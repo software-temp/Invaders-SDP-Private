@@ -1,6 +1,7 @@
 package screen;
 
 import engine.Core;
+import entity.IModel;
 
 import java.util.logging.Logger;
 
@@ -10,7 +11,7 @@ public interface IView {
 	/**
 	 * Draws the view's contents on the screen.
 	 */
-	void draw();
+	void draw(IModel model);
 	/** Event when this view shows */
 	default void onShow() {}
 	/** Event when this view hides */

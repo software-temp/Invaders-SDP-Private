@@ -1,9 +1,11 @@
 package engine;
 
+import entity.IModel;
+
 /**
  * Represents a single achievement in the game.
  */
-public class Achievement {
+public class Achievement implements IModel {
     /** The name of the achievement. */
     private String name;
     /** A description of how to earn the achievement. */
@@ -55,5 +57,10 @@ public class Achievement {
      */
     public void unlock() {
         this.unlocked = true;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+
     }
 }
