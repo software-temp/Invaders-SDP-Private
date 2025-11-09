@@ -4,7 +4,7 @@ import java.awt.*;
 import screen.Screen;
 import screen.ShopScreen;
 
-public class ShopRenderer {
+public final class ShopRenderer {
 
     private final BackBuffer backBuffer;
     private final FontPack fontPack;
