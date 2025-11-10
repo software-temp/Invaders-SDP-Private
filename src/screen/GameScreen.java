@@ -6,6 +6,7 @@ import engine.level.Level;
 import entity.GameModel;
 
 
+
 /**
  * Implements the game screen, where the action happens.
  * This class acts as the CONTROLLER in the MVC pattern.
@@ -115,7 +116,35 @@ public class GameScreen extends Screen {
             }
 
             // 1. (Controller) Process user input and tell Model to update
-            this.model.processPlayerInput(this.inputManager);
+            // Player 1 Input
+            // (Get player object from model to check status)
+            if (model.getLivesP1() > 0 && model.getShip() != null && !model.getShip().isDestroyed()) {
+                // (Controller detects input and sends a 'command' to the model)
+                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_D))
+                    model.playerMove(1, "RIGHT");
+                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_A))
+                    model.playerMove(1, "LEFT");
+                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_W))
+                    model.playerMove(1, "UP");
+                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_S))
+                    model.playerMove(1, "DOWN");
+                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_SPACE))
+                    model.playerFire(1);
+            }
+
+            // Player 2 Input
+            if (model.getShipP2() != null && model.getLivesP2() > 0 && !model.getShipP2().isDestroyed()) {
+                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_RIGHT))
+                    model.playerMove(2, "RIGHT");
+                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_LEFT))
+                    model.playerMove(2, "LEFT");
+                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_UP))
+                    model.playerMove(2, "UP");
+                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_DOWN))
+                    model.playerMove(2, "DOWN");
+                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_ENTER))
+                    model.playerFire(2);
+            }
 
             // 2. (Controller) Tell Model to update all game logic
             this.model.updateGameWorld();

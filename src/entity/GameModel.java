@@ -193,62 +193,51 @@ public class GameModel {
     }
 
     /**
-     * Processes player input.
-     * @param inputManager
+     * Processes a player move command received from the Controller.
+     * (Includes boundary checking logic)
+     * @param playerNum (1 or 2)
+     * @param direction ("RIGHT", "LEFT", "UP", "DOWN")
      */
-    public void processPlayerInput(engine.InputManager inputManager) {
-        if (this.livesP1 > 0 && !this.ship.isDestroyed()) {
-            boolean p1Right = inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_D);
-            boolean p1Left  = inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_A);
-            boolean p1Up    = inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_W);
-            boolean p1Down  = inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_S);
-            boolean p1Fire  = inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_SPACE);
+    public void playerMove(int playerNum, String direction) {
+        Ship ship = (playerNum == 1) ? this.ship : this.shipP2;
+        // If the ship doesn't exist or is destroyed, do nothing
+        if (ship == null || ship.isDestroyed()) return;
 
-            boolean isRightBorder = this.ship.getPositionX()
-                    + this.ship.getWidth() + this.ship.getSpeed() > this.width - 1;
-            boolean isLeftBorder = this.ship.getPositionX() - this.ship.getSpeed() < 1;
-            boolean isUpBorder = this.ship.getPositionY() - this.ship.getSpeed() < GameScreen.SEPARATION_LINE_HEIGHT;
-            boolean isDownBorder = this.ship.getPositionY()
-                    + this.ship.getHeight() + this.ship.getSpeed() > GameScreen.ITEMS_SEPARATION_LINE_HEIGHT;
-
-            if (p1Right && !isRightBorder) this.ship.moveRight();
-            if (p1Left  && !isLeftBorder)  this.ship.moveLeft();
-            if (p1Up    && !isUpBorder)    this.ship.moveUp();
-            if (p1Down  && !isDownBorder)  this.ship.moveDown();
-
-            if (p1Fire) {
-                if (this.ship.shoot(this.bullets)) {
-                    this.bulletsShot++;
-                    AchievementManager.getInstance().onShotFired();
-                }
-            }
+        // Boundary logic brought over from the original processPlayerInput
+        switch (direction) {
+            case "RIGHT":
+                boolean isRightBorder = ship.getPositionX() + ship.getWidth() + ship.getSpeed() > this.width - 1;
+                if (!isRightBorder) ship.moveRight();
+                break;
+            case "LEFT":
+                boolean isLeftBorder = ship.getPositionX() - ship.getSpeed() < 1;
+                if (!isLeftBorder) ship.moveLeft();
+                break;
+            case "UP":
+                boolean isUpBorder = ship.getPositionY() - ship.getSpeed() < GameScreen.SEPARATION_LINE_HEIGHT;
+                if (!isUpBorder) ship.moveUp();
+                break;
+            case "DOWN":
+                boolean isDownBorder = ship.getPositionY() + ship.getHeight() + ship.getSpeed() > GameScreen.ITEMS_SEPARATION_LINE_HEIGHT;
+                if (!isDownBorder) ship.moveDown();
+                break;
         }
+    }
 
-        if (this.shipP2 != null && this.livesP2 > 0 && !this.shipP2.isDestroyed()) {
-            boolean p2Right = inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_RIGHT);
-            boolean p2Left  = inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_LEFT);
-            boolean p2Up    = inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_UP);
-            boolean p2Down  = inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_DOWN);
-            boolean p2Fire  = inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_ENTER);
+    /**
+     * Processes a player fire command received from the Controller.
+     * (Includes firing logic, bulletsShot count, and Achievement management)
+     * @param playerNum (1 or 2)
+     */
+    public void playerFire(int playerNum) {
+        Ship ship = (playerNum == 1) ? this.ship : this.shipP2;
+        // If the ship doesn't exist or is destroyed, do nothing
+        if (ship == null || ship.isDestroyed()) return;
 
-            boolean p2RightBorder = this.shipP2.getPositionX()
-                    + this.shipP2.getWidth() + this.shipP2.getSpeed() > this.width - 1;
-            boolean p2LeftBorder = this.shipP2.getPositionX() - this.shipP2.getSpeed() < 1;
-            boolean p2UpBorder = this.shipP2.getPositionY() - this.shipP2.getSpeed() < GameScreen.SEPARATION_LINE_HEIGHT;
-            boolean p2DownBorder = this.shipP2.getPositionY()
-                    + this.shipP2.getHeight() + this.shipP2.getSpeed() > GameScreen.ITEMS_SEPARATION_LINE_HEIGHT;
-
-            if (p2Right && !p2RightBorder) this.shipP2.moveRight();
-            if (p2Left  && !p2LeftBorder)  this.shipP2.moveLeft();
-            if (p2Up    && !p2UpBorder)    this.shipP2.moveUp();
-            if (p2Down  && !p2DownBorder)  this.shipP2.moveDown();
-
-            if (p2Fire) {
-                if (this.shipP2.shoot(this.bullets)) {
-                    this.bulletsShot++;
-                    AchievementManager.getInstance().onShotFired();
-                }
-            }
+        // Firing logic brought over from the original processPlayerInput
+        if (ship.shoot(this.bullets)) {
+            this.bulletsShot++;
+            AchievementManager.getInstance().onShotFired();
         }
     }
 
