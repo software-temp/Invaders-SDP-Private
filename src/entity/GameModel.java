@@ -915,7 +915,7 @@ public class GameModel {
     public EnemyShipSpecialFormation getEnemyShipSpecialFormation() { return enemyShipSpecialFormation; }
     public FinalBoss getFinalBoss() { return finalBoss; }
     public Set<BossBullet> getBossBullets() { return bossBullets; }
-    public EnemyShipFormationModel getEnemyShipFormation() { return enemyShipFormationModel; }
+    public EnemyShipFormationModel getEnemyShipFormationModel() { return enemyShipFormationModel; }
     public MidBoss getOmegaBoss() { return omegaBoss; }
     public Set<Bullet> getBullets() { return bullets; }
     public Set<DropItem> getDropItems() { return dropItems; }
@@ -952,8 +952,8 @@ public class GameModel {
         }
 
         // 3. added enemyship
-        if (getEnemyShipFormation() != null) {
-            for (EnemyShip enemy : getEnemyShipFormation()) {
+        if (getEnemyShipFormationModel() != null) {
+            for (EnemyShip enemy : getEnemyShipFormationModel()) {
                 renderList.add(enemy);
             }
         }

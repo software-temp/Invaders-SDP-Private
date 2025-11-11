@@ -323,26 +323,19 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
             return;
         }
 
-        int maxColumn = 0;
         int minPositionY = Integer.MAX_VALUE;
+        int maxPositionY = Integer.MIN_VALUE;
         int leftMostPoint = Integer.MAX_VALUE;
         int rightMostPoint = Integer.MIN_VALUE;
-
         for (List<EnemyShip> column : this.enemyShips) {
-            // Height of this column
-            int columnSize = column.get(column.size() - 1).getPositionY()
-                    - this.positionY + this.shipHeight;
-            maxColumn = Math.max(maxColumn, columnSize);
             minPositionY = Math.min(minPositionY, column.get(0).getPositionY());
-
+            maxPositionY = Math.max(maxPositionY, column.get(column.size() - 1).getPositionY());
             int columnX = column.get(0).getPositionX();
             leftMostPoint = Math.min(leftMostPoint, columnX);
             rightMostPoint = Math.max(rightMostPoint, columnX);
         }
-
         this.width = rightMostPoint - leftMostPoint + this.shipWidth;
-        this.height = maxColumn;
-
+        this.height = maxPositionY - minPositionY + this.shipHeight;
         this.positionX = leftMostPoint;
         this.positionY = minPositionY;
     }
@@ -427,13 +420,30 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
      */
     @Override
     public final Iterator<EnemyShip> iterator() {
-        Set<EnemyShip> enemyShipsList = new HashSet<EnemyShip>();
+        return new Iterator<EnemyShip>() {
+            private int columnIterator = 0;
+            private int rowIterator = 0;
 
-        for (List<EnemyShip> column : this.enemyShips)
-            for (EnemyShip enemyShip : column)
-                enemyShipsList.add(enemyShip);
+            @Override
+            public boolean hasNext() {
+                while (columnIterator < enemyShips.size()) {
+                    if (rowIterator < enemyShips.get(columnIterator).size()) {
+                        return true;
+                    }
+                    columnIterator++;
+                    rowIterator = 0;
+                }
+                return false;
+            }
 
-        return enemyShipsList.iterator();
+            @Override
+            public EnemyShip next() {
+                if (!hasNext()) {
+                    throw new java.util.NoSuchElementException();
+                }
+                return enemyShips.get(columnIterator).get(rowIterator++);
+            }
+        };
     }
 
     /**
