@@ -43,7 +43,7 @@ public class GameModel {
     /** Current difficulty level number. */
     private int level;
     /** Formation of enemy ships. */
-    private EnemyShipFormation enemyShipFormation;
+    private EnemyShipFormationModel enemyShipFormationModel;
     /** Formation of special enemy ships. */
     private EnemyShipSpecialFormation enemyShipSpecialFormation;
     /** Player's ship. */
@@ -147,9 +147,9 @@ public class GameModel {
     public final void initialize() {
         /** Initialize the bullet Boss fired */
         this.bossBullets = new HashSet<>();
-        enemyShipFormation = new EnemyShipFormation(this.currentLevel);
-        enemyShipFormation.attach(this.screen);
-        this.enemyShipFormation.applyEnemyColorByLevel(this.currentLevel);
+        enemyShipFormationModel = new EnemyShipFormationModel(this.currentLevel);
+        enemyShipFormationModel.attach(this.screen);
+        this.enemyShipFormationModel.applyEnemyColorByLevel(this.currentLevel);
         this.ship = new Ship(this.width / 2 - 100, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT - 20,Color.green);
         this.ship.setPlayerId(1);   //=== [ADD] Player 1 ===
 
@@ -259,17 +259,17 @@ public class GameModel {
         switch (this.currentPhase) {
             case wave:
                 if (!DropItem.isTimeFreezeActive()) {
-                    this.enemyShipFormation.update();
-                    this.enemyShipFormation.shoot(this.bullets);
+                    this.enemyShipFormationModel.update();
+                    this.enemyShipFormationModel.shoot(this.bullets);
                 }
-                if (this.enemyShipFormation.isEmpty()) {
+                if (this.enemyShipFormationModel.isEmpty()) {
                     this.currentPhase = StagePhase.boss_wave;
                 }
                 break;
             case boss_wave:
                 if (this.finalBoss == null && this.omegaBoss == null){
                     bossReveal();
-                    this.enemyShipFormation.clear();
+                    this.enemyShipFormationModel.clear();
                 }
                 if(this.finalBoss != null){
                     finalbossManage();
@@ -385,7 +385,7 @@ public class GameModel {
                     }
                 }
             } else {
-                for (EnemyShip enemyShip : this.enemyShipFormation)
+                for (EnemyShip enemyShip : this.enemyShipFormationModel)
                     if (!enemyShip.isDestroyed()
                             && checkCollision(bullet, enemyShip)) {
                         int pts = enemyShip.getPointValue();
@@ -394,7 +394,7 @@ public class GameModel {
                         this.shipsDestroyed++;
 
                         String enemyType = enemyShip.getEnemyType();
-                        this.enemyShipFormation.destroy(enemyShip);
+                        this.enemyShipFormationModel.destroy(enemyShip);
                         AchievementManager.getInstance().onEnemyDefeated();
                         if (enemyType != null && this.currentLevel.getItemDrops() != null) {
                             List<engine.level.ItemDrop> potentialDrops = new ArrayList<>();
@@ -487,9 +487,9 @@ public class GameModel {
         if (!this.levelFinished && this.livesP1 > 0 && !this.ship.isDestroyed()
                 && !this.ship.isInvincible()) {
             // Check collision with normal enemy ships
-            for (EnemyShip enemyShip : this.enemyShipFormation) {
+            for (EnemyShip enemyShip : this.enemyShipFormationModel) {
                 if (!enemyShip.isDestroyed() && checkCollision(this.ship, enemyShip)) {
-                    this.enemyShipFormation.destroy(enemyShip);
+                    this.enemyShipFormationModel.destroy(enemyShip);
                     this.ship.destroy();
                     this.livesP1--;
                     showHealthPopup("-1 Life (Collision!)");
@@ -540,9 +540,9 @@ public class GameModel {
         if (!this.levelFinished && this.shipP2 != null && this.livesP2 > 0
                 && !this.shipP2.isDestroyed() && !this.shipP2.isInvincible()) {
             // Check collision with normal enemy ships
-            for (EnemyShip enemyShip : this.enemyShipFormation) {
+            for (EnemyShip enemyShip : this.enemyShipFormationModel) {
                 if (!enemyShip.isDestroyed() && checkCollision(this.shipP2, enemyShip)) {
-                    this.enemyShipFormation.destroy(enemyShip);
+                    this.enemyShipFormationModel.destroy(enemyShip);
                     this.shipP2.destroy();
                     this.livesP2--;
                     showHealthPopup("-1 Life (Collision!)");
@@ -618,15 +618,15 @@ public class GameModel {
                             DropItem.applyTimeFreezeItem(3000);
                             break;
                         case Push:
-                            DropItem.PushbackItem(this.enemyShipFormation,20);
+                            DropItem.PushbackItem(this.enemyShipFormationModel,20);
                             break;
                         case Explode:
-                            int destroyedEnemy = this.enemyShipFormation.destroyAll();
+                            int destroyedEnemy = this.enemyShipFormationModel.destroyAll();
                             int pts = destroyedEnemy * 5;
                             addPointsFor(null, pts);
                             break;
                         case Slow:
-                            enemyShipFormation.activateSlowdown();
+                            enemyShipFormationModel.activateSlowdown();
                             this.logger.info("Enemy formation slowed down!");
                             break;
                         default:
@@ -652,15 +652,15 @@ public class GameModel {
                             DropItem.applyTimeFreezeItem(3000);
                             break;
                         case Push:
-                            DropItem.PushbackItem(this.enemyShipFormation,20);
+                            DropItem.PushbackItem(this.enemyShipFormationModel,20);
                             break;
                         case Explode:
-                            int destroyedEnemy = this.enemyShipFormation.destroyAll();
+                            int destroyedEnemy = this.enemyShipFormationModel.destroyAll();
                             int pts = destroyedEnemy * 5;
                             addPointsFor(null, pts);
                             break;
                         case Slow:
-                            enemyShipFormation.activateSlowdown();
+                            enemyShipFormationModel.activateSlowdown();
                             this.logger.info("Enemy formation slowed down!");
                             break;
                         default:
@@ -915,7 +915,7 @@ public class GameModel {
     public EnemyShipSpecialFormation getEnemyShipSpecialFormation() { return enemyShipSpecialFormation; }
     public FinalBoss getFinalBoss() { return finalBoss; }
     public Set<BossBullet> getBossBullets() { return bossBullets; }
-    public EnemyShipFormation getEnemyShipFormation() { return enemyShipFormation; }
+    public EnemyShipFormationModel getEnemyShipFormation() { return enemyShipFormationModel; }
     public MidBoss getOmegaBoss() { return omegaBoss; }
     public Set<Bullet> getBullets() { return bullets; }
     public Set<DropItem> getDropItems() { return dropItems; }

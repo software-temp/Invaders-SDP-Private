@@ -109,7 +109,7 @@ public class DropItem extends Entity {
      * @param enemyShipFormation
      * @param distanceY
      */
-    public static void PushbackItem(EnemyShipFormation enemyShipFormation, int distanceY) {
+    public static void PushbackItem(EnemyShipFormationModel enemyShipFormation, int distanceY) {
         if (enemyShipFormation == null) {
             return;
         }

@@ -6,7 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.awt.Color;
 
+import screen.Screen;
+import screen.GameScreen;
 import engine.Cooldown;
 import engine.Core;
 import engine.level.Level;
@@ -91,6 +94,8 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
     private static final int SLOWED_X_SPEED = 4;
     /** Duration of slowdown effect (in movement cycles) */
     private static final int SLOWDOWN_DURATION = 18;
+    /** Screen to draw ships on. */
+    private Screen screen;
 
     /** Directions the formation can move. */
     private enum Direction {
@@ -108,13 +113,18 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
      * Constructor (Refactored to accept pre-built ships)
      *
      * @param level The level data (for speed, shooting, etc.).
-     * @param builtEnemyShips The 2D list of ships from the FormationBuilder.
      */
-    public EnemyShipFormationModel(final Level level, final List<List<EnemyShip>> builtEnemyShips) {
+    public EnemyShipFormationModel(final Level level) {
         this.logger = Core.getLogger();
         this.currentDirection = Direction.DOWN_RIGHT;
         this.movementInterval = 0;
 
+        FormationBuilder builder = new FormationBuilder();
+        List<List<EnemyShip>> builtShips = builder.build(
+                level,
+                level.getFormationWidth(),
+                level.getFormationHeight()
+        );
         // Read values directly from Level
         this.nShipsWide = level.getFormationWidth();
         this.nShipsHigh = level.getFormationHeight();
@@ -126,7 +136,7 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
         this.shooters = new ArrayList<EnemyShip>();
 
         // Receive the pre-built list of ships
-        this.enemyShips = builtEnemyShips;
+        this.enemyShips = builtShips;
 
         // Set initial position and count ships
         this.positionX = INIT_POS_X;
@@ -167,13 +177,19 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
         return this.enemyShips;
     }
 
-
+    /**
+     * Associates the formation to a given screen.
+     *
+     * @param newScreen
+     * Screen to attach.
+     */
+    public final void attach(final Screen newScreen) {
+        this.screen = newScreen;
+    }
     /**
      * Updates the position of the ships.
-     * @param screenWidth The width of the screen (passed from Controller)
-     * @param bottomBoundaryY The Y coordinate of the bottom margin (passed from Controller)
      */
-    public final void update(int screenWidth, int bottomBoundaryY) {
+    public final void update() {
         if(this.shootingCooldown == null) {
             this.shootingCooldown = Core.getVariableCooldown(shootingInterval,
                     shootingVariance);
@@ -195,8 +211,8 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
             movementInterval = 0;
             updateSlowdown();
 
-            boolean isAtBottom = positionY + this.height > bottomBoundaryY;
-            boolean isAtRightSide = positionX + this.width >= screenWidth - SIDE_MARGIN;
+            boolean isAtBottom = positionY + this.height > GameScreen.getItemsSeparationLineHeight();
+            boolean isAtRightSide = positionX + this.width >= screen.getWidth() - SIDE_MARGIN;
             boolean isAtLeftSide = positionX <= SIDE_MARGIN;
             boolean isAtTop = positionY <= INIT_POS_Y;
 
@@ -491,5 +507,49 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
         }
         this.enemyShips.clear();
         this.shipCount = 0;
+    }
+    /**
+     * Applies a specific color to all ships in the formation.
+     * @param color The color to apply.
+     */
+    public void applyEnemyColor(final Color color) {
+        for (java.util.List<EnemyShip> column : this.getEnemyShips()) {
+            for (EnemyShip ship : column) {
+                if (ship != null && !ship.isDestroyed()) {
+                    ship.setColor(color);
+                }
+            }
+        }
+    }
+
+    /**
+     * Applies a color to all ships based on the level number.
+     * @param level The current level.
+     */
+    public void applyEnemyColorByLevel(final Level level) {
+        if (level == null) return;
+        final int lv = level.getLevel();
+        applyEnemyColor(getColorForLevel(lv));
+    }
+
+    /**
+     * Gets the appropriate color for a given level number.
+     * @param levelNumber The level number.
+     * @return The color for that level.
+     */
+    private Color getColorForLevel(final int levelNumber) {
+        switch (levelNumber) {
+            case 1: return new Color(0x3DDC84); // green
+            case 2: return new Color(0x00BCD4); // cyan
+            case 3: return new Color(0xFF4081); // pink
+            case 4: return new Color(0xFFC107); // amber
+            case 5: return new Color(0x9C27B0); // purple
+            case 6: return new Color(0xFF5722); // deep orange
+            case 7: return new Color(0x8BC34A); // light green
+            case 8: return new Color(0x03A9F4); // light blue
+            case 9: return new Color(0xE91E63); // magenta
+            case 10: return new Color(0x607D8B); // blue gray
+            default: return Color.WHITE;
+        }
     }
 }
