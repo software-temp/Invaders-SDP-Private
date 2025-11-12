@@ -32,13 +32,14 @@ public class OmegaBoss extends MidBoss {
 	private boolean isRight = true;
 	/** Current vertical movement direction. true for down, false for up. */
 	private boolean isDown = true;
-	/** Boss cannot move below this boundary. */
+	/** Boss cannot move over this boundary. */
 	private final int widthBoundary;
 	/** Boss cannot move below this boundary. */
 	private final int bottomBoundary;
 	/**
 	 * Constructor, establishes the boss entity's generic properties.
 	 *
+	 * @param widthBoundary		The lowermost X-coordinate for the boss's movement. The boss cannot move over this value.
 	 * @param bottomBoundary    The lowermost Y-coordinate for the boss's movement. The boss cannot move below this value.
 	 * @param color     Color of the boss entity.
 	 */
