@@ -5,7 +5,6 @@ import engine.DTO.ShopInfoDTO;
 import engine.FontPack;
 
 import java.awt.*;
-//import screen.ShopScreen;
 
 public final class ShopRenderer {
 
@@ -25,19 +24,19 @@ public final class ShopRenderer {
 
         // --- Title ---
         g.setColor(Color.GREEN);
-        drawCenteredString(g, dto.getScreenWidth(), "SHOP", dto.getScreenHeight() / 8, fontPack.getFontBig());
+        drawCenteredString(dto.getScreenWidth(), "SHOP", dto.getScreenHeight() / 8, fontPack.getFontBig());
 
         // --- Coin balance ---
         g.setColor(Color.YELLOW);
         String balanceString = String.format("Your Balance: %d coins", dto.getCoinBalance());
-        drawCenteredString(g, dto.getScreenWidth(), balanceString, 120, fontPack.getRegular());
+        drawCenteredString(dto.getScreenWidth(), balanceString, 120, fontPack.getRegular());
 
         // --- Instructions ---
         g.setColor(Color.GRAY);
         String instructions = (dto.getSelectionMode() == 0)
                 ? "W/S: Navigate | SPACE: Select | ESC: Exit"
                 : "A/D: Change Level | SPACE: Buy | ESC: Back";
-        drawCenteredString(g, dto.getScreenWidth(), instructions, 145, fontPack.getRegular());
+        drawCenteredString(dto.getScreenWidth(), instructions, 145, fontPack.getRegular());
 
         // --- Layout ---
         int headerHeight = 165;
@@ -69,7 +68,7 @@ public final class ShopRenderer {
         int exitY = dto.getScreenHeight() - 30;
         g.setColor((dto.getSelectedItem() == dto.getTotalItems() && dto.getSelectionMode() == 0) ? Color.GREEN : Color.WHITE);
         String exitText = dto.isBetweenLevels() ? "< Back to Game >" : "< Back to Main Menu >";
-        drawCenteredString(g, dto.getScreenWidth(), exitText, exitY, fontPack.getRegular());
+        drawCenteredString(dto.getScreenWidth(), exitText, exitY, fontPack.getRegular());
     }
 
     /**
@@ -170,10 +169,11 @@ public final class ShopRenderer {
         g.drawRoundRect(x, y, popupWidth, popupHeight, 15, 15);
 
         // text center
-        drawCenteredString(g, screenWidth, message, y + popupHeight / 2 + 5, fontPack.getRegular());
+        drawCenteredString(screenWidth, message, y + popupHeight / 2 + 5, fontPack.getRegular());
     }
 
-    private void drawCenteredString(Graphics g, final int screenWidth, String text, int y, Font font) {
+    private void drawCenteredString(final int screenWidth, String text, int y, Font font) {
+        Graphics g = backBuffer.getGraphics();
         g.setFont(font);
         FontMetrics metrics = g.getFontMetrics();
         int x = (screenWidth - metrics.stringWidth(text)) / 2;

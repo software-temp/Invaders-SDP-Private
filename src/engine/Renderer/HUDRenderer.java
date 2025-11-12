@@ -24,24 +24,14 @@ public final class HUDRenderer {
         this.entityRenderer = entityRenderer;
     }
 
-    /** Draws Player 1 score. */
-    public void drawScoreP1(final int screenWidth, final int score) {
+    /** Draw score. */
+    public void drawScore(final int screenWidth, final int score, final int y) {
         Graphics g = backBuffer.getGraphics();
         Font font = fontPack.getRegular();
         g.setFont(font);
         g.setColor(Color.WHITE);
         String scoreString = String.format("P1:%04d", score);
-        g.drawString(scoreString, screenWidth - 120, 25);
-    }
-
-    /** Draws Player 2 score. */
-    public void drawScoreP2(final int screenWidth, final int scoreP2) {
-        Graphics g = backBuffer.getGraphics();
-        Font font = fontPack.getRegular();
-        g.setFont(font);
-        g.setColor(Color.WHITE);
-        String text = String.format("P2:%04d", scoreP2);
-        g.drawString(text, screenWidth - 120, 40);
+        g.drawString(scoreString, screenWidth - 120, y);
     }
 
     /** Draw elapsed time on screen. */

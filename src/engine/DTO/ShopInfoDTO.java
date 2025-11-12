@@ -12,7 +12,7 @@ public class ShopInfoDTO {
     private final String[] itemDescriptions;
     private final int[][] itemPrices;
     private final int[] maxLevels;
-    private final int[] currentLevels; // ✅ 각 아이템의 현재 레벨 추가
+    private final int[] currentLevels;
     private final boolean betweenLevels;
 
     public ShopInfoDTO(
