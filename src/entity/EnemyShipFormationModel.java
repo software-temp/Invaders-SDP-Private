@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.awt.Color;
 
-import screen.Screen;
 import engine.Core;
 import engine.level.Level;
 
@@ -58,9 +57,6 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
     private int shipHeight;
     /** Number of not destroyed ships. */
     private int shipCount;
-
-    /** Screen to draw ships on. */
-    private Screen screen;
 
     /** The logic component responsible for movement. */
     private EnemyShipFormationMovement movementStrategy;
@@ -348,12 +344,6 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
      * @return Formation height.
      */
     public int getHeight() { return this.height; }
-
-    /**
-     * Gets the screen context.
-     * @return The attached Screen.
-     */
-    public Screen getScreen() { return this.screen; }
 
     /**
      * Sets the new position of the formation's top-left corner.
