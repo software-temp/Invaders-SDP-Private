@@ -56,6 +56,8 @@ public final class Core {
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
 
+	private static boolean isTest = true;
+
 
 	/**
 	 * Test implementation.
@@ -90,7 +92,12 @@ public final class Core {
 		levelManager = new LevelManager();
 		GameState gameState = new GameState(1, 0, MAX_LIVES, MAX_LIVES, 0, 0,0);
 
-
+		if (isTest){
+			while (true) {
+				currentScreen = new TestScreen(width, height, FPS);
+				frame.setScreen(currentScreen);
+			}
+		}
         int returnCode = 1;
 		do {
             gameState = new GameState(1, 0, MAX_LIVES,MAX_LIVES, 0, 0,gameState.getCoin());
