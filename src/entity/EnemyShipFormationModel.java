@@ -1,7 +1,6 @@
 package entity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -119,7 +118,7 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
         this.currentDirection = Direction.DOWN_RIGHT;
         this.movementInterval = 0;
 
-        FormationBuilder builder = new FormationBuilder();
+        EnemyShipFactory builder = new EnemyShipFactory();
         List<List<EnemyShip>> builtShips = builder.build(
                 level,
                 level.getFormationWidth(),

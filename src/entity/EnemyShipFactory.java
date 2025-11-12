@@ -9,7 +9,7 @@ import engine.level.Level;
  * Builds the 2D list of EnemyShips based on Level data.
  * (Builder Pattern)
  */
-public class FormationBuilder {
+public class EnemyShipFactory {
 
     /** Proportion of C-type ships. */
     private static final double PROPORTION_C = 0.2;
