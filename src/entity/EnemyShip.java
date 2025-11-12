@@ -14,7 +14,7 @@ import engine.DrawManager.SpriteType;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public class EnemyShip extends Entity {
+public class EnemyShip extends Entity implements Collidable{
 	
 	/** Point value of a type A enemy. */
 	private static final int A_TYPE_POINTS = 10;
@@ -219,4 +219,16 @@ public class EnemyShip extends Entity {
 				return null;
 		}
 	}
+    @Override
+    public void onCollision(Collidable other) {
+        // 🔧 자신이 총알에 맞았을 때만 파괴
+        if (other instanceof Bullet) {
+            Bullet bullet = (Bullet) other;
+
+            // 🔧 자신이 이미 파괴되지 않았고, bullet이 위에서 날아오는 탄일 때만 반응
+            if (!this.isDestroyed() && bullet.getSpeed() < 0) {
+                this.destroy(); // 🔧 자기 자신 파괴 트리거
+            }
+        }
+    }
 }

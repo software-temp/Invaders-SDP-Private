@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * @author <a href="developer.ksb@gmail.com">Seungbeom Kim</a>
  *
  */
-public abstract class MidBoss extends Entity implements BossEntity {
+public abstract class MidBoss extends Entity implements BossEntity, Collidable {
 
 	protected int healPoint=10;
 	protected int maxHp=healPoint;
@@ -59,4 +59,8 @@ public abstract class MidBoss extends Entity implements BossEntity {
 	public final void attach(final Screen newScreen) {
 		screen = newScreen;
 	}
+    @Override
+    public void onCollision(Collidable other) {
+        // 🔧 현재 GameModel이 데미지 계산하므로 비워둔다.
+    }
 }

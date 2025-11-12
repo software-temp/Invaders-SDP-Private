@@ -10,7 +10,7 @@ import engine.DrawManager.SpriteType;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public class Bullet extends Entity {
+public class Bullet extends Entity implements Collidable{
     // === [ADD] Owner flag: 1 = P1, 2 = P2, null for legacy compatibility ===
     private Integer ownerId;
 
@@ -112,5 +112,8 @@ public class Bullet extends Entity {
 		this.penetrationCount = 0;
 		this.maxPenetration = ShopItem.getPenetrationCount();
 	}
-
+    @Override
+    public void onCollision(Collidable other) {
+        // 🔧 현재 GameModel이 모든 충돌 처리를 담당하므로, Bullet 내부에서는 아무 동작하지 않음.
+    }
 }

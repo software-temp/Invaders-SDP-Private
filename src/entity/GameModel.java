@@ -246,7 +246,7 @@ public class GameModel {
         this.updateAllEntities();
 
         // Phase 2: Process interactions and collisions
-        this.processAllCollisions();
+        this.handleCollisions();
 
         // Phase 3: Clean up destroyed or off-screen entities
         this.cleanupAllEntities();
@@ -311,11 +311,14 @@ public class GameModel {
         }
     }
 
-    //
-    private void processAllCollisions() {
-        manageBulletShipCollisions();
-        manageShipEnemyCollisions();
-        manageItemCollisions();
+    /**
+     * Handles all collision events between entities (bullets, ships, items).
+     * Now fully delegates reactions to each entity via onCollision().
+     */
+    private void handleCollisions() {
+        handleBulletShipCollisions();  // 🔧 이름 변경: manage → handle
+        handleShipEnemyCollisions();   // 🔧 이름 변경: manage → handle
+        handleItemCollisions();        // 🔧 이름 변경: manage → handle
     }
 
     private void cleanupAllEntities() {
@@ -356,32 +359,31 @@ public class GameModel {
     /**
      * Manages collisions between bullets and ships.
      */
-    private void manageBulletShipCollisions() {
+    private void handleBulletShipCollisions() {  // 🔧 이름 변경만
         Set<Bullet> recyclable = new HashSet<Bullet>();
         for (Bullet bullet : this.bullets)
             if (bullet.getSpeed() > 0) {
                 if (this.livesP1 > 0 && checkCollision(bullet, this.ship) && !this.levelFinished) {
                     recyclable.add(bullet);
-                    if (!this.ship.isInvincible()) {
-                        if (!this.ship.isDestroyed()) {
-                            this.ship.destroy();
-                            this.livesP1--;
-                            showHealthPopup("-1 Health");
-                            this.logger.info("Hit on player ship, " + this.livesP1
-                                    + " lives remaining.");
-                        }
+
+// 🔧 충돌 시 Ship.onCollision 호출 → 내부에서 destroy() 수행
+                    boolean wasAlive = !this.ship.isDestroyed();
+                    this.ship.onCollision(bullet); // 🔧 ship이 자기 파괴 트리거 수행
+                    if (wasAlive && this.ship.isDestroyed()) { // 🔧 결과를 기반으로 라이프 감소
+                        this.livesP1--;
+                        showHealthPopup("-1 Health");
+                        this.logger.info("Hit on player ship, " + this.livesP1 + " lives remaining.");
                     }
+
                 } else if (this.shipP2 != null && this.livesP2 > 0 && !this.shipP2.isDestroyed()
                         && checkCollision(bullet, this.shipP2) && !this.levelFinished) {
                     recyclable.add(bullet);
-                    if (!this.shipP2.isInvincible()) {
-                        if (!this.shipP2.isDestroyed()) {
-                            this.shipP2.destroy();
-                            this.livesP2--;
-                            showHealthPopup("-1 Health");
-                            this.logger.info("Hit on player ship, " + this.livesP2
-                                    + " lives remaining.");
-                        }
+                    boolean wasAliveP2 = !this.shipP2.isDestroyed();
+                    this.shipP2.onCollision(bullet); // 🔧 내부 반응 위임
+                    if (wasAliveP2 && this.shipP2.isDestroyed()) {
+                        this.livesP2--;
+                        showHealthPopup("-1 Health");
+                        this.logger.info("Hit on player ship, " + this.livesP2 + " lives remaining.");
                     }
                 }
             } else {
@@ -394,8 +396,13 @@ public class GameModel {
                         this.shipsDestroyed++;
 
                         String enemyType = enemyShip.getEnemyType();
-                        this.enemyShipFormation.destroy(enemyShip);
-                        AchievementManager.getInstance().onEnemyDefeated();
+
+                        boolean wasAlive = !enemyShip.isDestroyed();            // 🔧 충돌 전 상태 기록
+                        enemyShip.onCollision(bullet);                          // 🔧 EnemyShip 내부에서 destroy() 수행
+                        if (wasAlive && enemyShip.isDestroyed()) {              // 🔧 실제 파괴된 경우만 포메이션/성과 처리
+                            this.enemyShipFormation.destroy(enemyShip);         // 🔧 기존 포메이션 정리 로직 유지
+                            AchievementManager.getInstance().onEnemyDefeated(); // 🔧 업적 처리 유지
+                        }
                         if (enemyType != null && this.currentLevel.getItemDrops() != null) {
                             List<engine.level.ItemDrop> potentialDrops = new ArrayList<>();
                             for (engine.level.ItemDrop itemDrop : this.currentLevel.getItemDrops()) {
@@ -482,7 +489,7 @@ public class GameModel {
      * Manages collisions between player ship and enemy ships.
      * Player loses a life immediately upon collision with any enemy.
      */
-    private void manageShipEnemyCollisions() {
+    private void handleShipEnemyCollisions() {
         // ===== P1 collision check =====
         if (!this.levelFinished && this.livesP1 > 0 && !this.ship.isDestroyed()
                 && !this.ship.isInvincible()) {
@@ -490,11 +497,13 @@ public class GameModel {
             for (EnemyShip enemyShip : this.enemyShipFormation) {
                 if (!enemyShip.isDestroyed() && checkCollision(this.ship, enemyShip)) {
                     this.enemyShipFormation.destroy(enemyShip);
-                    this.ship.destroy();
-                    this.livesP1--;
-                    showHealthPopup("-1 Life (Collision!)");
-                    this.logger.info("Ship collided with enemy! " + this.livesP1
-                            + " lives remaining.");
+                    boolean wasAlive = !this.ship.isDestroyed();            // 🔧 충돌 전 상태 저장
+                    this.ship.onCollision(enemyShip);                       // 🔧 ship 내부에서 destroy() 판단
+                    if (wasAlive && this.ship.isDestroyed()) {              // 🔧 실제 파괴된 경우만 처리
+                        this.livesP1--;
+                        showHealthPopup("-1 Life (Collision!)");
+                        this.logger.info("Ship collided with enemy! " + this.livesP1 + " lives remaining.");
+                    }
                     return;
                 }
             }
@@ -504,7 +513,13 @@ public class GameModel {
                 if (enemyShipSpecial != null && !enemyShipSpecial.isDestroyed()
                         && checkCollision(this.ship, enemyShipSpecial)) {
                     enemyShipSpecial.destroy();
-                    this.ship.destroy();
+                    boolean wasAlive = !this.ship.isDestroyed();
+                    this.ship.onCollision(enemyShipSpecial);
+                    if (wasAlive && this.ship.isDestroyed()) {
+                        this.livesP1--;
+                        showHealthPopup("-1 Life (Collision!)");
+                        this.logger.info("Ship collided with special enemy formation! " + this.livesP1 + " lives remaining.");
+                    }
                     this.livesP1--;
                     showHealthPopup("-1 Life (Collision!)");
                     this.logger.info("Ship collided with special enemy formation! "
@@ -516,22 +531,26 @@ public class GameModel {
             // Check collision with omega boss (mid boss - yellow/pink ship)
             if (this.omegaBoss != null && !this.omegaBoss.isDestroyed()
                     && checkCollision(this.ship, this.omegaBoss)) {
-                this.ship.destroy();
-                this.livesP1--;
-                showHealthPopup("-1 Life (Boss Collision!)");
-                this.logger.info("Ship collided with omega boss! " + this.livesP1
-                        + " lives remaining.");
+                boolean wasAlive = !this.ship.isDestroyed();
+                this.ship.onCollision(this.omegaBoss);
+                if (wasAlive && this.ship.isDestroyed()) {
+                    this.livesP1--;
+                    showHealthPopup("-1 Life (Collision!)");
+                    this.logger.info("Ship collided with omega boss! " + this.livesP1 + " lives remaining.");
+                }
                 return;
             }
 
             // Check collision with final boss
             if (this.finalBoss != null && !this.finalBoss.isDestroyed()
                     && checkCollision(this.ship, this.finalBoss)) {
-                this.ship.destroy();
-                this.livesP1--;
-                showHealthPopup("-1 Life (Boss Collision!)");
-                this.logger.info("Ship collided with final boss! " + this.livesP1
-                        + " lives remaining.");
+                boolean wasAlive = !this.ship.isDestroyed();
+                this.ship.onCollision(this.finalBoss);
+                if (wasAlive && this.ship.isDestroyed()) {
+                    this.livesP1--;
+                    showHealthPopup("-1 Life (Collision!)");
+                    this.logger.info("Ship collided with final boss! " + this.livesP1 + " lives remaining.");
+                }
                 return;
             }
         }
@@ -543,11 +562,14 @@ public class GameModel {
             for (EnemyShip enemyShip : this.enemyShipFormation) {
                 if (!enemyShip.isDestroyed() && checkCollision(this.shipP2, enemyShip)) {
                     this.enemyShipFormation.destroy(enemyShip);
-                    this.shipP2.destroy();
-                    this.livesP2--;
-                    showHealthPopup("-1 Life (Collision!)");
-                    this.logger.info("Ship P2 collided with enemy! " + this.livesP2
-                            + " lives remaining.");
+
+                    boolean wasAliveP2 = !this.shipP2.isDestroyed();  // 🔧 Ship P2 충돌 전 상태 기록
+                    this.shipP2.onCollision(enemyShip);               // 🔧 destroy() 대신 onCollision()
+                    if (wasAliveP2 && this.shipP2.isDestroyed()) {    // 🔧 실제 파괴된 경우만 라이프 감소
+                        this.livesP2--;
+                        showHealthPopup("-1 Life (Collision!)");
+                        this.logger.info("Ship P2 collided with enemy! " + this.livesP2 + " lives remaining.");
+                    }
                     return;
                 }
             }
@@ -557,34 +579,41 @@ public class GameModel {
                 if (enemyShipSpecial != null && !enemyShipSpecial.isDestroyed()
                         && checkCollision(this.shipP2, enemyShipSpecial)) {
                     enemyShipSpecial.destroy();
-                    this.shipP2.destroy();
-                    this.livesP2--;
-                    showHealthPopup("-1 Life (Collision!)");
-                    this.logger.info("Ship P2 collided with special enemy formation! "
-                            + this.livesP2 + " lives remaining.");
+
+                    boolean wasAliveP2 = !this.shipP2.isDestroyed();  // 🔧 Ship P2 충돌 전 상태 기록
+                    this.shipP2.onCollision(enemyShipSpecial);        // 🔧 Ship P2 내부 반응 위임
+                    if (wasAliveP2 && this.shipP2.isDestroyed()) {    // 🔧 실제 파괴된 경우만 처리
+                        this.livesP2--;
+                        showHealthPopup("-1 Life (Collision!)");
+                        this.logger.info("Ship P2 collided with special enemy formation! "
+                                + this.livesP2 + " lives remaining.");
+                    }
                     return;
                 }
             }
-
             // Check collision with omega boss
             if (this.omegaBoss != null && !this.omegaBoss.isDestroyed()
                     && checkCollision(this.shipP2, this.omegaBoss)) {
-                this.shipP2.destroy();
-                this.livesP2--;
-                showHealthPopup("-1 Life (Boss Collision!)");
-                this.logger.info("Ship P2 collided with omega boss! " + this.livesP2
-                        + " lives remaining.");
+                boolean wasAliveP2 = !this.shipP2.isDestroyed();      // 🔧 Ship P2 충돌 전 상태 기록
+                this.shipP2.onCollision(this.omegaBoss);              // 🔧 destroy() 호출 대신 onCollision()
+                if (wasAliveP2 && this.shipP2.isDestroyed()) {        // 🔧 실제 파괴된 경우만 처리
+                    this.livesP2--;
+                    showHealthPopup("-1 Life (Boss Collision!)");
+                    this.logger.info("Ship P2 collided with omega boss! " + this.livesP2 + " lives remaining.");
+                }
                 return;
             }
 
             // Check collision with final boss
             if (this.finalBoss != null && !this.finalBoss.isDestroyed()
                     && checkCollision(this.shipP2, this.finalBoss)) {
-                this.shipP2.destroy();
-                this.livesP2--;
-                showHealthPopup("-1 Life (Boss Collision!)");
-                this.logger.info("Ship P2 collided with final boss! " + this.livesP2
-                        + " lives remaining.");
+                boolean wasAliveP2 = !this.shipP2.isDestroyed();      // 🔧 Ship P2 충돌 전 상태 기록
+                this.shipP2.onCollision(this.finalBoss);              // 🔧 destroy() 대신 onCollision()
+                if (wasAliveP2 && this.shipP2.isDestroyed()) {        // 🔧 실제 파괴된 경우만 라이프 감소 및 팝업
+                    this.livesP2--;
+                    showHealthPopup("-1 Life (Boss Collision!)");
+                    this.logger.info("Ship P2 collided with final boss! " + this.livesP2 + " lives remaining.");
+                }
                 return;
             }
         }
@@ -594,7 +623,7 @@ public class GameModel {
      * Manages collisions between player ship and dropped items.
      * Applies item effects when player collects them.
      */
-    private void manageItemCollisions() {
+    private void handleItemCollisions() {
         Set<DropItem> acquiredDropItems = new HashSet<DropItem>();
 
         if (!this.levelFinished && ((this.livesP1 > 0 && !this.ship.isDestroyed())

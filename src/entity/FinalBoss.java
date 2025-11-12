@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class FinalBoss extends Entity implements BossEntity{
+public class FinalBoss extends Entity implements BossEntity, Collidable{
 
     private int healPoint;
     private int maxHp;
@@ -205,5 +205,10 @@ public class FinalBoss extends Entity implements BossEntity{
     @Override
     public void draw(DrawManager drawManager) {
         drawManager.drawEntity(this, this.positionX, this.positionY);
+    }
+    @Override
+    public void onCollision(Collidable other) {
+        // 🔧 현재는 GameModel에서 데미지 로직 처리하므로 비워둔다.
+        // (나중에 데미지 판단을 Boss 내부로 옮길 때 사용 가능)
     }
 }

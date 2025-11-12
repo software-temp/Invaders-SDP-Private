@@ -14,7 +14,7 @@ import engine.DrawManager.SpriteType;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public class Ship extends Entity {
+public class Ship extends Entity implements Collidable{
 
 	/** Time between shots. */
 	private static final int SHOOTING_INTERVAL = 750;
@@ -202,5 +202,23 @@ public class Ship extends Entity {
         this.shieldCooldown.setMilliseconds(duration);
         this.shieldCooldown.reset();
         this.setColor(Color.BLUE);
+    }
+    @Override
+    public void onCollision(Collidable other) { // 🔧 Ship이 충돌 시 취하는 자기 행동
+        // 총알에 맞은 경우
+        if (other instanceof Bullet) {
+            Bullet bullet = (Bullet) other;
+            // 🔧 적 총알만 (speed > 0) 유효
+            if (bullet.getSpeed() > 0 && !this.isInvincible() && !this.isDestroyed()) {
+                this.destroy(); // 🔧 자기 파괴 트리거만 수행
+            }
+        }
+
+        // 🔧 적 기체나 보스와 부딪힌 경우
+        if (other instanceof EnemyShip || other instanceof MidBoss || other instanceof FinalBoss) {
+            if (!this.isInvincible() && !this.isDestroyed()) {
+                this.destroy(); // 🔧 자기 파괴 트리거만 수행
+            }
+        }
     }
 }
