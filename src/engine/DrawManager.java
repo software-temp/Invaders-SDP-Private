@@ -154,7 +154,7 @@ public final class DrawManager {
 		}
 	}
 
-    	public void drawShootingStars(final Screen screen, final List<ShootingStar> shootingStars, final float angle) {    }
+    public void drawShootingStars(final Screen screen, final List<ShootingStar> shootingStars, final float angle) {    }
 
     public ShopRenderer getShopRenderer() {
         return shopRenderer;
