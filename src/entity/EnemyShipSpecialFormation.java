@@ -143,12 +143,12 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
      */
     public final void draw() {
         if (this.enemyShipSpecialRed != null)
-            drawManager.drawEntity(this.enemyShipSpecialRed,
+            drawManager.getEntityRenderer().drawEntity(this.enemyShipSpecialRed,
                     this.enemyShipSpecialRed.getPositionX(),
                     this.enemyShipSpecialRed.getPositionY());
 
         if (this.enemyShipSpecialBlue != null)
-            drawManager.drawEntity(this.enemyShipSpecialBlue,
+            drawManager.getEntityRenderer().drawEntity(this.enemyShipSpecialBlue,
                     this.enemyShipSpecialBlue.getPositionX(),
                     this.enemyShipSpecialBlue.getPositionY());
 

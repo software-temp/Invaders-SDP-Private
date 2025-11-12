@@ -59,9 +59,9 @@ public class AchievementScreen extends Screen {
      * Draws the achievements on the screen.
      */
     private void draw() {
-        drawManager.initDrawing(this);
+        drawManager.initDrawing(this.width, this.height);
         List<Achievement> achievements = AchievementManager.getInstance().getAchievements();
-        drawManager.drawAchievements(this, achievements);
-        drawManager.completeDrawing(this);
+        drawManager.getUIRenderer().drawAchievements(this.width,this.height, achievements);
+        drawManager.completeDrawing();
     }
 }

@@ -67,11 +67,11 @@ public class HighScoreScreen extends Screen {
 	 * Draws the elements associated with the screen.
 	 */
 	private void draw() {
-		drawManager.initDrawing(this);
+		drawManager.initDrawing(this.width, this.height);
 
-		drawManager.drawHighScoreMenu(this);
-		drawManager.drawHighScores(this, this.highScores);
+		drawManager.getUIRenderer().drawHighScoreMenu(this.width, this.height);
+		drawManager.getUIRenderer().drawHighScores(this.width, this.height, this.highScores);
 
-		drawManager.completeDrawing(this);
+		drawManager.completeDrawing();
 	}
 }

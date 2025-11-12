@@ -183,9 +183,9 @@ public class FinalBoss extends Entity implements BossEntity{
         return bullets;
     }
 
+    public void ultimateSkill(){
 
-
-
+    }
 
     /** flag final boss' destroy */
     @Override
@@ -204,6 +204,6 @@ public class FinalBoss extends Entity implements BossEntity{
 
     @Override
     public void draw(DrawManager drawManager) {
-        drawManager.drawEntity(this, this.positionX, this.positionY);
+        drawManager.getEntityRenderer().drawEntity(this, this.positionX, this.positionY);
     }
 }

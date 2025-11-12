@@ -2,19 +2,16 @@ package screen;
 
 import engine.Core;
 import engine.GameState;
+import engine.DTO.HUDInfoDTO;
 import engine.level.Level;
 import entity.GameModel;
 
-
-
 /**
  * Implements the game screen, where the action happens.
- * This class acts as the CONTROLLER in the MVC pattern.
- * It manages the game loop, handles input, and coordinates
- * the GameModel (state/logic) and GameView (drawing).
- *
- * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- *
+ * Acts as the CONTROLLER in the MVC pattern.
+ * - Controls game flow, inputs, and timing
+ * - Updates the GameModel (Model)
+ * - Passes data to GameView (View) via HUDInfoDTO
  */
 public class GameScreen extends Screen {
 
@@ -22,24 +19,16 @@ public class GameScreen extends Screen {
     public static final int SEPARATION_LINE_HEIGHT = 45;
     /** Height of the items separation line (above items). */
     public static final int ITEMS_SEPARATION_LINE_HEIGHT = 400;
-    /** Returns the Y-coordinate of the bottom boundary for enemies (above items HUD) */
-    public static int getItemsSeparationLineHeight() {
-        return ITEMS_SEPARATION_LINE_HEIGHT;
-    }
 
-    /** Current level data (direct from Level system). */
-    private Level currentLevel;
-    /** Checks if a bonus life is received. */
-    private boolean bonusLife;
-    /** Maximum number of lives. */
-    private int maxLives;
-    /** Current game state. */
-    private GameState gameState;
+    /** Current level data. */
+    private final Level currentLevel;
+    private final boolean bonusLife;
+    private final int maxLives;
+    private final GameState gameState;
 
-    /** The Model component */
-    private GameModel model;
-    /** The View component */
-    private GameView view;
+    /** MVC Components */
+    private GameModel model;   // Model
+    private GameView view;     // View
 
     /**
      * Constructor, establishes the properties of the screen.
@@ -62,7 +51,6 @@ public class GameScreen extends Screen {
                       final Level level, final boolean bonusLife, final int maxLives,
                       final int width, final int height, final int fps) {
         super(width, height, fps);
-
         this.currentLevel = level;
         this.bonusLife = bonusLife;
         this.maxLives = maxLives;
@@ -70,16 +58,21 @@ public class GameScreen extends Screen {
     }
 
     /**
-     * Initializes basic screen properties, and adds necessary elements.
+     * Initializes the Model and View.
      */
+    @Override
     public final void initialize() {
         super.initialize();
 
         // Create Model and View
-        this.model = new GameModel(this.gameState, this.currentLevel, this.bonusLife, this.maxLives, this.width, this.height, this);
-        this.view = new GameView(this.model, this.drawManager, this.width, this.height);
+        this.model = new GameModel(
+                this.gameState, this.currentLevel,
+                this.bonusLife, this.maxLives,
+                this.width, this.height, this
+        );
+        this.view = new GameView(this.model,this.drawManager);
 
-        // Initialize the model's state
+        // Initialize Model
         this.model.initialize();
 
         this.inputDelay = Core.getCooldown(GameModel.INPUT_DELAY);
@@ -87,14 +80,12 @@ public class GameScreen extends Screen {
     }
 
     /**
-     * Starts the action.
-     *
-     * @return Next screen code.
+     * Game loop.
      */
+    @Override
     public final int run() {
         super.run();
 
-        // Calculate final score from the model
         int finalScore = this.model.calculateFinalScore();
         this.logger.info("Screen cleared with a score of " + finalScore);
 
@@ -102,24 +93,21 @@ public class GameScreen extends Screen {
     }
 
     /**
-     * Updates the elements on screen and checks for events.
-     * This is the main Controller loop.
+     * Main Controller Loop (Model ↔ View coordination)
      */
+    @Override
     protected final void update() {
         super.update();
 
-        // Check if input delay is over and game is not finished
+        // Input Handling
         if (this.inputDelay.checkFinished() && !this.model.isLevelFinished()) {
 
             if (!this.model.isTimerRunning()) {
                 this.model.startTimer();
             }
 
-            // 1. (Controller) Process user input and tell Model to update
             // Player 1 Input
-            // (Get player object from model to check status)
             if (model.getLivesP1() > 0 && model.getShip() != null && !model.getShip().isDestroyed()) {
-                // (Controller detects input and sends a 'command' to the model)
                 if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_D))
                     model.playerMove(1, "RIGHT");
                 if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_A))
@@ -146,24 +134,24 @@ public class GameScreen extends Screen {
                     model.playerFire(2);
             }
 
-            // 2. (Controller) Tell Model to update all game logic
+            // Update game world (Model)
             this.model.updateGameWorld();
         }
 
-        // Update elapsed time (if timer is running)
+        // Timer
         if (this.model.isTimerRunning()) {
             this.model.updateElapsedTime();
         }
 
-        // 3. (Controller) Tell View to draw the current Model state
-        this.view.draw(this);
+        // Create DTO and render via View
+        HUDInfoDTO hudInfo = createHUDInfoDTO();
+        this.view.render(hudInfo);
 
-        // 4. (Controller) Check Model state for game over
+        // Game Over / Level Finish check
         if (this.model.isGameOver() && !this.model.isLevelFinished()) {
             this.model.setGameOver();
         }
 
-        // 5. (Controller) Check Model state for level finished
         if (this.model.isLevelFinished() && this.model.getScreenFinishedCooldown().checkFinished()) {
             this.model.processLevelCompletion();
             this.isRunning = false;
@@ -171,10 +159,27 @@ public class GameScreen extends Screen {
     }
 
     /**
-     * Returns a GameState object representing the status of the game.
-     * (Passthrough to the model)
-     *
-     * @return Current game state.
+     * Builds the DTO that passes data from Model to View.
+     */
+    private HUDInfoDTO createHUDInfoDTO() {
+        return new HUDInfoDTO(
+                getWidth(),
+                getHeight(),
+                model.getScoreP1(),
+                model.getScoreP2(),
+                model.getCoin(),
+                model.getLivesP1(),
+                model.getLivesP2(),
+                model.getLevel(),
+                model.getElapsedTime(),
+                model.getCurrentLevel().getLevelName(),
+                model.getAchievementText(),
+                model.getHealthPopupText()
+        );
+    }
+
+    /**
+     * Returns the game state for other systems.
      */
     public final GameState getGameState() {
         return this.model.getGameState();
