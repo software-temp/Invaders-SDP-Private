@@ -1,7 +1,9 @@
-package engine;
+package engine.Renderer;
 
 import java.awt.Graphics;
 import java.util.Map;
+
+import engine.BackBuffer;
 import entity.Entity;
 import engine.DrawManager.SpriteType;
 

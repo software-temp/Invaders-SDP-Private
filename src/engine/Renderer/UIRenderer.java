@@ -1,10 +1,14 @@
-package engine;
+package engine.Renderer;
+
+import engine.Achievement;
+import engine.BackBuffer;
+import engine.FontPack;
+import engine.Score;
 
 import java.util.List;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import screen.Screen;
 
 public final class UIRenderer {
     private final BackBuffer backBuffer;
@@ -15,27 +19,27 @@ public final class UIRenderer {
         this.fontPack = fontPack;
     }
 
-    public void drawHorizontalLine(final Screen screen, final int y) {
+    public void drawHorizontalLine(final int screenWidth, final int y) {
         Graphics g = backBuffer.getGraphics();
         g.setColor(Color.GREEN);
-        g.drawLine(0, y, screen.getWidth(), y);
-        g.drawLine(0, y + 1, screen.getWidth(), y + 1);
+        g.drawLine(0, y, screenWidth, y);
+        g.drawLine(0, y + 1, screenWidth, y + 1);
     }
 
-    public void drawTitle(final Screen screen) {
+    public void drawTitle(final int screenWidth, final int screenHeight) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getFontBig());
         g.setColor(Color.GREEN);
-        g.drawString("Invaders", screen.getWidth() / 2 - 100, screen.getHeight() / 3);
+        g.drawString("Invaders", screenWidth / 2 - 100, screenHeight / 3);
 
         g.setFont(fontPack.getRegular());
         g.setColor(Color.GRAY);
         g.drawString("Select with W/S or Arrows, Confirm with Space",
-                screen.getWidth() / 2 - 180, screen.getHeight() / 2);
+                screenWidth / 2 - 180, screenHeight / 2);
     }
 
     /** Draws main menu options with pulsing selection effect. */
-    public void drawMenu(final Screen screen, final int option) {
+    public void drawMenu(final int screenWidth, final int screenHeight, final int option) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
 
@@ -45,7 +49,7 @@ public final class UIRenderer {
         float pulse = (float) ((Math.sin(System.currentTimeMillis() / 200.0) + 1.0) / 2.0);
         Color pulseColor = new Color(0, 0.5f + pulse * 0.5f, 0);
 
-        int baseY = screen.getHeight() * 2 / 3;
+        int baseY = screenHeight * 2 / 3;
         int spacing = fontPack.getRegularMetrics().getHeight();
 
         int selectedIndex = switch (option){
@@ -64,7 +68,7 @@ public final class UIRenderer {
                 g.setColor(Color.WHITE);
 
             int textWidth = fontPack.getRegularMetrics().stringWidth(options[i]);
-            int x = (screen.getWidth() - textWidth) / 2;
+            int x = (screenWidth - textWidth) / 2;
             int y = baseY + spacing * i;
 
             g.drawString(options[i], x, y);
@@ -72,7 +76,7 @@ public final class UIRenderer {
     }
 
     /** Draws game results on the end screen.*/
-    public void drawResults(final Screen screen, final int score, final int livesRemaining,
+    public void drawResults(final int screenWidth, final int screenHeight, final int score, final int livesRemaining,
                             final int shipsDestroyed, final float accuracy, final boolean isNewRecord) {
 
         Graphics g = backBuffer.getGraphics();
@@ -84,19 +88,19 @@ public final class UIRenderer {
         String shipsDestroyedString = "Enemies destroyed: " + shipsDestroyed;
         String accuracyString = String.format("Accuracy: %.2f%%", accuracy * 100);
 
-        int baseY = isNewRecord ? screen.getHeight() / 4 : screen.getHeight() / 2;
+        int baseY = isNewRecord ? screenHeight / 4 : screenHeight / 2;
         int spacing = fontPack.getRegularMetrics().getHeight() * 2;
 
-        g.drawString(scoreString, centerX(screen, g, scoreString), baseY);
-        g.drawString(livesRemainingString, centerX(screen, g, livesRemainingString), baseY + spacing);
-        g.drawString(shipsDestroyedString, centerX(screen, g, shipsDestroyedString), baseY + spacing * 2);
-        g.drawString(accuracyString, centerX(screen, g, accuracyString), baseY + spacing * 3);
+        g.drawString(scoreString, centerX(screenWidth, g, scoreString), baseY);
+        g.drawString(livesRemainingString, centerX(screenWidth, g, livesRemainingString), baseY + spacing);
+        g.drawString(shipsDestroyedString, centerX(screenWidth, g, shipsDestroyedString), baseY + spacing * 2);
+        g.drawString(accuracyString, centerX(screenWidth, g, accuracyString), baseY + spacing * 3);
     }
 
     /**
      * Draws interactive name input after new record.
      */
-    public void drawNameInput(final Screen screen, final char[] name, final int nameCharSelected) {
+    public void drawNameInput(final int screenWidth, final int screenHeight, final char[] name, final int nameCharSelected) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
 
@@ -104,16 +108,16 @@ public final class UIRenderer {
         String promptString = "Enter your initials:";
 
         g.setColor(Color.GREEN);
-        g.drawString(newRecordString, centerX(screen, g, newRecordString),
-                screen.getHeight() / 4 + fontPack.getRegularMetrics().getHeight() * 10);
+        g.drawString(newRecordString, centerX(screenWidth, g, newRecordString),
+                screenHeight / 4 + fontPack.getRegularMetrics().getHeight() * 10);
 
         g.setColor(Color.WHITE);
-        g.drawString(promptString, centerX(screen, g, promptString),
-                screen.getHeight() / 4 + fontPack.getRegularMetrics().getHeight() * 12);
+        g.drawString(promptString, centerX(screenWidth, g, promptString),
+                screenHeight / 4 + fontPack.getRegularMetrics().getHeight() * 12);
 
         // --- Draw name characters ---
-        int baseY = screen.getHeight() / 4 + fontPack.getRegularMetrics().getHeight() * 14;
-        int x = screen.getWidth() / 2 - 50;
+        int baseY = screenHeight / 4 + fontPack.getRegularMetrics().getHeight() * 14;
+        int x = screenWidth / 2 - 50;
 
         for (int i = 0; i < name.length; i++) {
             if (i == nameCharSelected) g.setColor(Color.GREEN);
@@ -124,111 +128,111 @@ public final class UIRenderer {
         }
     }
 
-    public void drawGameOver(final Screen screen, final boolean acceptsInput, final boolean isNewRecord) {
+    public void drawGameOver(final int screenWidth, final int screenHeight, final boolean acceptsInput, final boolean isNewRecord) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getFontBig());
         String gameOverText = "GAME OVER";
         String continueText = "Press SPACE to play again, ESC to exit";
 
-        int baseY = isNewRecord ? screen.getHeight() / 4 : screen.getHeight() / 2;
+        int baseY = isNewRecord ? screenHeight / 4 : screenHeight / 2;
 
         /** title */
         g.setColor(Color.GREEN);
         g.drawString(gameOverText,
-                centerX(screen, g, gameOverText),
+                centerX(screenWidth, g, gameOverText),
                 baseY - fontPack.getBigMetrics().getHeight() * 2);
 
         /** instructions */
         g.setFont(fontPack.getRegular());
         g.setColor(acceptsInput ? Color.GREEN : Color.GRAY);
         g.drawString(continueText,
-                centerX(screen, g, continueText),
-                screen.getHeight() / 2 + fontPack.getRegularMetrics().getHeight() * 10);
+                centerX(screenWidth, g, continueText),
+                screenHeight / 2 + fontPack.getRegularMetrics().getHeight() * 10);
     }
 
     /** high score title */
-    public void drawHighScoreMenu(final Screen screen) {
+    public void drawHighScoreMenu(final int screenWidth, final int screenHeight) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getFontBig());
         String title = "High Scores";
         String instructions = "Press SPACE to return";
 
         g.setColor(Color.GREEN);
-        g.drawString(title, centerX(screen, g, title), screen.getHeight() / 8);
+        g.drawString(title, centerX(screenWidth, g, title), screenHeight / 8);
 
         g.setFont(fontPack.getRegular());
         g.setColor(Color.GRAY);
-        g.drawString(instructions, centerX(screen, g, instructions), screen.getHeight() / 5);
+        g.drawString(instructions, centerX(screenWidth, g, instructions), screenHeight / 5);
     }
 
     /** high score list */
-    public void drawHighScores(final Screen screen, final List<Score> highScores) {
+    public void drawHighScores(final int screenWidth, final int screenHeight, final List<Score> highScores) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
 
-        int startY = screen.getHeight() / 4;
+        int startY = screenHeight / 4;
         int spacing = fontPack.getRegularMetrics().getHeight() * 2;
 
         int i = 0;
         for (Score s : highScores) {
             String text = String.format("%s        %04d", s.getName(), s.getScore());
-            g.drawString(text, centerX(screen, g, text), startY + spacing * (i + 1));
+            g.drawString(text, centerX(screenWidth, g, text), startY + spacing * (i + 1));
             i++;
         }
     }
 
     /** achievement list */
-    public void drawAchievements(final Screen screen, final List<Achievement> achievements) {
+    public void drawAchievements(final int screenWidth, final int screenHeight, final List<Achievement> achievements) {
         Graphics g = backBuffer.getGraphics();
 
         g.setFont(fontPack.getFontBig());
         g.setColor(Color.GREEN);
-        g.drawString("Achievements", centerX(screen, g, "Achievements"), screen.getHeight() / 8);
+        g.drawString("Achievements", centerX(screenWidth, g, "Achievements"), screenHeight / 8);
 
         g.setFont(fontPack.getRegular());
 
-        int startY = screen.getHeight() / 5;
+        int startY = screenHeight / 5;
         int spacing = fontPack.getRegularMetrics().getHeight() * 2;
 
         int i = 0;
         for (Achievement a : achievements) {
             g.setColor(a.isUnlocked() ? Color.GREEN : Color.WHITE);
             String text = a.getName() + " - " + a.getDescription();
-            g.drawString(text, centerX(screen, g, text), startY + spacing * (i + 1));
+            g.drawString(text, centerX(screenWidth, g, text), startY + spacing * (i + 1));
             i++;
         }
 
         g.setColor(Color.GRAY);
         String backText = "Press ESC to return";
-        g.drawString(backText, centerX(screen, g, backText), screen.getHeight() - 50);
+        g.drawString(backText, centerX(screenWidth, g, backText), screenHeight - 50);
     }
 
     /** Credit title */
-    public void drawCreditsMenu(final Screen screen) {
+    public void drawCreditsMenu(final int screenWidth, final int screenHeight) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getFontBig());
         g.setColor(Color.GREEN);
         String creditsString = "Credits";
         g.drawString(creditsString,
-                (screen.getWidth() - g.getFontMetrics().stringWidth(creditsString)) / 2,
-                screen.getHeight() / 8);
+                (screenWidth - g.getFontMetrics().stringWidth(creditsString)) / 2,
+                screenHeight / 8);
 
         g.setFont(fontPack.getRegular());
         g.setColor(Color.GRAY);
         String instructionsString = "Press Space to return";
         g.drawString(instructionsString,
-                (screen.getWidth() - g.getFontMetrics().stringWidth(instructionsString)) / 2,
-                screen.getHeight() / 5);
+                (screenWidth - g.getFontMetrics().stringWidth(instructionsString)) / 2,
+                screenHeight / 5);
     }
 
     /** Credit context */
-    public void drawCredits(final Screen screen, final java.util.List<String> creditLines) {
+    public void drawCredits(final int screenWidth, final int screenHeight, final java.util.List<String> creditLines) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getFontSmall());
 
-        int y = screen.getHeight() / 4;
-        final int x = screen.getWidth() / 10;
+        int y = screenHeight / 4;
+        final int x = screenWidth / 10;
         final int lineSpacing = fontPack.getSmallMetrics().getHeight() + 6;
 
         for (String line : creditLines) {
@@ -239,34 +243,34 @@ public final class UIRenderer {
     }
 
     /** text center Regular */
-    public void drawCenteredRegularString(final Screen screen, final String text, final int y) {
+    public void drawCenteredRegularString(final int screenWidth, final String text, final int y) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        int x = (screen.getWidth() - g.getFontMetrics().stringWidth(text)) / 2;
+        int x = (screenWidth - g.getFontMetrics().stringWidth(text)) / 2;
         g.drawString(text, x, y);
     }
 
     /** text center FontBig */
-    public void drawCenteredBigString(final Screen screen, final String text, final int y) {
+    public void drawCenteredBigString(final int screenWidth, final String text, final int y) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getFontBig());
         g.setColor(Color.WHITE);
-        int x = (screen.getWidth() - g.getFontMetrics().stringWidth(text)) / 2;
+        int x = (screenWidth - g.getFontMetrics().stringWidth(text)) / 2;
         g.drawString(text, x, y);
     }
 
     /**
      * Draws a level countdown ("Level X", "3", "2", "1", "GO!") on the screen.
      */
-    public void drawCountDown(final Screen screen, final int level, final int number, final boolean bonusLife) {
+    public void drawCountDown(final int screenWidth, final int screenHeight, final int level, final int number, final boolean bonusLife) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getFontBig());
         g.setColor(Color.GREEN);
 
-        int rectWidth = screen.getWidth();
-        int rectHeight = screen.getHeight() / 6;
-        int rectY = screen.getHeight() / 2 - rectHeight / 2;
+        int rectWidth = screenWidth;
+        int rectHeight = screenHeight / 6;
+        int rectY = screenHeight / 2 - rectHeight / 2;
 
         /** background box */
         g.setColor(Color.BLACK);
@@ -283,8 +287,8 @@ public final class UIRenderer {
         }
 
         FontMetrics metrics = g.getFontMetrics();
-        int textX = (screen.getWidth() - metrics.stringWidth(text)) / 2;
-        int textY = screen.getHeight() / 2 + metrics.getHeight() / 3;
+        int textX = (screenWidth - metrics.stringWidth(text)) / 2;
+        int textY = screenHeight / 2 + metrics.getHeight() / 3;
 
         g.setColor(Color.GREEN);
         g.drawString(text, textX, textY);
@@ -292,7 +296,7 @@ public final class UIRenderer {
 
 
     // center text horizontally
-    private int centerX(Screen screen, Graphics g, String text) {
-        return (screen.getWidth() - g.getFontMetrics().stringWidth(text)) / 2;
+    private int centerX(final int screenWidth, Graphics g, String text) {
+        return (screenWidth - g.getFontMetrics().stringWidth(text)) / 2;
     }
 }

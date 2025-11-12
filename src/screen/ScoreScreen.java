@@ -167,17 +167,17 @@ public class ScoreScreen extends Screen {
 	 * Draws the elements associated with the screen.
 	 */
 	private void draw() {
-		drawManager.initDrawing(this);
+		drawManager.initDrawing(this.width,this.height);
 
-		drawManager.getUIRenderer().drawGameOver(this, this.inputDelay.checkFinished(),
+		drawManager.getUIRenderer().drawGameOver(this.width,this.height, this.inputDelay.checkFinished(),
 				this.isNewRecord);
-		drawManager.getUIRenderer().drawResults(this, this.score, this.livesRemaining,
+		drawManager.getUIRenderer().drawResults(this.width,this.height, this.score, this.livesRemaining,
 				this.shipsDestroyed, (float) this.shipsDestroyed
 						/ this.bulletsShot, this.isNewRecord);
 
 		if (this.isNewRecord)
-			drawManager.getUIRenderer().drawNameInput(this, this.name, this.nameCharSelected);
+			drawManager.getUIRenderer().drawNameInput(this.width,this.height, this.name, this.nameCharSelected);
 
-		drawManager.completeDrawing(this);
+		drawManager.completeDrawing();
 	}
 }

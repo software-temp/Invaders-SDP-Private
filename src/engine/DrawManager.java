@@ -1,25 +1,15 @@
 package engine;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import entity.Entity;
-import entity.FinalBoss;
-import entity.Ship;
-import engine.Achievement;
-import screen.CreditScreen;
-import screen.Screen;
-import engine.Score;
-import screen.TitleScreen;
+import engine.Renderer.EntityRenderer;
+import engine.Renderer.HUDRenderer;
+import engine.Renderer.ShopRenderer;
+import engine.Renderer.UIRenderer;
 import screen.TitleScreen.Star;
 import screen.TitleScreen.ShootingStar;
 
@@ -93,12 +83,12 @@ public void setFrame(final Frame currentFrame) {
 	/**
 	 * First part of the drawing process.
 	 */
-	public void initDrawing(final Screen screen) {
+	public void initDrawing(final int screenWidth, final int screenHeight) {
         if(backBuffer == null){
             logger.warning("BackBuffer is not initialized! Call setFrame() first.");
             return;
         }
-        backBuffer.initDraw(screen);
+        backBuffer.initDraw(screenWidth, screenHeight);
         if(fontPack == null){
             fontPack = new FontPack(backBuffer.getGraphics(), fileManager);
             entityRenderer = new EntityRenderer(spriteAtlas.getSpriteMap(),backBuffer);
@@ -111,27 +101,25 @@ public void setFrame(final Frame currentFrame) {
 	/**
 	 * Draws the completed drawing on screen.
 	 */
-	public void completeDrawing(final Screen screen) {
+	public void completeDrawing() {
         if(backBuffer == null){
             logger.warning("BackBuffer is not initialized!");
             return;
         }
-        backBuffer.end(screen);
+        backBuffer.end();
 	}
 	/**
 	 * Draws the starfield background.
-	 * 
-	 * @param screen
-	 *            Screen to draw on.
+	 *
 	 * @param stars
 	 *            List of stars to draw.
 	 * @param angle
 	 *            Current rotation angle.
 	 */
-	public void drawStars(final Screen screen, final List<Star> stars, final float angle) {
+	public void drawStars(final int screenWidth, final int screenHeight, final List<Star> stars, final float angle) {
         Graphics g = backBuffer.getGraphics();
-		final int centerX = screen.getWidth() / 2;
-		final int centerY = screen.getHeight() / 2;
+		final int centerX = screenWidth / 2;
+		final int centerY = screenHeight / 2;
 		final double angleRad = Math.toRadians(angle);
 		final double cosAngle = Math.cos(angleRad);
 		final double sinAngle = Math.sin(angleRad);
@@ -155,7 +143,7 @@ public void setFrame(final Frame currentFrame) {
 		}
 	}
 
-    public void drawShootingStars(final Screen screen, final List<ShootingStar> shootingStars, final float angle) {    }
+    public void drawShootingStars(final List<ShootingStar> shootingStars, final float angle) {    }
 
     public ShopRenderer getShopRenderer() {
         return shopRenderer;

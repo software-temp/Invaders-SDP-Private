@@ -5,6 +5,7 @@ import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
 import entity.ShopItem;
+import engine.DTO.ShopInfoDTO;
 
 /**
  * Implements the shop screen where players can purchase item upgrades.
@@ -114,6 +115,30 @@ public class ShopScreen extends Screen {
 
         this.logger.info("Shop screen initialized with " +
                 gameState.getCoin() + " coins. BetweenLevels=" + betweenLevels);
+    }
+
+
+    private ShopInfoDTO createShopInfoDTO() {
+        int[] currentLevels = new int[TOTAL_ITEMS];
+        for (int i = 0; i < TOTAL_ITEMS; i++) {
+            currentLevels[i] = getCurrentLevel(i);
+        }
+
+        return new ShopInfoDTO(
+                this.width,
+                this.height,
+                gameState.getCoin(),
+                this.selectedItem,
+                this.selectionMode,
+                this.selectedLevel,
+                TOTAL_ITEMS,
+                ITEM_NAMES,
+                ITEM_DESCRIPTIONS,
+                ITEM_PRICES,
+                MAX_LEVELS,
+                currentLevels,
+                this.betweenLevels
+        );
     }
 
     /**
@@ -347,19 +372,17 @@ public class ShopScreen extends Screen {
      * Draws the elements associated with the screen.
      */
     private void draw() {
-        drawManager.initDrawing(this);
+        drawManager.initDrawing(this.width,this.height);
 
-        drawManager.getShopRenderer().drawShopScreen(this, gameState.getCoin(), selectedItem,
-                selectionMode, selectedLevel, TOTAL_ITEMS,
-                ITEM_NAMES, ITEM_DESCRIPTIONS, ITEM_PRICES,
-                MAX_LEVELS, this);
+        ShopInfoDTO dto = createShopInfoDTO();
+        drawManager.getShopRenderer().drawShopScreen(dto);
 
         // Draw feedback message
         if (!purchaseFeedbackCooldown.checkFinished()) {
-            drawManager.getShopRenderer().drawShopFeedback(this, feedbackMessage);
+            drawManager.getShopRenderer().drawShopFeedback(this.width, feedbackMessage);
         }
 
-        drawManager.completeDrawing(this);
+        drawManager.completeDrawing();
     }
 
     /**

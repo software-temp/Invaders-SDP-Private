@@ -1,10 +1,12 @@
-package engine;
+package engine.Renderer;
 
+import engine.BackBuffer;
+import engine.FontPack;
+import engine.ItemHUDManager;
 import entity.Ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import screen.Screen;
 
 /**
  * Handles all on-screen HUD rendering such as scores, coins, and timers.
@@ -19,31 +21,31 @@ public final class HUDRenderer {
     public HUDRenderer(BackBuffer backBuffer, FontPack fontPack, EntityRenderer entityRenderer) {
         this.backBuffer = backBuffer;
         this.fontPack = fontPack;
-        this.entityRenderer =  entityRenderer;
+        this.entityRenderer = entityRenderer;
     }
 
     /** Draws Player 1 score. */
-    public void drawScoreP1(final Screen screen, final int score) {
+    public void drawScoreP1(final int screenWidth, final int score) {
         Graphics g = backBuffer.getGraphics();
         Font font = fontPack.getRegular();
         g.setFont(font);
         g.setColor(Color.WHITE);
         String scoreString = String.format("P1:%04d", score);
-        g.drawString(scoreString, screen.getWidth() - 120, 25);
+        g.drawString(scoreString, screenWidth - 120, 25);
     }
 
     /** Draws Player 2 score. */
-    public void drawScoreP2(final Screen screen, final int scoreP2) {
+    public void drawScoreP2(final int screenWidth, final int scoreP2) {
         Graphics g = backBuffer.getGraphics();
         Font font = fontPack.getRegular();
         g.setFont(font);
         g.setColor(Color.WHITE);
         String text = String.format("P2:%04d", scoreP2);
-        g.drawString(text, screen.getWidth() - 120, 40);
+        g.drawString(text, screenWidth - 120, 40);
     }
 
     /** Draw elapsed time on screen. */
-    public void drawTime(final Screen screen, final long milliseconds) {
+    public void drawTime(final int screenHeight, final long milliseconds) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.GRAY);
@@ -53,25 +55,25 @@ public final class HUDRenderer {
         seconds %= 60;
 
         String timeString = String.format("Time: %02d:%02d", minutes, seconds);
-        g.drawString(timeString, 10, screen.getHeight() - 20);
+        g.drawString(timeString, 10, screenHeight - 20);
     }
 
-    /** Draw current coin count on screen. */
-    public void drawCoin(final Screen screen, final int coin) {
+    /** Draw current coin count on screen (bottom-center). */
+    public void drawCoin(final int screenWidth, final int screenHeight, final int coin) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
 
         String coinString = String.format("%03d$", coin);
         int textWidth = fontPack.getRegularMetrics().stringWidth(coinString);
-        int x = screen.getWidth() / 2 - textWidth / 2;
-        int y = screen.getHeight() - 50;
+        int x = screenWidth / 2 - textWidth / 2;
+        int y = screenHeight - 50;
 
         g.drawString(coinString, x, y);
     }
 
     /** Draw number of remaining lives for Player 1. */
-    public void drawLivesP1(final Screen screen, final int lives) {
+    public void drawLivesP1(final int lives) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
@@ -84,7 +86,7 @@ public final class HUDRenderer {
     }
 
     /** Draw number of remaining lives for Player 2. */
-    public void drawLivesP2(final Screen screen, final int lives) {
+    public void drawLivesP2(final int lives) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
@@ -95,41 +97,47 @@ public final class HUDRenderer {
             entityRenderer.drawEntity(dummyShip, 40 + 35 * i, 30);
         }
     }
-    public void drawItemsHUD(final Screen screen) {
+
+    /** Draw all item icons on HUD. */
+    public void drawItemsHUD(final int screenWidth) {
         Graphics g = backBuffer.getGraphics();
         ItemHUDManager hud = ItemHUDManager.getInstance();
-        hud.initialize(screen);
-        hud.drawItems(screen, g);
+        hud.initialize(screenWidth);
+        hud.drawItems(g);
     }
 
-    public void drawLevel(final Screen screen, final String levelName) {
+    /** Draw current level name (bottom-left). */
+    public void drawLevel(final int screenHeight, final String levelName) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        g.drawString(levelName, 20, screen.getHeight() - 50);
+        g.drawString(levelName, 20, screenHeight - 50);
     }
 
-    public void drawAchievementPopup(final Screen screen, final String text) {
+    /** Draw achievement popup at the top center of the screen. */
+    public void drawAchievementPopup(final int screenWidth, final String text) {
         Graphics g = backBuffer.getGraphics();
         int popupWidth = 250, popupHeight = 50;
-        int x = screen.getWidth() / 2 - popupWidth / 2;
+        int x = screenWidth / 2 - popupWidth / 2;
         int y = 80;
 
         g.setColor(new Color(0, 0, 0, 200));
         g.fillRoundRect(x, y, popupWidth, popupHeight, 15, 15);
+
         g.setColor(Color.YELLOW);
         g.drawRoundRect(x, y, popupWidth, popupHeight, 15, 15);
 
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
         int textWidth = fontPack.getRegularMetrics().stringWidth(text);
-        g.drawString(text, (screen.getWidth() - textWidth) / 2, y + popupHeight / 2 + 5);
+        g.drawString(text, (screenWidth - textWidth) / 2, y + popupHeight / 2 + 5);
     }
 
-    public void drawHealthPopup(final Screen screen, final String text) {
+    /** Draw health popup (green if heal, red if damage). */
+    public void drawHealthPopup(final int screenWidth, final String text) {
         Graphics g = backBuffer.getGraphics();
         int popupWidth = 250, popupHeight = 40;
-        int x = screen.getWidth() / 2 - popupWidth / 2;
+        int x = screenWidth / 2 - popupWidth / 2;
         int y = 100;
 
         g.setColor(new Color(0, 0, 0, 200));
@@ -138,6 +146,6 @@ public final class HUDRenderer {
         g.setColor(text.startsWith("+") ? new Color(50, 255, 50) : new Color(255, 50, 50));
         g.setFont(fontPack.getFontBig());
         int textWidth = fontPack.getBigMetrics().stringWidth(text);
-        g.drawString(text, (screen.getWidth() - textWidth) / 2, y + popupHeight / 2 + 5);
+        g.drawString(text, (screenWidth - textWidth) / 2, y + popupHeight / 2 + 5);
     }
 }

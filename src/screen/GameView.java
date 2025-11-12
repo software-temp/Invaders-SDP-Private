@@ -1,67 +1,87 @@
 package screen;
 
-import java.util.List;
-import entity.*;
 import engine.DrawManager;
+import engine.DTO.HUDInfoDTO;
+import entity.GameModel;
 
 /**
- * Implements the View for the game screen.
- * Responsible for all drawing operations.
+ * GameView
+ * ----------
+ * - View 계층 (MVC의 V)
+ * - Controller(GameScreen)나 Screen 객체에 의존하지 않음
+ * - HUDInfoDTO에서 HUD 데이터를 받고,
+ *   Model에서 렌더링할 엔티티 리스트를 직접 받아서 그린다.
  */
 public class GameView {
 
-    private GameModel model;
-    private DrawManager drawManager;
+    private final GameModel model;
+    private final DrawManager drawManager;
 
-
-    public GameView(GameModel model, DrawManager drawManager, int width, int height) {
+    public GameView(GameModel model, DrawManager drawManager) {
         this.model = model;
         this.drawManager = drawManager;
     }
 
     /**
-     * Draws the elements associated with the screen.
+     * Controller가 만들어준 DTO를 이용해서 전체 프레임을 렌더링.
      */
-    /**
-     * Draws the elements associated with the screen.
-     * The View is now decoupled from the Model's internal structure and only
-     */
-    public void draw(Screen screen) {
-        drawManager.initDrawing(screen);
+    public void render(final HUDInfoDTO dto) {
 
-        List<Entity> entitiesToRender = model.getEntitiesToRender();
+        // 1️⃣ 프레임 초기화
+        drawManager.initDrawing(dto.getWidth(), dto.getHeight());
 
-        for (Entity entity : entitiesToRender) {
-            drawManager.getEntityRenderer().drawEntity(entity, entity.getPositionX(), entity.getPositionY());
+        // 2️⃣ 게임 월드의 엔티티들 렌더링
+        // (기존 구조 유지 — drawEntity 직접 호출)
+        // Player, Enemies, Bullets, Boss 등 Model의 엔티티
+        if (model.getEntitiesToRender() != null) {
+            for (int i = 0; i < model.getEntitiesToRender().size(); i++) {
+                var e = model.getEntitiesToRender().get(i);
+                drawManager.getEntityRenderer().drawEntity(e, e.getPositionX(), e.getPositionY());
+            }
         }
 
-        drawManager.getHUDRenderer().drawScoreP1(screen, model.getScoreP1());
-        drawManager.getHUDRenderer().drawScoreP2(screen, model.getScoreP2());
-        drawManager.getHUDRenderer().drawCoin(screen, model.getCoin());
-        drawManager.getHUDRenderer().drawLivesP1(screen, model.getLivesP1());
-        drawManager.getHUDRenderer().drawLivesP2(screen, model.getLivesP2());
-        drawManager.getHUDRenderer().drawTime(screen, model.getElapsedTime());
-        drawManager.getHUDRenderer().drawItemsHUD(screen);
-        drawManager.getHUDRenderer().drawLevel(screen, model.getCurrentLevel().getLevelName());
-        drawManager.getUIRenderer().drawHorizontalLine(screen, GameScreen.SEPARATION_LINE_HEIGHT - 1);
-        drawManager.getUIRenderer().drawHorizontalLine(screen, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT);
+        // 3️⃣ HUD: 점수, 코인, 라이프, 시간, 아이템, 레벨 표시
+        drawManager.getHUDRenderer().drawScoreP1(dto.getWidth(), dto.getScoreP1());
+        drawManager.getHUDRenderer().drawScoreP2(dto.getWidth(), dto.getScoreP2());
+        drawManager.getHUDRenderer().drawCoin(dto.getWidth(), dto.getHeight(), dto.getCoin());
+        drawManager.getHUDRenderer().drawLivesP1(dto.getLivesP1());
+        drawManager.getHUDRenderer().drawLivesP2(dto.getLivesP2());
+        drawManager.getHUDRenderer().drawTime(dto.getHeight(), dto.getElapsedTimeMillis());
+        drawManager.getHUDRenderer().drawItemsHUD(dto.getWidth());
+        drawManager.getHUDRenderer().drawLevel(dto.getHeight(), dto.getLevelName());
 
-        if (model.getAchievementText() != null && !model.getAchievementPopupCooldown().checkFinished()) {
-            drawManager.getHUDRenderer().drawAchievementPopup(screen, model.getAchievementText());
+        // 4️⃣ 구분선 (UI)
+        drawManager.getUIRenderer().drawHorizontalLine(dto.getHeight(), GameScreen.SEPARATION_LINE_HEIGHT - 1);
+        drawManager.getUIRenderer().drawHorizontalLine(dto.getHeight(), GameScreen.ITEMS_SEPARATION_LINE_HEIGHT);
+
+        // 5️⃣ 업적 팝업
+        if (dto.getAchievementText() != null && !model.getAchievementPopupCooldown().checkFinished()) {
+            drawManager.getHUDRenderer().drawAchievementPopup(dto.getWidth(), dto.getAchievementText());
         }
-        if (model.getHealthPopupText() != null && !model.getHealthPopupCooldown().checkFinished()) {
-            drawManager.getHUDRenderer().drawHealthPopup(screen, model.getHealthPopupText());
+
+        // 6️⃣ 체력 변화 팝업
+        if (dto.getHealthPopupText() != null && !model.getHealthPopupCooldown().checkFinished()) {
+            drawManager.getHUDRenderer().drawHealthPopup(dto.getWidth(), dto.getHealthPopupText());
         }
+
+        // 7️⃣ 시작 카운트다운 표시
         if (!model.isInputDelayFinished()) {
             int countdown = (int) ((GameModel.INPUT_DELAY
-                    - (System.currentTimeMillis()
-                    - model.getGameStartTime())) / 1000);
-            drawManager.getUIRenderer().drawCountDown(screen, model.getLevel(), countdown,
-                    model.isBonusLife());
-            drawManager.getUIRenderer().drawHorizontalLine(screen, screen.getHeight() / 2 - screen.getHeight() / 12);
-            drawManager.getUIRenderer().drawHorizontalLine(screen, screen.getHeight() / 2 + screen.getHeight() / 12);
+                    - (System.currentTimeMillis() - model.getGameStartTime())) / 1000);
+
+            drawManager.getUIRenderer().drawCountDown(
+                    dto.getWidth(),
+                    dto.getHeight(),
+                    dto.getLevel(),
+                    countdown,
+                    model.isBonusLife()
+            );
+
+            drawManager.getUIRenderer().drawHorizontalLine(dto.getHeight(), dto.getHeight() / 2 - dto.getHeight() / 12);
+            drawManager.getUIRenderer().drawHorizontalLine(dto.getHeight(), dto.getHeight() / 2 + dto.getHeight() / 12);
         }
 
-        drawManager.completeDrawing(screen);
+        // 8️⃣ 프레임 완료
+        drawManager.completeDrawing();
     }
 }

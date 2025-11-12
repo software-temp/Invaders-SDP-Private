@@ -332,13 +332,13 @@ public class TitleScreen extends Screen {
 	 * Draws the elements associated with the screen.
 	 */
 	private void draw() {
-		drawManager.initDrawing(this);
+		drawManager.initDrawing(this.width, this.height);
 
 		// Draw stars with rotation
-		drawManager.drawStars(this, this.stars, this.currentAngle);
+		drawManager.drawStars(this.width,this.height, this.stars, this.currentAngle);
 
 		// Draw shooting stars with rotation
-        drawManager.drawShootingStars(this, this.shootingStars, this.currentAngle);
+        drawManager.drawShootingStars( this.shootingStars, this.currentAngle);
 
 		// Draw background enemies with rotation
 		final double angleRad = Math.toRadians(this.currentAngle);
@@ -360,12 +360,12 @@ public class TitleScreen extends Screen {
 			drawManager.getEntityRenderer().drawEntity(enemy, screenX, screenY);
 		}
 
-		drawManager.getUIRenderer().drawTitle(this);
-		drawManager.getUIRenderer().drawMenu(this, this.returnCode);
+		drawManager.getUIRenderer().drawTitle(this.width,this.height);
+		drawManager.getUIRenderer().drawMenu(this.width,this.height, this.returnCode);
 		drawManager.getEntityRenderer().drawEntity(this.soundButton, this.width * 4 / 5 - 16,
 				this.height * 4 / 5 - 16);
 
-		drawManager.completeDrawing(this);
+		drawManager.completeDrawing();
 	}
 
 	/**
