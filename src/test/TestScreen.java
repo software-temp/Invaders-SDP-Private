@@ -50,6 +50,11 @@ public class TestScreen extends Screen {
 		// Check if input delay is over and game is not finished
 		if (this.inputDelay.checkFinished()) {
 
+			// Process initializing position if esc key is pressed
+			if (inputManager.isKeyDown(java.awt.event.KeyEvent.VK_ESCAPE)) {
+				this.isRunning = false;
+			}
+
 			// 1. (Controller) Process user input and tell Model to update
 			// Player 1 Input
 			// (Get player object from model to check status)
