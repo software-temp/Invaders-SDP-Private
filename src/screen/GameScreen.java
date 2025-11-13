@@ -68,7 +68,7 @@ public class GameScreen extends Screen {
         this.model = new GameModel(
                 this.gameState, this.currentLevel,
                 this.bonusLife, this.maxLives,
-                this.width, this.height, this
+                this.width, this.height, ITEMS_SEPARATION_LINE_HEIGHT,this
         );
         this.view = new GameView(this.model,this.drawManager);
 

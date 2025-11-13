@@ -112,16 +112,18 @@ public class GameModel {
     private Logger logger;
     private int width;
     private int height;
+    private int bottomHeight;
     private Screen screen; // Needed for attach()
 
     /** Milliseconds until the screen accepts user input. */
     private Cooldown inputDelay;
 
 
-    public GameModel(GameState gameState, Level level, boolean bonusLife, int maxLives, int width, int height, Screen screen) {
+    public GameModel(GameState gameState, Level level, boolean bonusLife, int maxLives, int width, int height,int ITEMS_SEPARATION_LINE_HEIGHT, Screen screen) {
         this.logger = Core.getLogger();
         this.width = width;
         this.height = height;
+        this.bottomHeight = ITEMS_SEPARATION_LINE_HEIGHT;
         this.screen = screen; // Store screen context
 
         this.currentLevel = level;
@@ -147,7 +149,7 @@ public class GameModel {
     public final void initialize() {
         /** Initialize the bullet Boss fired */
         this.bossBullets = new HashSet<>();
-        enemyShipFormationModel = new EnemyShipFormationModel(this.currentLevel, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT, screen.getWidth());
+        enemyShipFormationModel = new EnemyShipFormationModel(this.currentLevel, bottomHeight, width);
         this.enemyShipFormationModel.applyEnemyColor(this.currentLevel.getColorForLevel());
         this.ship = new Ship(this.width / 2 - 100, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT - 20,Color.green);
         this.ship.setPlayerId(1);   //=== [ADD] Player 1 ===
