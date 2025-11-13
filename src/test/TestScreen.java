@@ -1,11 +1,9 @@
-package main.screen;
+package test;
 
 import main.engine.Core;
 import main.engine.DTO.HUDInfoDTO;
-import main.engine.GameState;
-import main.engine.level.Level;
 import main.entity.GameModel;
-import main.entity.TestModel;
+import main.screen.Screen;
 
 public class TestScreen extends Screen {
 

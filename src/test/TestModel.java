@@ -1,5 +1,8 @@
-package main.entity;
+package test;
 
+import main.entity.Entity;
+import main.entity.OmegaBoss;
+import main.entity.Ship;
 import main.screen.GameScreen;
 import java.awt.*;
 import java.util.ArrayList;

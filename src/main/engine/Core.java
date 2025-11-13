@@ -17,6 +17,7 @@ import main.screen.TitleScreen;
 import main.screen.AchievementScreen;
 import main.engine.level.LevelManager;
 import main.screen.*;
+import test.TestScreen;
 
 /**
  * Implements core game logic.
@@ -52,7 +53,7 @@ public final class Core {
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
 
-	private static boolean isTest = true;
+	private static boolean isTest = false;
 
 
 	/**
