@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.Map;
 
 import engine.BackBuffer;
+import engine.DrawManager;
 import entity.Entity;
 import engine.DrawManager.SpriteType;
 
@@ -26,27 +27,7 @@ public final class EntityRenderer {
     }
 
     /** Draws a single entity on the back buffer. */
-//    public void drawEntity(final Entity entity, final int positionX, final int positionY) {
-//        boolean[][] image = spriteMap.get(entity.getSpriteType());
-//        Graphics g = backBuffer.getGraphics();
-//
-//        g.setColor(entity.getColor());
-//
-//        for (int i = 0; i < image.length; i++) {
-//            for (int j = 0; j < image[i].length; j++) {
-//                if (image[i][j]) {
-//                    // 스케일 적용된 좌표 계산
-//                    int scaledX = (int) ((positionX + i * 2) * this.scaleX);
-//                    int scaledY = (int) ((positionY + j * 2) * this.scaleY);
-//
-//                    // 스케일 적용된 픽셀 크기
-//                    int pixelWidth = (int) Math.max(1, 2 * this.scaleX);
-//                    int pixelHeight = (int) Math.max(1, 2 * this.scaleY);
-//                    g.fillRect(scaledX, scaledY, pixelWidth, pixelHeight);
-//                }
-//            }
-//        }
-//    }
+
     public void drawEntity(final Entity entity, final int positionX, final int positionY) {
         Color[][] image = spriteMap.get(entity.getSpriteType());
         Graphics g = backBuffer.getGraphics();
@@ -68,6 +49,29 @@ public final class EntityRenderer {
                 int pixelWidth = (int) Math.max(1, 2 * this.scaleX);
                 int pixelHeight = (int) Math.max(1, 2 * this.scaleY);
                 g.fillRect(scaledX, scaledY, pixelWidth, pixelHeight);
+            }
+        }
+    }
+
+    public void drawShield(int shipPositionX, int shipPositionY, double ratio){
+        int alpha = (int) (255 * ratio);
+        Graphics g = backBuffer.getGraphics();
+        if (alpha < 30) alpha = 30;
+        Color[][] image = spriteMap.get(DrawManager.SpriteType.Shield);
+        for (int i = 0; i < image.length; i++) {
+            for (int j = 0; j < image[i].length; j++) {
+                Color baseColor = image[i][j];
+                // 완전 투명 픽셀은 무시
+                if (baseColor.getAlpha() == 0) continue;
+                // 알파값을 ratio 기반으로 새로 계산
+                Color blendedColor = new Color(
+                        baseColor.getRed(),
+                        baseColor.getGreen(),
+                        baseColor.getBlue(),
+                        Math.min(alpha, baseColor.getAlpha())
+                );
+                g.setColor(blendedColor);
+                g.drawRect(shipPositionX - 4 + i * 2, shipPositionY + j * 2, 1, 1);
             }
         }
     }

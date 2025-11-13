@@ -3,6 +3,7 @@ package screen;
 import engine.DrawManager;
 import engine.DTO.HUDInfoDTO;
 import entity.GameModel;
+import entity.Ship;
 
 /**
  * GameView
@@ -31,7 +32,12 @@ public class GameView {
         if (model.getEntitiesToRender() != null) {
             for (int i = 0; i < model.getEntitiesToRender().size(); i++) {
                 var e = model.getEntitiesToRender().get(i);
+                if(e instanceof Ship && ((Ship) e).isInvincible()){
+                    Ship ship = ((Ship) e);
+                    drawManager.getEntityRenderer().drawShield(e.getPositionX() - e.getWidth() / 2, e.getPositionY() - e.getHeight() / 2, ship.getInvincibilityRatio());
+                }
                 drawManager.getEntityRenderer().drawEntity(e, e.getPositionX(), e.getPositionY());
+
             }
         }
 

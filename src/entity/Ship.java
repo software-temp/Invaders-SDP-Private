@@ -273,6 +273,11 @@ public class Ship extends Entity {
         this.isInvincible = true;
         this.shieldCooldown.setMilliseconds(duration);
         this.shieldCooldown.reset();
-        this.setColor(Color.BLUE);
     }
+    public float getInvincibilityRatio() {
+        if (!isInvincible || shieldCooldown.getTotal() == 0) return 0f;
+        float ratio = (float) shieldCooldown.getRemaining() / shieldCooldown.getTotal();
+        return ratio;
+    }
+
 }
