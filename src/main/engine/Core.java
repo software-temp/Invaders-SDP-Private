@@ -27,7 +27,7 @@ import test.TestScreen;
  */
 public final class Core {
 
-	/** Width of current main.screen. */
+	/** Width of current screen. */
 	private static final int WIDTH = 448;
 	/** Height of current main.screen. */
 	private static final int HEIGHT = 520;
