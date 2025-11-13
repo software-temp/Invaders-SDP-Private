@@ -95,7 +95,7 @@ public void setFrame(final Frame currentFrame) {
         if(fontPack == null){
             fontPack = new FontPack(backBuffer.getGraphics(), fileManager);
             entityRenderer = new EntityRenderer(spriteAtlas.getSpriteMap(),backBuffer, this.scaleX, this.scaleY);
-            hudRenderer = new HUDRenderer(backBuffer, fontPack, entityRenderer);
+            hudRenderer = new HUDRenderer(backBuffer, fontPack, entityRenderer,spriteAtlas.getSpriteMap());
             shopRenderer = new ShopRenderer(backBuffer,fontPack);
             uiRenderer = new UIRenderer(backBuffer,fontPack);
         }

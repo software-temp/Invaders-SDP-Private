@@ -8,22 +8,24 @@ import entity.Ship;
 import screen.HealthBar;
 
 import java.awt.*;
+import java.util.Map;
 
 /**
  * Handles all on-screen HUD rendering such as scores, coins, and timers.
  * Acts as a sub-view in the MVC structure.
  */
 public final class HUDRenderer {
-
+    private final Map<DrawManager.SpriteType, Color[][]> spriteMap;
     private final BackBuffer backBuffer;
     private final FontPack fontPack;
     private final EntityRenderer entityRenderer;
 
 
-    public HUDRenderer(BackBuffer backBuffer, FontPack fontPack, EntityRenderer entityRenderer) {
+    public HUDRenderer(BackBuffer backBuffer, FontPack fontPack, EntityRenderer entityRenderer, Map<DrawManager.SpriteType, Color[][]> spriteMap) {
         this.backBuffer = backBuffer;
         this.fontPack = fontPack;
         this.entityRenderer = entityRenderer;
+        this.spriteMap = spriteMap;
     }
 
     /** Draw score. */
@@ -69,11 +71,10 @@ public final class HUDRenderer {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        g.drawString("P1:", 10, 25);
-        Ship dummyShip = new Ship(0, 0, true);
-        for (int i = 0; i < lives; i++) {
-            entityRenderer.drawEntity(dummyShip, 40 + 35 * i, 10);
-        }
+        g.drawString("P1:", 15, 25);
+        for (int i = 0; i < lives; i++)
+            drawLife(50 + 35 * i, 10);
+
     }
 
     /** Draw number of remaining lives for Player 2. */
@@ -81,10 +82,10 @@ public final class HUDRenderer {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        g.drawString("P2:", 10, 55);
-        Ship dummyShip = new Ship(0, 0, false);
+        // backBufferGraphics.drawString("P2:" + Integer.toString(lives), 10, 40);
+        g.drawString("P2:", 15, 40);
         for (int i = 0; i < lives; i++) {
-            entityRenderer.drawEntity(dummyShip, 40 + 35 * i, 40);
+            drawLife(50 + 35 * i, 30);
         }
     }
 
@@ -155,6 +156,16 @@ public final class HUDRenderer {
             g2.drawLine((int) ((float)position[0] + (width * ratio_hp)), position[1], position[2], position[3]);
         }
         g2.setStroke(oldStroke); // 백업 받은거 원위치
+    }
+    public void drawLife(final int positionX, final int positionY){
+        Graphics g = backBuffer.getGraphics();
+        Color[][] image = spriteMap.get(DrawManager.SpriteType.Life);
+        for (int i = 0; i < image.length; i++) {
+            for (int j = 0; j < image[i].length; j++) {
+                g.setColor(image[i][j]);
+                g.drawRect(positionX + i * 2, positionY + j * 2, 1, 1);
+            }
+        }
     }
 
 
