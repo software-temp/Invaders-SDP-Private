@@ -48,7 +48,7 @@ public class Ship extends Entity {
 		super(positionX, positionY, 13 * 2, 8 * 2, color);
 
 		this.spriteType = SpriteType.Ship;
-		this.shootingCooldown = Core.getCooldown(100); //ShopItem.getShootingInterval()
+		this.shootingCooldown = Core.getCooldown(ShopItem.getShootingInterval());
 		this.destructionCooldown = Core.getCooldown(1000);
 		this.shieldCooldown = Core.getCooldown(0);
 		this.isInvincible = false;
