@@ -126,30 +126,19 @@ public class Bullet extends Entity implements Collidable {
      */
     @Override
     public void onCollision(Collidable other, GameModel game) {
-
         Entity o = other.asEntity();
 
-        if (o instanceof Ship && this.speed > 0) {
-            Ship ship = (Ship) o;
-            game.handleEnemyBulletHitPlayer(this, ship);
-            return;
-        }
+        if (this.speed > 0 && o instanceof Ship) {
+            // Enemy bullet → Player
+            game.handleEnemyBulletHitPlayer(this, (Ship) o);
 
-        if (this.speed < 0) {
-
+        } else if (this.speed < 0) {
+            // Player bullet → Enemy/Boss
             if (o instanceof EnemyShip) {
                 game.handlePlayerBulletHitEnemy(this, (EnemyShip) o);
-                return;
-            }
 
-            if (o instanceof FinalBoss) {
-                game.handlePlayerBulletHitFinalBoss(this, (FinalBoss) o);
-                return;
-            }
-
-            if (o instanceof OmegaBoss) {
-                game.handlePlayerBulletHitOmegaBoss(this, (OmegaBoss) o);
-                return;
+            } else if (o instanceof BossEntity) {
+                game.handlePlayerBulletHitBoss(this, (BossEntity) o);
             }
         }
     }

@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * Omega - Middle Boss
  */
-public class OmegaBoss extends MidBoss implements Collidable {
+public class OmegaBoss extends MidBoss {
 
 	/** Initial position in the x-axis. */
 	private static final int INIT_POS_X = 224;
@@ -164,7 +164,7 @@ public class OmegaBoss extends MidBoss implements Collidable {
         if (other instanceof Bullet) {
             Bullet bullet = (Bullet) other;
             if (bullet.getSpeed() < 0) {
-                game.handlePlayerBulletHitOmegaBoss(bullet, this);
+                game.handlePlayerBulletHitBoss(bullet, this);
             }
             return;
         }

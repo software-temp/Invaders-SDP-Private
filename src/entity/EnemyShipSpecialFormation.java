@@ -111,6 +111,11 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
         cooldown.reset();
     }
 
+    public boolean isEmpty() {
+        return (enemyShipSpecialRed == null || enemyShipSpecialRed.isDestroyed())
+                && (enemyShipSpecialBlue == null || enemyShipSpecialBlue.isDestroyed());
+    }
+
     /**
      * Level-based constructor (preferred). Avoids passing GameSettings around.
      */

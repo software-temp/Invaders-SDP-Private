@@ -67,9 +67,6 @@ public class EnemyShip extends Entity implements Collidable {
          */
         DOWN
     }
-
-    ;
-
     /**
      * Special enemy Direction variable
      **/
@@ -241,6 +238,8 @@ public class EnemyShip extends Entity implements Collidable {
             case EnemyShipC1:
             case EnemyShipC2:
                 return "enemyC";
+            case EnemyShipSpecial:
+                return "enemySpecial";
             default:
                 return null;
         }

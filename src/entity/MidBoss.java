@@ -59,12 +59,4 @@ public abstract class MidBoss extends Entity implements BossEntity, Collidable {
 	public final void attach(final Screen newScreen) {
 		screen = newScreen;
 	}
-    @Override
-    public Entity asEntity() {
-        return this;
-    }
-
-    @Override
-    public void onCollision(Collidable other, GameModel game) {
-    }
 }

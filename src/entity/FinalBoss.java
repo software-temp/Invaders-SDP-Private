@@ -215,7 +215,7 @@ public class FinalBoss extends Entity implements BossEntity, Collidable{
             Bullet bullet = (Bullet) other;
 
             if (bullet.getSpeed() < 0) {
-                game.handlePlayerBulletHitFinalBoss(bullet, this);
+                game.handlePlayerBulletHitBoss(bullet, this);
             }
             return;
         }

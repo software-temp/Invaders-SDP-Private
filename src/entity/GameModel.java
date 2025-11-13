@@ -1,16 +1,20 @@
 package entity;
 
 import java.awt.Color;
-import java.util.*;
 import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import java.util.Collections;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
 import engine.GameTimer;
 import engine.AchievementManager;
 import engine.ItemHUDManager;
+import engine.level.ItemDrop;
 import engine.level.Level;
 import screen.GameScreen;
 import screen.Screen;
@@ -248,6 +252,11 @@ public class GameModel {
 
         // Phase 3: Clean up destroyed or off-screen entities
         this.cleanupAllEntities();
+
+        if (this.currentPhase == StagePhase.wave &&
+                this.enemyShipFormation.isEmpty()) {
+            this.currentPhase = StagePhase.boss_wave;
+        }
     }
 
     /**
@@ -260,7 +269,7 @@ public class GameModel {
                     this.enemyShipFormation.update();
                     this.enemyShipFormation.shoot(this.bullets);
                 }
-                if (this.enemyShipFormation.isEmpty()) {
+                if (this.enemyShipFormation.isEmpty() && this.enemyShipSpecialFormation.isEmpty()) {
                     this.currentPhase = StagePhase.boss_wave;
                 }
                 break;
@@ -359,6 +368,8 @@ public class GameModel {
      */
     public void handlePlayerBulletHitEnemy(Bullet bullet, EnemyShip enemy) {
 
+        if (!bullets.contains(bullet)) return;
+
         if (enemy.isDestroyed()) return;
 
         int pts = enemy.getPointValue();
@@ -367,9 +378,8 @@ public class GameModel {
 
         AchievementManager.getInstance().onEnemyDefeated();
 
+        attemptItemDrop(enemy);
         enemyShipFormation.destroy(enemy);
-
-        maybeDropItem(enemy);
 
         if (!bullet.penetration()) {
             bullets.remove(bullet);
@@ -401,33 +411,16 @@ public class GameModel {
     /**
      * When an enemy bullet hits the player, apply damage and remove the bullet.
      */
-    public void handleEnemyBulletHitPlayer(Bullet bullet, Ship ship) {
+    public void handleEnemyBulletHitPlayer(Bullet b, Ship ship) {
+            if (!bullets.contains(b)) return;  // 이미 처리됨
         playerTakeDamage(ship, 1);
-        bullets.remove(bullet);
+        bullets.remove(b);
     }
 
     /**
-     * Handles damage and rewards when a player bullet hits the FinalBoss.
+     * Handles all logic when a player bullet hits any boss (FinalBoss or OmegaBoss).
      */
-    public void handlePlayerBulletHitFinalBoss(Bullet bullet, FinalBoss boss) {
-
-        boss.takeDamage(2);
-
-        if (!bullet.penetration()) {
-            bullets.remove(bullet);
-                  }
-
-        if (boss.getHealPoint() <= 0) {
-            boss.destroy();
-            score += 500;
-            coin += 100;
-        }
-    }
-
-    /**
-     * Handles damage and rewards when a player bullet hits the OmegaBoss.
-     */
-    public void handlePlayerBulletHitOmegaBoss(Bullet bullet, OmegaBoss boss){
+    public void handlePlayerBulletHitBoss(Bullet bullet, BossEntity boss) {
 
         boss.takeDamage(2);
 
@@ -454,6 +447,8 @@ public class GameModel {
      * When the player collides with an enemy, apply crash damage.
      */
     public void handlePlayerCrash(Ship ship, Entity enemy) {
+
+        if (enemy instanceof EnemyShip && ((EnemyShip) enemy).isDestroyed()) return;
         playerTakeDamage(ship, 1);
     }
 
@@ -461,6 +456,8 @@ public class GameModel {
      * Applies the effect of a collected drop item to the player ship.
      */
     public void handleItemCollected(Ship ship, DropItem item) {
+
+        if (!dropItems.contains(item)) return;
 
         ItemHUDManager.getInstance().addDroppedItem(item.getItemType());
 
@@ -497,23 +494,36 @@ public class GameModel {
     /**
      * Randomly drops an item from a defeated enemy based on drop chance.
      */
-    public void maybeDropItem(EnemyShip enemy) {
+    public void attemptItemDrop(EnemyShip enemy) {
 
-        double dropChance = 0.20;
+        String enemyType = enemy.getEnemyType();
+        if (enemyType == null) return;
 
-        DropItem.ItemType type = DropItem.getRandomItemType(dropChance);
+        if ("enemySpecial".equals(enemyType)) return;
 
-        if (type == null) return;
+        List<ItemDrop> drops = currentLevel.getItemDrops();
+        if (drops == null || drops.isEmpty()) return;
 
-        DropItem item = new DropItem(
-                enemy.getPositionX(),
-                enemy.getPositionY(),
-                2,
-                type
-        );
+        for (ItemDrop drop : drops) {
 
-        dropItems.add(item);
+            if (!enemyType.equals(drop.getEnemyType())) continue;
+
+            if (Math.random() > drop.getDropChance()) continue;
+
+            DropItem.ItemType type = DropItem.ItemType.valueOf(drop.getItemId());
+
+            DropItem item = new DropItem(
+                    enemy.getPositionX(),
+                    enemy.getPositionY(),
+                    2,
+                    type
+            );
+
+            dropItems.add(item);
+            return;
+        }
     }
+
 
 
     /**

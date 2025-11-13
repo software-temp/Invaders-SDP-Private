@@ -491,9 +491,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 						+ this.shooters.size() + " members.");
 			}
 		}
-
-		this.shipCount--;
-	}
+    }
 
 	/**
 	 * Gets the ship on a given column that will be in charge of shooting.
@@ -546,7 +544,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 				}
 			}
 		}
-		this.shipCount = 0;
 		return destroyed;
 	}
 
@@ -555,9 +552,17 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 *
 	 * @return True when all ships have been destroyed.
 	 */
-	public final boolean isEmpty() {
-		return this.shipCount <= 0;
-	}
+    public final boolean isEmpty() {
+        for (List<EnemyShip> column : this.enemyShips) {
+            for (EnemyShip ship : column) {
+                if (ship != null && !ship.isDestroyed()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Activates slowdown effect on the formation.
