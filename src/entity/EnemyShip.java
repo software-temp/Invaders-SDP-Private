@@ -93,7 +93,7 @@ public class EnemyShip extends Entity {
 	 * known starting properties.
 	 */
 	public EnemyShip(Color color, Direction direction, int x_speed) {
-		super(-32, 60, 16 * 2, 7 * 2, color);
+        super(-32, 60, 16 * 2, 16 * 2, color);
 
 		this.direction = direction;
 		this.X_SPEED = x_speed;
@@ -120,10 +120,19 @@ public class EnemyShip extends Entity {
 	 * @param distanceY
 	 *            Distance to move in the Y axis.
 	 */
-	public final void move(final int distanceX, final int distanceY) {
-		this.positionX += distanceX;
-		this.positionY += distanceY;
-	}
+    public final void move(final int distanceX, final int distanceY,boolean isSpecial) {
+        if (isSpecial){
+            if (distanceX >= 0){
+                this.spriteType = SpriteType.EnemyShipSpecial;
+            }
+            else {
+                this.spriteType = SpriteType.EnemyShipSpecialLeft;
+            }
+        }
+
+        this.positionX += distanceX;
+        this.positionY += distanceY;
+    }
 
 	/**
 	 * Updates attributes, mainly used for animation purposes.
@@ -160,15 +169,24 @@ public class EnemyShip extends Entity {
 	/**
 	 * Destroys the ship, causing an explosion.
 	 */
-	public final void destroy() {
+    public final void destroy() {
         if (!this.isDestroyed) {
             this.isDestroyed = true;
-            this.spriteType = SpriteType.Explosion;
-			SoundManager.stop("sfx/disappearance.wav");
-            SoundManager.play("sfx/disappearance.wav");
+
+            if (this.spriteType == SpriteType.EnemyShipSpecialLeft || this.spriteType == SpriteType.EnemyShipSpecial){
+                this.spriteType = SpriteType.EnemySpecialExplosion;
+                SoundManager.stop("sfx/SpecialEnemyDeath.wav");
+                SoundManager.play("sfx/SpecialEnemyDeath.wav");
+            }
+            else {
+                this.spriteType = SpriteType.Explosion;
+                SoundManager.stop("sfx/disappearance.wav");
+                SoundManager.play("sfx/disappearance.wav");
+            }
+
             this.explosionCooldown.reset();
         }
-	}
+    }
 
 	/**
 	 * Checks if the ship has been destroyed.

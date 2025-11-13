@@ -58,6 +58,10 @@ public class GameScreen extends Screen {
         SEPARATION_LINE_HEIGHT = (int) (height * 0.08);
         ITEMS_SEPARATION_LINE_HEIGHT = (int) (height * 0.9);
     }
+
+    public static int getItemsSeparationLineHeight() {
+        return ITEMS_SEPARATION_LINE_HEIGHT;
+    }
     /**
      * Initializes the Model and View.
      */

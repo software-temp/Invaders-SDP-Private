@@ -205,10 +205,10 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
                     movementX = enemyShipSpecial.getXSpeed();
                 else if (enemyShipSpecial.getDirection() == EnemyShip.Direction.LEFT)
                     movementX = -enemyShipSpecial.getXSpeed();
-                enemyShipSpecial.move(movementX, movementY);
+                enemyShipSpecial.move(movementX, movementY, true);
 
             /** explosion logic **/
-            } else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
+            }else if (enemyShipSpecial.isExplosionFinished())
                 if (color == Color.RED) {
                     this.enemyShipSpecialRed = null;
                 } else if (color == Color.BLUE) {
@@ -243,9 +243,6 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
          */
         public final void destroy (EnemyShip enemyShipSpecial){
             enemyShipSpecial.destroy();
-            if(enemyShipSpecial.getColor() == Color.RED) {
-                this.enemyShipSpecialCooldown.reset();
-            }
         }
 
         /**

@@ -117,7 +117,7 @@ public class DropItem extends Entity {
         // All enemyship push
         for (EnemyShip enemy : enemyShipFormation) {
             if (enemy != null && !enemy.isDestroyed()) {
-                enemy.move(0, -distanceY);
+                enemy.move(0, -distanceY, false);
             }
         }
     }
