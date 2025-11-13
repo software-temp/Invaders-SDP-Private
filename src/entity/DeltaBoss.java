@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.awt.*;
 import engine.DrawManager;
@@ -22,10 +23,11 @@ public class DeltaBoss extends MidBoss {
     private static final int DELTA_POINT_VALUE = 1000;
     /** Boss cannot move below this boundary. */
     private final int bottomBoundary;
+    private final int screenWidth;
     /** Boss spawn child ships */
     private List<EnemyShip> ChildShips;
     private static final int ChildShip_Distance = 80;
-    private int SPAWN_COUNT;
+    private int SPAWN_COUNT = 0;
     private int Child_Speed = 1;
     private Color[] colorPalette = {
             new Color( 0xFF4081),
@@ -42,9 +44,10 @@ public class DeltaBoss extends MidBoss {
             new Color( 0x8303EE)
     };
 
-    public DeltaBoss(Color color, int bottomBoundary) {
+    public DeltaBoss(Color color, int bottomBoundary, int width) {
         super(INIT_POS_X, INIT_POS_Y, DELTA_WIDTH, DELTA_HEIGHT, DELTA_HEALTH, DELTA_POINT_VALUE, color);
         this.bottomBoundary = bottomBoundary;
+        this.screenWidth = width;
         this.spriteType = DrawManager.SpriteType.OmegaBoss1;
         this.ChildShips = new ArrayList<EnemyShip>();
     }
@@ -88,7 +91,7 @@ public class DeltaBoss extends MidBoss {
         if(!this.ChildShips.isEmpty()) {
             for(EnemyShip ship : this.ChildShips) {
                 if(ship.getDirection()== null || ship.getDirection() == EnemyShip.Direction.RIGHT){
-                    boolean check_right_wall =ship.getPositionX() + ship.getWidth()+ship.getXSpeed() > screen.getWidth();
+                    boolean check_right_wall =ship.getPositionX() + ship.getWidth()+ship.getXSpeed() > screenWidth;
                     if(check_right_wall){ ship.setDirection(EnemyShip.Direction.LEFT); }
                     else{ ship.move(Child_Speed,0); }
                 }else {
@@ -102,7 +105,7 @@ public class DeltaBoss extends MidBoss {
 
     public void spawnPattern() {
         this.cleanDestroyedChild();
-        if(SPAWN_COUNT < 0 && this.healPoint < this.maxHp*0.9){
+        if(SPAWN_COUNT == 0 && this.healPoint < this.maxHp*0.9){
             SPAWN_COUNT++;
             createChild(SPAWN_COUNT);
         } else if (SPAWN_COUNT == 1 && this.healPoint < this.maxHp*0.7){
@@ -118,6 +121,7 @@ public class DeltaBoss extends MidBoss {
     }
 
     public void createChild(int shipCount) {
+        this.logger.info("Delta: Create Child");
         for (int count = 0; count < shipCount; count++) {
             EnemyShip ship = new EnemyShip(INIT_POS_X - 200 + ChildShip_Distance * count,
                     INIT_POS_Y + ChildShip_Distance, DrawManager.SpriteType.EnemyShipB1);
@@ -128,8 +132,10 @@ public class DeltaBoss extends MidBoss {
     }
 
     public void cleanDestroyedChild() {
-        for(EnemyShip ship : this.ChildShips) {
-           if(ship.isDestroyed()) {this.ChildShips.remove(ship);}
+        Iterator<EnemyShip> iterator = this.ChildShips.iterator();
+        while(iterator.hasNext()){
+            EnemyShip ship = iterator.next();
+            if(ship.isDestroyed()) { iterator.remove(); }
         }
     }
 
