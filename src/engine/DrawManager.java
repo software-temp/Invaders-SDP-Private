@@ -2,6 +2,7 @@ package engine;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -10,6 +11,7 @@ import engine.Renderer.EntityRenderer;
 import engine.Renderer.HUDRenderer;
 import engine.Renderer.ShopRenderer;
 import engine.Renderer.UIRenderer;
+import screen.Screen;
 import screen.TitleScreen.Star;
 import screen.TitleScreen.ShootingStar;
 
@@ -40,6 +42,8 @@ public final class DrawManager {
     private UIRenderer uiRenderer;
     private double scaleX;
     private double scaleY;
+    private int shakeDuration = 0;   // 흔들리는 남은 프레임 수
+    private int shakeIntensity = 0;  // 흔들림 강도 (픽셀)
 
 	/** Sprite types mapped to their images. */
 	private static Map<SpriteType, boolean[][]> spriteMap;
@@ -63,6 +67,8 @@ public final class DrawManager {
         spriteAtlas = new SpriteAtlas(fileManager);
         logger.info("Sprite atlas loaded!");
         logger.info("DrawManager initialized successfully");
+
+
     }
 
 	/**
@@ -104,13 +110,31 @@ public void setFrame(final Frame currentFrame) {
 	/**
 	 * Draws the completed drawing on screen.
 	 */
-	public void completeDrawing() {
-        if(backBuffer == null){
-            logger.warning("BackBuffer is not initialized!");
-            return;
+    public void completeDrawing() {
+        if (backBuffer == null) return;
+
+        int offsetX = 0;
+        int offsetY = 0;
+
+        if (shakeDuration > 0) {
+            offsetX = (int)(Math.random() * shakeIntensity * 2 - shakeIntensity);
+            offsetY = (int)(Math.random() * shakeIntensity * 2 - shakeIntensity);
+            shakeDuration--;
         }
-        backBuffer.end();
-	}
+
+        Graphics g = frame.getGraphics();
+        g.drawImage(backBuffer.getBuffer(),
+                frame.getInsets().left + offsetX,
+                frame.getInsets().top + offsetY,
+                frame);
+
+        g.dispose();
+    }
+    public void startShake(int duration, int intensity) {
+        this.shakeDuration = duration;
+        this.shakeIntensity = intensity;
+    }
+
 	/**
 	 * Draws the starfield background.
 	 *

@@ -33,4 +33,8 @@ public final class BackBuffer {
     public Graphics getGraphics() {
         return backGraphics;
     }
+
+    public BufferedImage getBuffer() {
+        return buffer;
+    }
 }

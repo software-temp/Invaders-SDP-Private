@@ -58,7 +58,7 @@ public class Ship extends Entity {
             this.spriteType = SpriteType.ShipP2;
             this.isP1Ship = false;
         }
-        this.shootingCooldown = Core.getCooldown(100);//ShopItem.getShootingInterval()
+        this.shootingCooldown = Core.getCooldown(ShopItem.getShootingInterval());//ShopItem.getShootingInterval()
         this.destructionCooldown = Core.getCooldown(1000);
         this.shieldCooldown = Core.getCooldown(0);
         this.isInvincible = false; //테스트용

@@ -155,7 +155,7 @@ public class OmegaBoss extends MidBoss {
      */
     @Override
     public void takeDamage(int damage) {
-//        DrawManager.getInstance().startShake(10, 3);
+        DrawManager.getInstance().startShake(10, 3);
         SoundManager.stop("sfx/OmegaBoss_hitting.wav");
         SoundManager.play("sfx/OmegaBoss_hitting.wav");
         this.healPoint -= damage;
