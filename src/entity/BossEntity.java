@@ -1,6 +1,8 @@
 package entity;
 
 import engine.DrawManager;
+import screen.HealthBar;
+
 /**
  * Defines the contract for all boss entities that appear in the game.
  * Includes methods related to the boss's lifecycle, interaction, and movement.
@@ -59,4 +61,8 @@ public interface BossEntity {
 	 * @param drawManager the {@link DrawManager} responsible for rendering the boss
 	 */
 	void draw(DrawManager drawManager);
+    HealthBar getHealthBar();
+    int getPositionX();
+    int getPositionY();
+    int getWidth();
 }

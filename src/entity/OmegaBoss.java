@@ -4,7 +4,7 @@ import audio.SoundManager;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager;
-//import screen.HealthBar;
+import screen.HealthBar;
 
 import java.awt.*;
 
@@ -40,7 +40,7 @@ public class OmegaBoss extends MidBoss {
     /** Boss cannot move below this boundary. */
     private final int bottomBoundary;
     private Cooldown animationCooldown;
-//    private HealthBar healthBar;
+    private HealthBar healthBar;
     private boolean isMove = false;
 
     /**
@@ -57,7 +57,7 @@ public class OmegaBoss extends MidBoss {
         this.logger.info("OMEGA : Initializing Boss OMEGA");
         this.logger.info("OMEGA : move using the default pattern");
         this.animationCooldown = Core.getCooldown(300);
-//        this.healthBar = new HealthBar(this.getHealPoint(), this.getPositionX(), this.getPositionY(), this.getWidth(),this.getHeight());
+        this.healthBar = new HealthBar(this.getHealPoint(), this.getPositionX(), this.getPositionY(), this.getWidth(),this.getHeight());
         SoundManager.stop("sfx/OmegaBossAppearance.wav");
         SoundManager.play("sfx/OmegaBossAppearance.wav");
     }
@@ -210,8 +210,8 @@ public class OmegaBoss extends MidBoss {
     public void draw(DrawManager drawManager) {
         drawManager.getEntityRenderer().drawEntity(this, this.positionX, this.positionY);
     }
-
-//    public HealthBar getHealthBar(){
-//        return this.healthBar;
-//    }
+    @Override
+    public HealthBar getHealthBar(){
+        return this.healthBar;
+    }
 }

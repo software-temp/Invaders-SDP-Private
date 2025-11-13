@@ -5,6 +5,7 @@ import engine.DrawManager;
 import engine.Cooldown;
 import engine.Core;
 import screen.GameScreen;
+import screen.HealthBar;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ public class FinalBoss extends Entity implements BossEntity{
     private int screenHeight;
     /** random x coordinate of Shoot2's bullet  */
     private int random_x;
+    private HealthBar healthBar;
 
 
     /** basic attribute of final boss */
@@ -47,7 +49,7 @@ public class FinalBoss extends Entity implements BossEntity{
         this.isDestroyed = false;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-
+        this.healthBar = new HealthBar(this.getHealPoint(), this.getPositionX(), this.getPositionY(), this.getWidth(),this.getHeight());
         this.animationCooldown = Core.getCooldown(500);
         this.shootCooldown1 = Core.getCooldown(5000);
         this.shootCooldown2 = Core.getCooldown(400);
@@ -205,5 +207,9 @@ public class FinalBoss extends Entity implements BossEntity{
     @Override
     public void draw(DrawManager drawManager) {
         drawManager.getEntityRenderer().drawEntity(this, this.positionX, this.positionY);
+    }
+    @Override
+    public HealthBar getHealthBar(){
+        return this.healthBar;
     }
 }

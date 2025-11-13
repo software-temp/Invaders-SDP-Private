@@ -1,6 +1,7 @@
 package entity;
 
 import engine.Core;
+import screen.HealthBar;
 import screen.Screen;
 
 import java.awt.*;
@@ -21,6 +22,7 @@ public abstract class MidBoss extends Entity implements BossEntity {
     protected int pattern=1;
     protected Screen screen;
     protected Logger logger;
+    private HealthBar healthBar;
 
     /**
      * Constructor, establishes the boss entity's generic properties.
@@ -59,5 +61,6 @@ public abstract class MidBoss extends Entity implements BossEntity {
     public final void attach(final Screen newScreen) {
         screen = newScreen;
     }
+    public HealthBar getHealthBar() {return this.healthBar;}
 
 }

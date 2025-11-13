@@ -2,7 +2,9 @@ package screen;
 
 import engine.DrawManager;
 import engine.DTO.HUDInfoDTO;
+import entity.BossEntity;
 import entity.GameModel;
+import entity.OmegaBoss;
 import entity.Ship;
 
 /**
@@ -35,6 +37,12 @@ public class GameView {
                 if(e instanceof Ship && ((Ship) e).isInvincible()){
                     Ship ship = ((Ship) e);
                     drawManager.getEntityRenderer().drawShield(e.getPositionX() - e.getWidth() / 2, e.getPositionY() - e.getHeight() / 2, ship.getInvincibilityRatio());
+                }
+                else if (e instanceof BossEntity){
+                    BossEntity boss = ((BossEntity) e);
+                    boss.getHealthBar().setPosition(boss.getPositionX(), boss.getPositionY(), boss.getWidth());
+                    boss.getHealthBar().setCurrent_HP(boss.getHealPoint());
+                    drawManager.getHUDRenderer().drawHealthBar(boss.getHealthBar());
                 }
                 drawManager.getEntityRenderer().drawEntity(e, e.getPositionX(), e.getPositionY());
 
