@@ -54,7 +54,7 @@ Functionalities:
 - 5. Display time
 Description: Show the elapsed or remaining time during the game.
 Functionalities: 
-  - Must pause and resume in sync with the main game engine. 
+  - Must pause and resume in sync with the main game main.engine. 
   - Updates with one-second precision. 
 
   
