@@ -1,7 +1,7 @@
 package engine;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import engine.DrawManager.SpriteType;
+
+import javax.imageio.ImageIO;
 
 /**
  * Manages files used in the application.
@@ -66,38 +68,44 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
-	public void loadSprite(final Map<SpriteType, boolean[][]> spriteMap)
-			throws IOException {
-		InputStream inputStream = null;
+    public void loadSprite(final Map<SpriteType, Color[][]> spriteMap)
+            throws IOException {
 
-		try {
-			inputStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics");
-            char c;
+        File dir = new File("res/images");
+        File[] files = dir.listFiles((d, name) -> name.endsWith(".png"));
 
-			// Sprite loading.
-			for (Map.Entry<SpriteType, boolean[][]> sprite : spriteMap
-					.entrySet()) {
-				for (int i = 0; i < sprite.getValue().length; i++)
-					for (int j = 0; j < sprite.getValue()[i].length; j++) {
-						do
-							c = (char) inputStream.read();
-						while (c != '0' && c != '1');
+        Map<String, BufferedImage> images = new HashMap<>();
 
-						if (c == '1')
-							sprite.getValue()[i][j] = true;
-						else
-							sprite.getValue()[i][j] = false;
-					}
-				logger.fine("Sprite " + sprite.getKey() + " loaded.");
-			}
-			if (inputStream != null)
-				inputStream.close();
-		} finally {
-			if (inputStream != null)
-				inputStream.close();
-		}
-	}
+        for (File file : files) {
+            try {
+                BufferedImage img = ImageIO.read(file);
+                String fileName = file.getName().replace(".png", "");
+                for (SpriteType type : SpriteType.values()) {
+                    if (type.name().equalsIgnoreCase(fileName)) { //spritetype과 이미지 파일명이 같으면
+                        int width = img.getWidth();
+                        int height = img.getHeight();
+                        Color[][] colors = new Color[width][height]; // <== 추가
+                        for (int x = 0; x < width; x++) {
+                            for (int y = 0; y < height; y++) {
+                                int rgb = img.getRGB(x, y);     // 픽셀의 색상값 (int)
+                                Color color = new Color(rgb, true); // 알파값 포함
+                                colors[x][y] = color;
+                            }
+                        }
+                        spriteMap.put(type,colors);
+                        images.put(type.name(), img);
+                        System.out.println(type.name() + " 로드 성공!");
+                        break; // 찾았으면 더 안 돌게 break
+                    }
+                }
+
+                System.out.println(file.getName() + " 로드 성공!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
 	/**
 	 * Loads a font of a given size.

@@ -79,4 +79,16 @@ public class Cooldown {
 		this.milliseconds = milliseconds;
 		this.duration = milliseconds;
 	}
+    // 남은 시간 (ms)
+    public final long getRemaining() {
+        if (this.time == 0)
+            return 0;
+        long remaining = (this.time + this.duration) - System.currentTimeMillis();
+        return Math.max(0, remaining);
+    }
+    // 전체 쿨다운 지속시간 (ms)
+    public final int getTotal() {
+        return this.duration;
+    }
+
 }

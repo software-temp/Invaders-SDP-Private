@@ -6,6 +6,7 @@ import java.util.Set;
 
 import engine.Cooldown;
 import engine.Core;
+import engine.DrawManager;
 import engine.DrawManager.SpriteType;
 
 /**
@@ -16,25 +17,28 @@ import engine.DrawManager.SpriteType;
  */
 public class Ship extends Entity {
 
-	/** Time between shots. */
-	private static final int SHOOTING_INTERVAL = 750;
-	/** Speed of the bullets shot by the ship. */
-	private static final int BULLET_SPEED = -6;
-	/** Movement of the ship for each unit of time. */
-	private static final int SPEED = 2;
-	
-	/** Minimum time between shots. */
-	private Cooldown shootingCooldown;
-	/** Time spent inactive between hits. */
-	private Cooldown destructionCooldown;
-	/** Cooldown for the invincibility shield. */
-	private Cooldown shieldCooldown;
-	/** Checks if the ship is invincible. */
-	private boolean isInvincible;
+    /** Time between shots. */
+    private static final int SHOOTING_INTERVAL = 750;
+    /** Speed of the bullets shot by the ship. */
+    private static final int BULLET_SPEED = -6;
+    /** Movement of the ship for each unit of time. */
+    private static final int SPEED = 2;
+
+    /** Minimum time between shots. */
+    private Cooldown shootingCooldown;
+    /** Time spent inactive between hits. */
+    private Cooldown destructionCooldown;
+    /** Cooldown for the invincibility shield. */
+    private Cooldown shieldCooldown;
+    /** Checks if the ship is invincible. */
+    private boolean isInvincible;
     // === [ADD] Which player: 1 = P1, 2 = P2 (default 1 for single-player compatibility) ===
     private int playerId = 1;
     public void setPlayerId(int pid) { this.playerId = pid; }
     public int getPlayerId() { return this.playerId; }
+    private boolean isP1Ship;
+    private boolean isMove;
+    private boolean movingSoundPlaying = false;
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -44,42 +48,51 @@ public class Ship extends Entity {
 	 * @param positionY
 	 *            Initial position of the ship in the Y axis.
 	 */
-	public Ship(final int positionX, final int positionY,final Color color) {
-		super(positionX, positionY, 13 * 2, 8 * 2, color);
+    public Ship(final int positionX, final int positionY, boolean isP1ship) {
+        super(positionX, positionY, 13 * 2, 13 * 2, Color.green);
+        if (isP1ship){
+            this.spriteType = SpriteType.ShipP1;
+            this.isP1Ship = true;
+        }
+        else {
+            this.spriteType = SpriteType.ShipP2;
+            this.isP1Ship = false;
+        }
+        this.shootingCooldown = Core.getCooldown(ShopItem.getShootingInterval());
+        this.destructionCooldown = Core.getCooldown(1000);
+        this.shieldCooldown = Core.getCooldown(0);
+        this.isInvincible = false; //테스트용
 
-		this.spriteType = SpriteType.Ship;
-		this.shootingCooldown = Core.getCooldown(ShopItem.getShootingInterval());
-		this.destructionCooldown = Core.getCooldown(1000);
-		this.shieldCooldown = Core.getCooldown(0);
-		this.isInvincible = false;
-
-	}
+    }
 
 	/**
 	 * Moves the ship speed uni ts right, or until the right screen border is
 	 * reached.
 	 */
-	public final void moveRight() {
-		int shipspeed = ShopItem.getSHIPSpeedCOUNT();
-		this.positionX += SPEED*(1+shipspeed/10);
-	}
+    public final void moveRight() {
+        int shipspeed = ShopItem.getSHIPSpeedCOUNT();
+        this.positionX += SPEED*(1+shipspeed/10);
+        this.isMove = true;
+    }
 
-	/**
-	 * Moves the ship speed units left, or until the left screen border is
-	 * reached.
-	 */
-	public final void moveLeft() {
-		int shipspeed = ShopItem.getSHIPSpeedCOUNT();
-		this.positionX -= SPEED*(1+shipspeed/10);
-	}
+    /**
+     * Moves the ship speed units left, or until the left screen border is
+     * reached.
+     */
+    public final void moveLeft() {
+        int shipspeed = ShopItem.getSHIPSpeedCOUNT();
+        this.positionX -= SPEED*(1+shipspeed/10);
+        this.isMove = true;
+    }
 
     /**
      * Moves the ship speed units up, or until the SEPARATION_LINE_HEIGHT is
      * reached.
      */
     public final void moveUp() {
-		int shipspeed = ShopItem.getSHIPSpeedCOUNT();
-		this.positionY -= SPEED*(1+shipspeed/10);
+        int shipspeed = ShopItem.getSHIPSpeedCOUNT();
+        this.positionY -= SPEED*(1+shipspeed/10);
+        this.isMove = true;
     }
 
     /**
@@ -87,8 +100,9 @@ public class Ship extends Entity {
      * reached.
      */
     public final void moveDown() {
-		int shipspeed = ShopItem.getSHIPSpeedCOUNT();
-		this.positionY += SPEED*(1+shipspeed/10);
+        int shipspeed = ShopItem.getSHIPSpeedCOUNT();
+        this.positionY += SPEED*(1+shipspeed/10);
+        this.isMove = true;
     }
 
 	/**
@@ -141,17 +155,75 @@ public class Ship extends Entity {
 	/**
 	 * Updates status of the ship.
 	 */
-	public final void update() {
+    public final void update() {
         if (this.isInvincible && this.shieldCooldown.checkFinished()) {
-            this.isInvincible = false;
-            this.setColor(Color.GREEN);
+            this.isInvincible = false;//테스트용
         }
 
-        if (!this.destructionCooldown.checkFinished())
-            this.spriteType = SpriteType.ShipDestroyed;
-        else
-            this.spriteType = SpriteType.Ship;
-	}
+
+        if (!this.destructionCooldown.checkFinished()) {
+            if (!this.isP1Ship) {
+                double ratio = this.destructionCooldown.getRemaining() / (double) this.destructionCooldown.getTotal();
+                // 전체 쿨다운 시간 1000ms 기준, 3단계로 나누기
+                if (ratio > 0.6) {
+                    this.spriteType = SpriteType.ShipP2Explosion1;
+                } else if (ratio > 0.3) {
+                    this.spriteType = SpriteType.ShipP2Explosion2;
+                } else {
+                    this.spriteType = SpriteType.ShipP2Explosion3;
+                }
+            }
+            else{
+                double ratio = this.destructionCooldown.getRemaining() / (double) this.destructionCooldown.getTotal();
+                // 전체 쿨다운 시간 1000ms 기준, 3단계로 나누기
+                if (ratio > 0.6) {
+                    this.spriteType = SpriteType.ShipP1Explosion1;
+                } else if (ratio > 0.3) {
+                    this.spriteType = SpriteType.ShipP1Explosion2;
+                } else {
+                    this.spriteType = SpriteType.ShipP1Explosion3;
+                }
+            }
+        }
+
+        else {
+            if (this.isP1Ship){
+                if (this.isMove){
+                    this.spriteType = SpriteType.ShipP1Move;
+                    if (!movingSoundPlaying) {
+                        SoundManager.playLoop("sfx/ShipMoving.wav");
+                        movingSoundPlaying = true;
+                    }
+                    this.isMove = false;
+                }
+                else{
+                    this.spriteType = SpriteType.ShipP1;
+                    if (movingSoundPlaying) {
+                        SoundManager.stop("sfx/ShipMoving.wav");
+                        movingSoundPlaying = false;
+                    }
+                }
+            }
+            else {
+                if (this.isMove){
+                    this.spriteType = SpriteType.ShipP2Move;
+                    if (!movingSoundPlaying) {
+                        SoundManager.playLoop("sfx/ShipMoving.wav");
+                        movingSoundPlaying = true;
+                    }
+                    this.isMove = false;
+                }
+                else {
+                    this.spriteType = SpriteType.ShipP2;
+                    if (movingSoundPlaying) {
+                        SoundManager.stop("sfx/ShipMoving.wav");
+                        movingSoundPlaying = false;
+                    }
+                }
+            }
+
+        }
+    }
 
 	/**
 	 * Switches the ship to its destroyed state.
