@@ -150,10 +150,10 @@ public class GameModel {
         enemyShipFormation = new EnemyShipFormation(this.currentLevel);
         enemyShipFormation.attach(this.screen);
         this.enemyShipFormation.applyEnemyColorByLevel(this.currentLevel);
-        this.ship = new Ship(this.width / 2 - 100, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT - 20,Color.green);
+        this.ship = new Ship(this.width / 4, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT * 19 / 20,Color.green);
         this.ship.setPlayerId(1);   //=== [ADD] Player 1 ===
 
-        this.shipP2 = new Ship(this.width / 2 + 100, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT - 20,Color.pink);
+        this.shipP2 = new Ship(this.width * 3 / 4, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT * 19 / 20,Color.pink);
         this.shipP2.setPlayerId(2); // === [ADD] Player2 ===
         // special enemy initial
         enemyShipSpecialFormation = new EnemyShipSpecialFormation(this.currentLevel,

@@ -29,20 +29,17 @@ public final class EntityRenderer {
     public void drawEntity(final Entity entity, final int positionX, final int positionY) {
         boolean[][] image = spriteMap.get(entity.getSpriteType());
         Graphics g = backBuffer.getGraphics();
-
+        double scale = Math.min(scaleX, scaleY);
         g.setColor(entity.getColor());
 
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[i].length; j++) {
                 if (image[i][j]) {
                     // 스케일 적용된 좌표 계산
-                    int scaledX = (int) ((positionX + i * 2) * this.scaleX);
-                    int scaledY = (int) ((positionY + j * 2) * this.scaleY);
-
-                    // 스케일 적용된 픽셀 크기
-                    int pixelWidth = (int) Math.max(1, 2 * this.scaleX);
-                    int pixelHeight = (int) Math.max(1, 2 * this.scaleY);
-                    g.fillRect(scaledX, scaledY, pixelWidth, pixelHeight);
+                    int scaledX = (int) ((positionX + i * 2) * scale);
+                    int scaledY = (int) ((positionY + j * 2) * scale);
+                    int pixelSize = (int) Math.max(1, 2 * scale);
+                    g.fillRect(scaledX, scaledY, pixelSize, pixelSize);
                 }
             }
         }
