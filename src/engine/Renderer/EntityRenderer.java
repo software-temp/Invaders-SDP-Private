@@ -15,21 +15,18 @@ public final class EntityRenderer {
 
     private final Map<SpriteType, boolean[][]> spriteMap;
     private final BackBuffer backBuffer;
-    private final double scaleX;
-    private final double scaleY;
+    private final double scale;
 
-    public EntityRenderer(Map<SpriteType, boolean[][]> spriteMap, BackBuffer backBuffer, double scaleX, double scaleY) {
+    public EntityRenderer(Map<SpriteType, boolean[][]> spriteMap, BackBuffer backBuffer, double scale) {
         this.spriteMap = spriteMap;
         this.backBuffer = backBuffer;
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
+        this.scale = scale;
     }
 
     /** Draws a single entity on the back buffer. */
     public void drawEntity(final Entity entity, final int positionX, final int positionY) {
         boolean[][] image = spriteMap.get(entity.getSpriteType());
         Graphics g = backBuffer.getGraphics();
-        double scale = Math.min(scaleX, scaleY);
         g.setColor(entity.getColor());
 
         for (int i = 0; i < image.length; i++) {
