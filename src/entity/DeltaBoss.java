@@ -6,6 +6,7 @@ import java.util.List;
 import java.awt.*;
 import engine.DrawManager;
 import entity.EnemyShip;
+import entity.DeltaBossChildMovement;
 
 public class DeltaBoss extends MidBoss {
 
@@ -88,19 +89,7 @@ public class DeltaBoss extends MidBoss {
 
 
     public void childMovePattern() {
-        if(!this.ChildShips.isEmpty()) {
-            for(EnemyShip ship : this.ChildShips) {
-                if(ship.getDirection()== null || ship.getDirection() == EnemyShip.Direction.RIGHT){
-                    boolean check_right_wall =ship.getPositionX() + ship.getWidth()+ship.getXSpeed() > screenWidth;
-                    if(check_right_wall){ ship.setDirection(EnemyShip.Direction.LEFT); }
-                    else{ ship.move(Child_Speed,0); }
-                }else {
-                    boolean check_left_wall =ship.getPositionX() < 0;
-                    if(check_left_wall) { ship.setDirection(EnemyShip.Direction.RIGHT); }
-                    else{ ship.move(-Child_Speed,0); }
-                }
-            }
-        }
+
     }
 
     public void spawnPattern() {
@@ -128,7 +117,6 @@ public class DeltaBoss extends MidBoss {
             ship.setColor(colorPalette[count]);
             this.ChildShips.add(ship);
         }
-
     }
 
     public void cleanDestroyedChild() {
