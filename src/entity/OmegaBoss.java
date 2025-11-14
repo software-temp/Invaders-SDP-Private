@@ -161,21 +161,4 @@ public class OmegaBoss extends MidBoss {
 	public void draw(DrawManager drawManager) {
 		drawManager.getEntityRenderer().drawEntity(this, this.positionX, this.positionY);
 	}
-    @Override
-    public void onCollision(Collidable other, GameModel game) {
-
-        // Hit by player bullet
-        if (other instanceof Bullet) {
-            Bullet bullet = (Bullet) other;
-            if (bullet.getSpeed() < 0) {
-                game.handlePlayerBulletHitBoss(bullet, this);
-            }
-            return;
-        }
-        // Collision with player ship
-        if (other instanceof Ship) {
-            Ship ship = (Ship) other;
-            game.playerTakeDamage(ship, 1);
-        }
-    }
 }

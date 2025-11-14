@@ -204,38 +204,23 @@ public class Ship extends Entity implements Collidable {
     @Override
     public void onCollision(Collidable other, GameModel game) {
 
-        // 0) Ignore collisions if level is finished
         if (game.isLevelFinished()) return;
 
-        // 1) Hit by enemy bullet
-        if (other instanceof Bullet) {
-            Bullet bullet = (Bullet) other;
-
-            // Enemy bullet (speed > 0)
-            if (bullet.getSpeed() > 0) {
-                game.handleEnemyBulletHitPlayer(bullet, this);
-            }
-            return;
-        }
-        // 2) Hit by boss bullet
-        if (other instanceof BossBullet) {
-            game.handleBossBulletHitPlayer((BossBullet) other, this);
-            return;
-        }
-        // 3) Collision with normal enemy ship
+        // 1. Player ship hits enemy ship
         if (other instanceof EnemyShip) {
             game.handlePlayerCrash(this, (EnemyShip) other);
             return;
         }
-        // 4) Collision with FinalBoss
-        if (other instanceof FinalBoss) {
-            game.handlePlayerCrash(this, (FinalBoss) other);
+
+        // 2. Player ship hits boss (FinalBoss, OmegaBoss)
+        if (other instanceof BossEntity) {
+            game.handlePlayerCrash(this, other.asEntity());
             return;
         }
 
-        // 5) Collision with OmegaBoss
-        if (other instanceof OmegaBoss) {
-            game.handlePlayerCrash(this, (OmegaBoss) other);
+        // 3. Player ship collects drop item
+        if (other instanceof DropItem) {
+            game.handleItemCollected(this, (DropItem) other);
             return;
         }
     }

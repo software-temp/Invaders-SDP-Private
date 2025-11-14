@@ -244,27 +244,4 @@ public class EnemyShip extends Entity implements Collidable {
                 return null;
         }
     }
-    /**
-     * Handles collision behavior for normal enemy ships.
-     * Reacts to player bullets and collisions with the player ship.
-     */
-    @Override
-    public void onCollision(Collidable other, GameModel game) {
-
-        Entity o = other.asEntity();
-
-        if (o instanceof Bullet) {
-            Bullet bullet = (Bullet) o;
-            if (bullet.getSpeed() < 0) {
-                game.handlePlayerBulletHitEnemy(bullet, this);
-            }
-            return;
-        }
-
-        if (o instanceof Ship) {
-            Ship ship = (Ship) o;
-            game.handlePlayerCrash(ship, this);
-            return;
-        }
-    }
 }

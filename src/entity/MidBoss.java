@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * @author <a href="developer.ksb@gmail.com">Seungbeom Kim</a>
  *
  */
-public abstract class MidBoss extends Entity implements BossEntity, Collidable {
+public abstract class MidBoss extends Entity implements BossEntity {
 
 	protected int healPoint=10;
 	protected int maxHp=healPoint;

@@ -188,17 +188,5 @@ public class DropItem extends Entity implements Collidable {
             return null;
         }
     }
-    /**
-     * Handles collision behavior for dropped items.
-     * When a ship touches the item, the item is collected.
-     */
-    @Override
-    public void onCollision(Collidable other, GameModel game) {
-        if (!(other instanceof Ship)) return;
 
-        Ship ship = (Ship) other;
-        if (game.isLevelFinished()) return;
-
-        game.handleItemCollected(ship, this);
-    }
 }

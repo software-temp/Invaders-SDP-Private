@@ -537,9 +537,9 @@ public class GameModel {
                 continue;
             }
 
-            DropItem item = new DropItem(
-                    enemy.getPositionX(),
-                    enemy.getPositionY(),
+            DropItem item = ItemPool.getItem(
+                    enemy.getPositionX() + enemy.getWidth() / 2,
+                    enemy.getPositionY() + enemy.getHeight() / 2,
                     2,
                     type
             );
