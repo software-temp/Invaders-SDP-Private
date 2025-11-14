@@ -51,5 +51,22 @@ Requires Java 7 or better.
 
 Note that you should install the following resources in order to run the game.
 
+## TODO
+ - Refactor codes into MVC Pattern
+ - Implement various Boss patterns
+    - dash pattern
+    - machine gun pattern
+    - spawn mob pattern
+    - attack with time gap pattern
+    - pull attack pattern
+ - Add more middle bosses
+ - Add scene effects
+    - vibration when the boss attacks
+ - HUD upgrade
+    - health bar
+    - more sprites
+ - Item upgrade
+ - Link Github & Slack & Jira
+
 
 - [Space Invaders Regular (font)](http://www.fonts2u.com/space-invaders-regular.font) - &copy; kylemaoin 2010
