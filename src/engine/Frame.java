@@ -1,10 +1,10 @@
-package main.engine;
+package engine;
 
 import java.awt.Insets;
 
 import javax.swing.JFrame;
 
-import main.screen.Screen;
+import screen.Screen;
 
 /**
  * Implements a frame to show screens on.
@@ -47,11 +47,11 @@ public class Frame extends JFrame {
 	}
 
 	/**
-	 * Sets current main.screen.
+	 * Sets current screen.
 	 * 
 	 * @param screen
 	 *            Screen to show.
-	 * @return Return code of the finished main.screen.
+	 * @return Return code of the finished screen.
 	 */
 	public final int setScreen(final Screen screen) {
 		currentScreen = screen;

@@ -1,9 +1,9 @@
-package main.engine.renderer;
+package engine.renderer;
 
-import main.engine.Achievement;
-import main.engine.BackBuffer;
-import main.engine.FontPack;
-import main.engine.Score;
+import engine.Achievement;
+import engine.BackBuffer;
+import engine.FontPack;
+import engine.Score;
 
 import java.util.List;
 import java.awt.Color;
@@ -75,7 +75,7 @@ public final class UIRenderer {
         }
     }
 
-    /** Draws game results on the end main.screen.*/
+    /** Draws game results on the end screen.*/
     public void drawResults(final int screenWidth, final int screenHeight, final int score, final int livesRemaining,
                             final int shipsDestroyed, final float accuracy, final boolean isNewRecord) {
 
@@ -261,7 +261,7 @@ public final class UIRenderer {
     }
 
     /**
-     * Draws a level countdown ("Level X", "3", "2", "1", "GO!") on the main.screen.
+     * Draws a level countdown ("Level X", "3", "2", "1", "GO!") on the screen.
      */
     public void drawCountDown(final int screenWidth, final int screenHeight, final int level, final int number, final boolean bonusLife) {
         Graphics g = backBuffer.getGraphics();

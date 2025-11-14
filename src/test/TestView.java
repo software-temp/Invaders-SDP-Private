@@ -1,8 +1,8 @@
 package test;
 
-import main.engine.DTO.HUDInfoDTO;
-import main.entity.*;
-import main.engine.DrawManager;
+import engine.DTO.HUDInfoDTO;
+import entity.*;
+import engine.DrawManager;
 
 /**
  * Implements the View for the game screen.

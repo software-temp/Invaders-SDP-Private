@@ -1,12 +1,12 @@
-package main.entity;
-import main.audio.SoundManager;
+package entity;
+import audio.SoundManager;
 
 
 import java.awt.Color;
 
-import main.engine.Cooldown;
-import main.engine.Core;
-import main.engine.DrawManager.SpriteType;
+import engine.Cooldown;
+import engine.Core;
+import engine.DrawManager.SpriteType;
 
 /**
  * Implements a enemy ship, to be destroyed by the player.
@@ -36,11 +36,11 @@ public class EnemyShip extends Entity {
 
 	/** Special enemy Direction enum **/
 	public enum Direction {
-		/** Movement to the right side of the main.screen. */
+		/** Movement to the right side of the screen. */
 		RIGHT,
-		/** Movement to the left side of the main.screen. */
+		/** Movement to the left side of the screen. */
 		LEFT,
-		/** Movement to the bottom of the main.screen. */
+		/** Movement to the bottom of the screen. */
 		DOWN
 	};
 

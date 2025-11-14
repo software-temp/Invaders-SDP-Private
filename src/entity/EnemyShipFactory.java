@@ -1,9 +1,9 @@
-package main.entity;
+package entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.engine.DrawManager.SpriteType;
-import main.engine.level.Level;
+import engine.DrawManager.SpriteType;
+import engine.level.Level;
 
 /**
  * Builds the 2D list of EnemyShips based on Level data.
@@ -81,7 +81,7 @@ public class EnemyShipFactory {
         }
 
         int countA = 0, countB = 0, countC = 0;
-        for (main.engine.level.EnemyType t : level.getEnemyTypes()) {
+        for (engine.level.EnemyType t : level.getEnemyTypes()) {
             String kind = (t.getType() == null) ? "enemya" : t.getType().trim().toLowerCase();
             int cnt = Math.max(0, t.getCount());
             switch (kind) {

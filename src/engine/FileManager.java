@@ -1,4 +1,4 @@
-package main.engine;
+package engine;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import main.engine.DrawManager.SpriteType;
+import engine.DrawManager.SpriteType;
 
 /**
  * Manages files used in the application.

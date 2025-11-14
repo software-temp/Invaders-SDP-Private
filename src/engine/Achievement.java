@@ -1,4 +1,4 @@
-package main.engine;
+package engine;
 
 /**
  * Represents a single achievement in the game.

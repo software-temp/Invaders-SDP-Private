@@ -1,4 +1,4 @@
-package main.engine.level;
+package engine.level;
 
 import java.io.BufferedReader;
 import java.io.IOException;

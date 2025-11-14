@@ -1,4 +1,4 @@
-package main.screen;
+package screen;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  *  Implements the CreditScreen.
- *  main.screen number 8
+ *  screen number 8
  */
 public class CreditScreen extends Screen {
 
@@ -35,7 +35,7 @@ public class CreditScreen extends Screen {
     }
 
     /**
-     * constructor: Set the main.screen properties and load credit data.
+     * constructor: Set the screen properties and load credit data.
      *
      * @param width Screen width
      * @param height Screen height
@@ -44,7 +44,7 @@ public class CreditScreen extends Screen {
     public CreditScreen(final int width, final int height, final int fps) {
         super(width, height, fps);
 
-        // When the main.screen closes, it returns to the main menu 1.
+        // When the screen closes, it returns to the main menu 1.
         this.returnCode = 1;
         this.creditList = new ArrayList<>();
         loadCredits();
@@ -68,9 +68,9 @@ public class CreditScreen extends Screen {
     }
 
     /**
-     * Starts the main loop for the main.screen.
+     * Starts the main loop for the screen.
      *
-     * @return Code to switch to the next main.screen.
+     * @return Code to switch to the next screen.
      */
     public final int run() {
         super.run();
@@ -78,13 +78,13 @@ public class CreditScreen extends Screen {
     }
 
     /**
-     * Every frame, we update main.screen elements and check for events.
+     * Every frame, we update screen elements and check for events.
      */
     @Override
     protected final void update() {
         super.update();
         draw();
-        // Pressing the spacebar will exit the main.screen.
+        // Pressing the spacebar will exit the screen.
         if (inputManager.isKeyDown(KeyEvent.VK_SPACE) && this.inputDelay.checkFinished()) {
             this.isRunning = false;
         }

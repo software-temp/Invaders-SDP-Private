@@ -1,14 +1,14 @@
-package main.screen;
+package screen;
 
 import java.awt.event.KeyEvent;
-import main.engine.Cooldown;
-import main.engine.Core;
-import main.engine.GameState;
-import main.entity.ShopItem;
-import main.engine.DTO.ShopInfoDTO;
+import engine.Cooldown;
+import engine.Core;
+import engine.GameState;
+import entity.ShopItem;
+import engine.DTO.ShopInfoDTO;
 
 /**
- * Implements the shop main.screen where players can purchase item upgrades.
+ * Implements the shop screen where players can purchase item upgrades.
  * Integrates with the ShopItem system from the Items Team.
  *
  * @author Currency System Team
@@ -81,7 +81,7 @@ public class ShopScreen extends Screen {
     public boolean betweenLevels;
 
     /**
-     * Constructor, establishes the properties of the main.screen.
+     * Constructor, establishes the properties of the screen.
      *
      * @param gameState
      *            Current game state with player's coin balance.
@@ -113,7 +113,7 @@ public class ShopScreen extends Screen {
         this.purchaseFeedbackCooldown = Core.getCooldown(2000);
         this.feedbackMessage = "";
 
-        this.logger.info("Shop main.screen initialized with " +
+        this.logger.info("Shop screen initialized with " +
                 gameState.getCoin() + " coins. BetweenLevels=" + betweenLevels);
     }
 
@@ -144,7 +144,7 @@ public class ShopScreen extends Screen {
     /**
      * Starts the action.
      *
-     * @return Next main.screen code (1 = main menu).
+     * @return Next screen code (1 = main menu).
      */
     public final int run() {
         super.run();
@@ -152,7 +152,7 @@ public class ShopScreen extends Screen {
     }
 
     /**
-     * Updates the elements on main.screen and checks for events.
+     * Updates the elements on screen and checks for events.
      */
     protected final void update() {
         super.update();
@@ -369,7 +369,7 @@ public class ShopScreen extends Screen {
     }
 
     /**
-     * Draws the elements associated with the main.screen.
+     * Draws the elements associated with the screen.
      */
     private void draw() {
         drawManager.initDrawing(this.width,this.height);

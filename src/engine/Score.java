@@ -1,4 +1,4 @@
-package main.engine;
+package engine;
 
 /**
  * Implements a high score record.

@@ -1,7 +1,7 @@
-package main.entity;
+package entity;
 
 import java.util.logging.Logger;
-import main.engine.Core;
+import engine.Core;
 
 /**
  * Implements a diagonal movement pattern for the formation,

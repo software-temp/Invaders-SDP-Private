@@ -1,13 +1,13 @@
-package main.screen;
+package screen;
 
-import main.engine.Core;
-import main.engine.GameState;
-import main.engine.DTO.HUDInfoDTO;
-import main.engine.level.Level;
-import main.entity.GameModel;
+import engine.Core;
+import engine.GameState;
+import engine.DTO.HUDInfoDTO;
+import engine.level.Level;
+import entity.GameModel;
 
 /**
- * Implements the game main.screen, where the action happens.
+ * Implements the game screen, where the action happens.
  * Acts as the CONTROLLER in the MVC pattern.
  * - Controls game flow, inputs, and timing
  * - Updates the GameModel (Model)
@@ -26,7 +26,7 @@ public class GameScreen extends Screen {
     private GameView view;     // View
 
     /**
-     * Constructor, establishes the properties of the main.screen.
+     * Constructor, establishes the properties of the screen.
      *
      * @param gameState
      * Current game state.	 * @param level

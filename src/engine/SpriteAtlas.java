@@ -1,10 +1,10 @@
-package main.engine;
+package engine;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import main.engine.DrawManager.SpriteType;
+import engine.DrawManager.SpriteType;
 
 public final class SpriteAtlas {
 

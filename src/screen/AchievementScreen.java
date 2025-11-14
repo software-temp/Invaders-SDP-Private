@@ -1,13 +1,13 @@
-package main.screen;
+package screen;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-import main.engine.Achievement;
-import main.engine.AchievementManager;
+import engine.Achievement;
+import engine.AchievementManager;
 
 /**
- * Implements the achievement main.screen, which displays the player's achievements.
+ * Implements the achievement screen, which displays the player's achievements.
  */
 public class AchievementScreen extends Screen {
 
@@ -24,7 +24,7 @@ public class AchievementScreen extends Screen {
     }
 
     /**
-     * Initializes the main.screen elements.
+     * Initializes the screen elements.
      */
     @Override
     public void initialize() {
@@ -32,9 +32,9 @@ public class AchievementScreen extends Screen {
     }
 
     /**
-     * Runs the main.screen's main loop.
+     * Runs the screen's main loop.
      *
-     * @return The main.screen's return code.
+     * @return The screen's return code.
      */
     @Override
     public int run() {
@@ -43,7 +43,7 @@ public class AchievementScreen extends Screen {
     }
 
     /**
-     * Updates the main.screen's state.
+     * Updates the screen's state.
      */
     @Override
     protected void update() {
@@ -55,7 +55,7 @@ public class AchievementScreen extends Screen {
     }
 
     /**
-     * Draws the achievements on the main.screen.
+     * Draws the achievements on the screen.
      */
     private void draw() {
         drawManager.initDrawing(this.width, this.height);

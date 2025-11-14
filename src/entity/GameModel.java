@@ -1,4 +1,4 @@
-package main.entity;
+package entity;
 
 import java.awt.Color;
 import java.util.List;
@@ -7,23 +7,23 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import main.engine.Cooldown;
-import main.engine.Core;
-import main.engine.GameState;
-import main.engine.GameTimer;
-import main.engine.AchievementManager;
-import main.engine.ItemHUDManager;
-import main.engine.level.Level;
-import main.screen.GameScreen;
-import main.screen.Screen;
+import engine.Cooldown;
+import engine.Core;
+import engine.GameState;
+import engine.GameTimer;
+import engine.AchievementManager;
+import engine.ItemHUDManager;
+import engine.level.Level;
+import screen.GameScreen;
+import screen.Screen;
 
 /**
- * Implements the Model for the game main.screen.
+ * Implements the Model for the game screen.
  * Contains all game state and game logic.
  */
 public class GameModel {
 
-    /** Milliseconds until the main.screen accepts user input. */
+    /** Milliseconds until the screen accepts user input. */
     public static final int INPUT_DELAY = 6000;
     /** Bonus score for each life remaining at the end of the level. */
     private static final int LIFE_SCORE = 100;
@@ -35,7 +35,7 @@ public class GameModel {
     private static final int BONUS_SHIP_EXPLOSION = 500;
     /** Time until bonus ship explosion disappears. */
     private static final int BOSS_EXPLOSION = 600;
-    /** Time from finishing the level to main.screen change. */
+    /** Time from finishing the level to screen change. */
     private static final int SCREEN_CHANGE_INTERVAL = 1500;
 
     /** Current level data (direct from Level system). */
@@ -60,13 +60,13 @@ public class GameModel {
     private Cooldown enemyShipSpecialExplosionCooldown;
     /** Time until Boss explosion disappears. */
     private Cooldown bossExplosionCooldown;
-    /** Time from finishing the level to main.screen change. */
+    /** Time from finishing the level to screen change. */
     private Cooldown screenFinishedCooldown;
     /** OmegaBoss */
     private MidBoss omegaBoss;
-    /** Set of all bullets fired by on-main.screen ships. */
+    /** Set of all bullets fired by on-screen ships. */
     private Set<Bullet> bullets;
-    /** Set of all dropItems dropped by on main.screen ships. */
+    /** Set of all dropItems dropped by on screen ships. */
     private Set<DropItem> dropItems;
     /** Current score. */
     private int score;
@@ -93,7 +93,7 @@ public class GameModel {
 
     /** bossBullets carry bullets which Boss fires */
     private Set<BossBullet> bossBullets;
-    /** Is the bullet on the main.screen erased */
+    /** Is the bullet on the screen erased */
     private boolean is_cleared = false;
     /** Timer to track elapsed time. */
     private GameTimer gameTimer;
@@ -115,7 +115,7 @@ public class GameModel {
     private int bottomHeight;
     private Screen screen; // Needed for attach()
 
-    /** Milliseconds until the main.screen accepts user input. */
+    /** Milliseconds until the screen accepts user input. */
     private Cooldown inputDelay;
 
 
@@ -124,7 +124,7 @@ public class GameModel {
         this.width = width;
         this.height = height;
         this.bottomHeight = ITEMS_SEPARATION_LINE_HEIGHT;
-        this.screen = screen; // Store main.screen context
+        this.screen = screen; // Store screen context
 
         this.currentLevel = level;
         this.bonusLife = bonusLife;
@@ -249,7 +249,7 @@ public class GameModel {
         // Phase 2: Process interactions and collisions
         this.processAllCollisions();
 
-        // Phase 3: Clean up destroyed or off-main.screen entities
+        // Phase 3: Clean up destroyed or off-screen entities
         this.cleanupAllEntities();
     }
 
@@ -326,7 +326,7 @@ public class GameModel {
 
 
     /**
-     * Cleans bullets that go off main.screen.
+     * Cleans bullets that go off screen.
      */
     private void cleanBullets() {
         Set<Bullet> recyclable = new HashSet<Bullet>();
@@ -340,7 +340,7 @@ public class GameModel {
     }
 
     /**
-     * Cleans Items that go off main.screen.
+     * Cleans Items that go off screen.
      */
 
     private void cleanItems() {
@@ -398,22 +398,22 @@ public class GameModel {
                         this.enemyShipFormationModel.destroy(enemyShip);
                         AchievementManager.getInstance().onEnemyDefeated();
                         if (enemyType != null && this.currentLevel.getItemDrops() != null) {
-                            List<main.engine.level.ItemDrop> potentialDrops = new ArrayList<>();
-                            for (main.engine.level.ItemDrop itemDrop : this.currentLevel.getItemDrops()) {
+                            List<engine.level.ItemDrop> potentialDrops = new ArrayList<>();
+                            for (engine.level.ItemDrop itemDrop : this.currentLevel.getItemDrops()) {
                                 if (enemyType.equals(itemDrop.getEnemyType())) {
                                     potentialDrops.add(itemDrop);
                                 }
                             }
 
-                            List<main.engine.level.ItemDrop> successfulDrops = new ArrayList<>();
-                            for (main.engine.level.ItemDrop itemDrop : potentialDrops) {
+                            List<engine.level.ItemDrop> successfulDrops = new ArrayList<>();
+                            for (engine.level.ItemDrop itemDrop : potentialDrops) {
                                 if (Math.random() < itemDrop.getDropChance()) {
                                     successfulDrops.add(itemDrop);
                                 }
                             }
 
                             if (!successfulDrops.isEmpty()) {
-                                main.engine.level.ItemDrop selectedDrop = successfulDrops.get((int) (Math.random() * successfulDrops.size()));
+                                engine.level.ItemDrop selectedDrop = successfulDrops.get((int) (Math.random() * successfulDrops.size()));
                                 DropItem.ItemType droppedType = DropItem.fromString(selectedDrop.getItemId());
                                 if (droppedType != null) {
                                     final int ITEM_DROP_SPEED = 2;
@@ -681,9 +681,9 @@ public class GameModel {
      * Checks if two entities are colliding.
      *
      * @param a
-     * First main.entity, the bullet.
+     * First entity, the bullet.
      * @param b
-     * Second main.entity, the ship.
+     * Second entity, the ship.
      * @return Result of the collision test.
      */
     private boolean checkCollision(final Entity a, final Entity b) {
@@ -788,7 +788,7 @@ public class GameModel {
                 bossBullets.addAll(this.finalBoss.shoot1());
                 bossBullets.addAll(this.finalBoss.shoot2());
             } else {
-                /** Is the bullet on the main.screen erased */
+                /** Is the bullet on the screen erased */
                 if (!is_cleared) {
                     bossBullets.clear();
                     is_cleared = true;
@@ -803,7 +803,7 @@ public class GameModel {
 
             for (BossBullet b : bossBullets) {
                 b.update();
-                /** If the bullet goes off the main.screen */
+                /** If the bullet goes off the screen */
                 if (b.isOffScreen(width, height)) {
                     /** bulletsToRemove carry bullet */
                     bulletsToRemove.add(b);

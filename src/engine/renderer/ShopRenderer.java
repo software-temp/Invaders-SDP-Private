@@ -1,8 +1,8 @@
-package main.engine.renderer;
+package engine.renderer;
 
-import main.engine.BackBuffer;
-import main.engine.DTO.ShopInfoDTO;
-import main.engine.FontPack;
+import engine.BackBuffer;
+import engine.DTO.ShopInfoDTO;
+import engine.FontPack;
 
 import java.awt.*;
 

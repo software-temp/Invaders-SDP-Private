@@ -1,8 +1,8 @@
-package main.screen;
+package screen;
 
-import main.engine.DrawManager;
-import main.engine.DTO.HUDInfoDTO;
-import main.entity.GameModel;
+import engine.DrawManager;
+import engine.DTO.HUDInfoDTO;
+import entity.GameModel;
 
 /**
  * GameView

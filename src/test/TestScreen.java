@@ -1,9 +1,9 @@
 package test;
 
-import main.engine.Core;
-import main.engine.DTO.HUDInfoDTO;
-import main.entity.GameModel;
-import main.screen.Screen;
+import engine.Core;
+import engine.DTO.HUDInfoDTO;
+import entity.GameModel;
+import screen.Screen;
 
 public class TestScreen extends Screen {
 

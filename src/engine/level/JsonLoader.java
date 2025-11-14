@@ -1,4 +1,4 @@
-package main.engine.level;
+package engine.level;
 
 import java.io.IOException;
 import java.util.ArrayList;

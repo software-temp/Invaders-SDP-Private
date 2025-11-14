@@ -1,12 +1,12 @@
-package main.entity;
-import main.audio.SoundManager;
+package entity;
+import audio.SoundManager;
 
 import java.awt.Color;
 import java.util.Set;
 
-import main.engine.Cooldown;
-import main.engine.Core;
-import main.engine.DrawManager.SpriteType;
+import engine.Cooldown;
+import engine.Core;
+import engine.DrawManager.SpriteType;
 
 /**
  * Implements a ship, to be controlled by the player.
@@ -56,7 +56,7 @@ public class Ship extends Entity {
 	}
 
 	/**
-	 * Moves the ship speed uni ts right, or until the right main.screen border is
+	 * Moves the ship speed uni ts right, or until the right screen border is
 	 * reached.
 	 */
 	public final void moveRight() {
@@ -65,7 +65,7 @@ public class Ship extends Entity {
 	}
 
 	/**
-	 * Moves the ship speed units left, or until the left main.screen border is
+	 * Moves the ship speed units left, or until the left screen border is
 	 * reached.
 	 */
 	public final void moveLeft() {
@@ -83,7 +83,7 @@ public class Ship extends Entity {
     }
 
     /**
-     * Moves the ship speed units down, or until the down main.screen border is
+     * Moves the ship speed units down, or until the down screen border is
      * reached.
      */
     public final void moveDown() {
@@ -95,7 +95,7 @@ public class Ship extends Entity {
 	 * Shoots a bullet upwards.
 	 * 
 	 * @param bullets
-	 *            List of bullets on main.screen, to add the new bullet.
+	 *            List of bullets on screen, to add the new bullet.
 	 * @return Checks if the bullet was shot correctly.
 	 */
 	public final boolean shoot(final Set<Bullet> bullets) {

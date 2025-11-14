@@ -1,4 +1,4 @@
-package main.engine.DTO;
+package engine.DTO;
 
 public class ShopInfoDTO {
     private final int screenWidth;

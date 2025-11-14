@@ -1,4 +1,4 @@
-package main.engine;
+package engine;
 
 /**
  * Implements an object that stores the state of the game between levels.

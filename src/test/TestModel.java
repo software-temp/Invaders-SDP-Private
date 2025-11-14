@@ -1,9 +1,9 @@
 package test;
 
-import main.entity.Entity;
-import main.entity.OmegaBoss;
-import main.entity.Ship;
-import main.screen.GameScreen;
+import entity.Entity;
+import entity.OmegaBoss;
+import entity.Ship;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

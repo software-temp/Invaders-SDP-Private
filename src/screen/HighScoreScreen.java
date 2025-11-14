@@ -1,14 +1,14 @@
-package main.screen;
+package screen;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 
-import main.engine.Core;
-import main.engine.Score;
+import engine.Core;
+import engine.Score;
 
 /**
- * Implements the high scores main.screen, it shows player records.
+ * Implements the high scores screen, it shows player records.
  * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
@@ -19,7 +19,7 @@ public class HighScoreScreen extends Screen {
 	private List<Score> highScores;
 
 	/**
-	 * Constructor, establishes the properties of the main.screen.
+	 * Constructor, establishes the properties of the screen.
 	 * 
 	 * @param width
 	 *            Screen width.
@@ -43,7 +43,7 @@ public class HighScoreScreen extends Screen {
 	/**
 	 * Starts the action.
 	 * 
-	 * @return Next main.screen code.
+	 * @return Next screen code.
 	 */
 	public final int run() {
 		super.run();
@@ -52,7 +52,7 @@ public class HighScoreScreen extends Screen {
 	}
 
 	/**
-	 * Updates the elements on main.screen and checks for events.
+	 * Updates the elements on screen and checks for events.
 	 */
 	protected final void update() {
 		super.update();
@@ -64,7 +64,7 @@ public class HighScoreScreen extends Screen {
 	}
 
 	/**
-	 * Draws the elements associated with the main.screen.
+	 * Draws the elements associated with the screen.
 	 */
 	private void draw() {
 		drawManager.initDrawing(this.width, this.height);

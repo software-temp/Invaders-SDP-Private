@@ -1,4 +1,4 @@
-package main.entity;
+package entity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import main.engine.Cooldown;
-import main.engine.Core;
-import main.engine.level.Level;
+import engine.Cooldown;
+import engine.Core;
+import engine.level.Level;
 
 /**
  * Manages all shooting-related logic for an enemy formation.

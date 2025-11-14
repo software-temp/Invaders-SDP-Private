@@ -1,15 +1,15 @@
-package main.engine.renderer;
+package engine.renderer;
 
-import main.engine.BackBuffer;
-import main.engine.FontPack;
-import main.engine.ItemHUDManager;
-import main.entity.Ship;
+import engine.BackBuffer;
+import engine.FontPack;
+import engine.ItemHUDManager;
+import entity.Ship;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
 /**
- * Handles all on-main.screen HUD rendering such as scores, coins, and timers.
+ * Handles all on-screen HUD rendering such as scores, coins, and timers.
  * Acts as a sub-view in the MVC structure.
  */
 public final class HUDRenderer {
@@ -34,7 +34,7 @@ public final class HUDRenderer {
         g.drawString(scoreString, screenWidth - 120, y);
     }
 
-    /** Draw elapsed time on main.screen. */
+    /** Draw elapsed time on screen. */
     public void drawTime(final int screenHeight, final long milliseconds) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
@@ -48,7 +48,7 @@ public final class HUDRenderer {
         g.drawString(timeString, 10, screenHeight - 20);
     }
 
-    /** Draw current coin count on main.screen (bottom-center). */
+    /** Draw current coin count on screen (bottom-center). */
     public void drawCoin(final int screenWidth, final int screenHeight, final int coin) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
@@ -104,7 +104,7 @@ public final class HUDRenderer {
         g.drawString(levelName, 20, screenHeight - 50);
     }
 
-    /** Draw achievement popup at the top center of the main.screen. */
+    /** Draw achievement popup at the top center of the screen. */
     public void drawAchievementPopup(final int screenWidth, final String text) {
         Graphics g = backBuffer.getGraphics();
         int popupWidth = 250, popupHeight = 50;

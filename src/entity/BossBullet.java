@@ -1,6 +1,6 @@
-package main.entity;
+package entity;
 
-import main.engine.DrawManager;
+import engine.DrawManager;
 
 import java.awt.*;
 
@@ -43,7 +43,7 @@ public class BossBullet extends Entity{
         this.positionY += this.dy;
     }
     /**
-     * does the bullet go off the main.screen
+     * does the bullet go off the screen
      */
     public boolean isOffScreen(int screenWidth, int screenHeight) {
         return positionX < 0 || positionX > screenWidth ||

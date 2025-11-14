@@ -1,4 +1,4 @@
-package main.engine;
+package engine;
 
 import java.awt.Font;
 import java.awt.FontFormatException;

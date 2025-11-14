@@ -1,12 +1,12 @@
-package main.engine;
+package engine;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.entity.ShopItem;
-import main.entity.DropItem;
+import entity.ShopItem;
+import entity.DropItem;
 
 /**
  * Manages the display of items in the HUD.
@@ -81,7 +81,7 @@ public class ItemHUDManager {
     }
 
     /**
-     * Initialize the HUD manager with main.screen dimensions
+     * Initialize the HUD manager with screen dimensions
      */
     public void initialize(int screenWidth) {
         // Calculate starting X position to align items to the right

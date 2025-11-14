@@ -1,10 +1,10 @@
-package main.engine;
+package engine;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * Manages keyboard input for the provided main.screen.
+ * Manages keyboard input for the provided screen.
  * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 

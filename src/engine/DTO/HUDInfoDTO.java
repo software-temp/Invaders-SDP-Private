@@ -1,8 +1,8 @@
-package main.engine.DTO;
+package engine.DTO;
 
 public final class HUDInfoDTO {
 
-    /** main.screen info */
+    /** screen info */
     private final int width;
     private final int height;
 

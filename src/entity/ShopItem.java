@@ -1,4 +1,4 @@
-package main.entity;
+package entity;
 
 /**
  * Manages the in-game item (enhancement) system.

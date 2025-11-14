@@ -1,7 +1,7 @@
-package main.entity;
+package entity;
 import java.awt.Color;
 
-import main.engine.DrawManager.SpriteType;
+import engine.DrawManager.SpriteType;
 import java.util.Random;
 
 public class DropItem extends Entity {

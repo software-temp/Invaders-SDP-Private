@@ -1,4 +1,4 @@
-package main.engine;
+package engine;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import main.engine.renderer.EntityRenderer;
-import main.engine.renderer.HUDRenderer;
-import main.engine.renderer.ShopRenderer;
-import main.engine.renderer.UIRenderer;
-import main.screen.TitleScreen.Star;
-import main.screen.TitleScreen.ShootingStar;
+import engine.renderer.EntityRenderer;
+import engine.renderer.HUDRenderer;
+import engine.renderer.ShopRenderer;
+import engine.renderer.UIRenderer;
+import screen.TitleScreen.Star;
+import screen.TitleScreen.ShootingStar;
 
 /**
- * Manages main.screen drawing.
+ * Manages screen drawing.
  *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  *
@@ -99,7 +99,7 @@ public void setFrame(final Frame currentFrame) {
     }
 
 	/**
-	 * Draws the completed drawing on main.screen.
+	 * Draws the completed drawing on screen.
 	 */
 	public void completeDrawing() {
         if(backBuffer == null){

@@ -1,12 +1,12 @@
-package main.entity;
+package entity;
 
-import main.engine.Core;
+import engine.Core;
 
 import java.awt.*;
 import java.util.logging.Logger;
 
 /**
- * Implements a game middle boss main.entity.
+ * Implements a game middle boss entity.
  *
  * @author <a href="developer.ksb@gmail.com">Seungbeom Kim</a>
  *
@@ -21,15 +21,15 @@ public abstract class MidBoss extends Entity implements BossEntity {
 	protected Logger logger;
 
 	/**
-	 * Constructor, establishes the boss main.entity's generic properties.
+	 * Constructor, establishes the boss entity's generic properties.
 	 *
-	 * @param positionX Initial position of the main.entity in the X axis.
-	 * @param positionY Initial position of the main.entity in the Y axis.
-	 * @param width     Width of the main.entity.
-	 * @param height    Height of the main.entity.
-	 * @param healPoint    HP of the main.entity.
-	 * @param pointValue    point of the main.entity.
-	 * @param color     Color of the main.entity.
+	 * @param positionX Initial position of the entity in the X axis.
+	 * @param positionY Initial position of the entity in the Y axis.
+	 * @param width     Width of the entity.
+	 * @param height    Height of the entity.
+	 * @param healPoint    HP of the entity.
+	 * @param pointValue    point of the entity.
+	 * @param color     Color of the entity.
 	 */
 	public MidBoss(int positionX, int positionY, int width, int height, int healPoint, int pointValue, Color color) {
 		super(positionX, positionY, width, height, color);

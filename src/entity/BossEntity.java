@@ -1,6 +1,6 @@
-package main.entity;
+package entity;
 
-import main.engine.DrawManager;
+import engine.DrawManager;
 /**
  * Defines the contract for all boss entities that appear in the game.
  * Includes methods related to the boss's lifecycle, interaction, and movement.
@@ -54,7 +54,7 @@ public interface BossEntity {
 	void update();
 
 	/**
-	 * Draws the boss main.entity on the main.screen.
+	 * Draws the boss entity on the screen.
 	 *
 	 * @param drawManager the {@link DrawManager} responsible for rendering the boss
 	 */

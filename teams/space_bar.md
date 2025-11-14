@@ -14,7 +14,7 @@ Track the progress of each achivement
 
 Display message when a task is completed
 
-Create new achievements button on the main main.screen
+Create new achievements button on the main screen
 
 Alter file management system
 

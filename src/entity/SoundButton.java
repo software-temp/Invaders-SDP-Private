@@ -1,7 +1,7 @@
-package main.entity;
+package entity;
 
 import java.awt.Color;
-import main.engine.DrawManager.SpriteType;
+import engine.DrawManager.SpriteType;
 
 /**
  *  Implements a sound button, to change sound state such as on/off.
@@ -56,7 +56,7 @@ public class SoundButton extends Entity {
         }
     }
     /**
-     * Determine if you need to switch to the credit main.screen.
+     * Determine if you need to switch to the credit screen.
      * @return If you turn on the sound more than five times, it's true, otherwise it's false.
      * (Using Easter egg)
      */

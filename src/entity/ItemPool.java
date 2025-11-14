@@ -1,8 +1,8 @@
-package main.entity;
+package entity;
 
 import java.util.HashSet;
 import java.util.Set;
-import main.entity.DropItem.ItemType;
+import entity.DropItem.ItemType;
 
 /**
  * Implements a pool of recyclable items.

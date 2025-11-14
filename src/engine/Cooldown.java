@@ -1,4 +1,4 @@
-package main.engine;
+package engine;
 
 /**
  * Imposes a cooldown period between two actions.

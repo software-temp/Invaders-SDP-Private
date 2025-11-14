@@ -1,9 +1,9 @@
-package main.entity;
+package entity;
 
-import main.audio.SoundManager;
-import main.engine.DrawManager;
-import main.engine.Cooldown;
-import main.engine.Core;
+import audio.SoundManager;
+import engine.DrawManager;
+import engine.Cooldown;
+import engine.Core;
 
 import java.awt.*;
 import java.util.HashSet;

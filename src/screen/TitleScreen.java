@@ -1,4 +1,4 @@
-package main.screen;
+package screen;
 
 import java.awt.event.KeyEvent;
 import java.awt.Color;
@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 
-import main.engine.Cooldown;
-import main.engine.Core;
-import main.engine.DrawManager.SpriteType;
-import main.entity.Entity;
-import main.entity.SoundButton;
+import engine.Cooldown;
+import engine.Core;
+import engine.DrawManager.SpriteType;
+import entity.Entity;
+import entity.SoundButton;
 
-import main.audio.SoundManager;
+import audio.SoundManager;
 
 
 /**
- * Implements the title main.screen.
+ * Implements the title screen.
  * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
@@ -120,7 +120,7 @@ public class TitleScreen extends Screen {
     private Random random;
 
 	/**
-	 * Constructor, establishes the properties of the main.screen.
+	 * Constructor, establishes the properties of the screen.
 	 * 
 	 * @param width
 	 *            Screen width.
@@ -162,7 +162,7 @@ public class TitleScreen extends Screen {
 	/**
 	 * Starts the action.
 	 * 
-	 * @return Next main.screen code.
+	 * @return Next screen code.
 	 */
 	public final int run() {
 		super.run();
@@ -171,7 +171,7 @@ public class TitleScreen extends Screen {
 	}
 
 	/**
-	 * Updates the elements on main.screen and checks for events.
+	 * Updates the elements on screen and checks for events.
 	 */
 	protected final void update() {
 		super.update();
@@ -328,7 +328,7 @@ public class TitleScreen extends Screen {
 	}
 
 	/**
-	 * Draws the elements associated with the main.screen.
+	 * Draws the elements associated with the screen.
 	 */
 	private void draw() {
 		drawManager.initDrawing(this.width, this.height);

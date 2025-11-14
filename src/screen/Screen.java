@@ -1,16 +1,16 @@
-package main.screen;
+package screen;
 
 import java.awt.Insets;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import main.engine.Cooldown;
-import main.engine.Core;
-import main.engine.DrawManager;
-import main.engine.InputManager;
+import engine.Cooldown;
+import engine.Core;
+import engine.DrawManager;
+import engine.InputManager;
 
 /**
- * Implements a generic main.screen.
+ * Implements a generic screen.
  * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
@@ -21,7 +21,7 @@ public class Screen {
 	public static final int SEPARATION_LINE_HEIGHT = 45;
 	/** Height of the items separation line (above items). */
 	public static final int ITEMS_SEPARATION_LINE_HEIGHT = 400;
-	/** Milliseconds until the main.screen accepts user input. */
+	/** Milliseconds until the screen accepts user input. */
 	private static final int INPUT_DELAY = 1000;
 
 	/** Draw Manager instance. */
@@ -35,20 +35,20 @@ public class Screen {
 	protected int width;
 	/** Screen height. */
 	protected int height;
-	/** Frames per second shown on the main.screen. */
+	/** Frames per second shown on the screen. */
 	protected int fps;
 	/** Screen insets. */
 	protected Insets insets;
-	/** Time until the main.screen accepts user input. */
+	/** Time until the screen accepts user input. */
 	protected Cooldown inputDelay;
 
-	/** If the main.screen is running. */
+	/** If the screen is running. */
 	protected boolean isRunning;
-	/** What kind of main.screen goes next. */
+	/** What kind of screen goes next. */
 	protected int returnCode;
 
 	/**
-	 * Constructor, establishes the properties of the main.screen.
+	 * Constructor, establishes the properties of the screen.
 	 * 
 	 * @param width
 	 *            Screen width.
@@ -71,16 +71,16 @@ public class Screen {
 	}
 
 	/**
-	 * Initializes basic main.screen properties.
+	 * Initializes basic screen properties.
 	 */
 	public void initialize() {
 
 	}
 
 	/**
-	 * Activates the main.screen.
+	 * Activates the screen.
 	 * 
-	 * @return Next main.screen code.
+	 * @return Next screen code.
 	 */
 	public int run() {
 		this.isRunning = true;
@@ -104,13 +104,13 @@ public class Screen {
 	}
 
 	/**
-	 * Updates the elements on main.screen and checks for events.
+	 * Updates the elements on screen and checks for events.
 	 */
 	protected void update() {
 	}
 
 	/**
-	 * Getter for main.screen width.
+	 * Getter for screen width.
 	 * 
 	 * @return Screen width.
 	 */
@@ -119,7 +119,7 @@ public class Screen {
 	}
 
 	/**
-	 * Getter for main.screen height.
+	 * Getter for screen height.
 	 * 
 	 * @return Screen height.
 	 */

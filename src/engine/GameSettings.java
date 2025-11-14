@@ -1,4 +1,4 @@
-package main.engine;
+package engine;
 
 /**
  * Implements an object that stores a single game's difficulty settings.

@@ -1,10 +1,10 @@
-package main.screen;
+package screen;
 
 public interface IView {
 	/** Loads all resources needed by this view (fonts, images, sounds, etc.). */
 	void loadAssets();
 	/**
-	 * Draws the view's contents on the main.screen.
+	 * Draws the view's contents on the screen.
 	 */
 	void draw();
 	/** Event when this view shows */

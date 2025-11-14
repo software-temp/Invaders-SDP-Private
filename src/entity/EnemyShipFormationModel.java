@@ -1,4 +1,4 @@
-package main.entity;
+package entity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.awt.Color;
 
-import main.engine.Core;
-import main.engine.level.Level;
+import engine.Core;
+import engine.level.Level;
 
 /**
  * Groups enemy ships into a formation.

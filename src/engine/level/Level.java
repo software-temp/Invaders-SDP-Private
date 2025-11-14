@@ -1,4 +1,4 @@
-package main.engine.level;
+package engine.level;
 
 import java.util.ArrayList;
 import java.util.List;

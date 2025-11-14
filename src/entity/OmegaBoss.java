@@ -1,6 +1,6 @@
-package main.entity;
+package entity;
 
-import main.engine.DrawManager;
+import engine.DrawManager;
 
 import java.awt.*;
 

@@ -1,16 +1,16 @@
-package main.entity;
+package entity;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
 
-import main.screen.Screen;
-import main.engine.level.Level;
-import main.engine.Cooldown;
-import main.engine.Core;
-import main.engine.DrawManager;
-import main.engine.GameSettings;
+import screen.Screen;
+import engine.level.Level;
+import engine.Cooldown;
+import engine.Core;
+import engine.DrawManager;
+import engine.GameSettings;
 
 /**
  * Groups enemy ships into a formation that moves together.
@@ -30,7 +30,7 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
      */
     private static final double SHOOTING_VARIANCE = .2;
     /**
-     * Margin on the sides of the main.screen.
+     * Margin on the sides of the screen.
      */
     private static final int SIDE_MARGIN = 20;
 
@@ -130,7 +130,7 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
     }
 
     /**
-     * Associates the formation to a given main.screen.
+     * Associates the formation to a given screen.
      *
      * @param newScreen Screen to attach.
      */
