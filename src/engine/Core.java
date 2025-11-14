@@ -104,8 +104,9 @@ public final class Core {
                 case 1:
                     // Main menu.
                     currentScreen = new TitleScreen(FRAME_WIDTH, FRAME_HEIGHT, FPS);
-					SoundManager.stopAll();
-					SoundManager.playLoop("sfx/menu_music.wav");
+                    if (!SoundManager.isCurrentLoop("sfx/menu_music.wav")) {
+                        SoundManager.playLoop("sfx/menu_music.wav");
+                    }
                     LOGGER.info("Starting " + Core.FRAME_WIDTH + "x" + Core.FRAME_HEIGHT
                             + " title screen at " + FPS + " fps.");
                     returnCode = frame.setScreen(currentScreen);
