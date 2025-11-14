@@ -3,6 +3,7 @@ package engine.level;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.awt.Color;
 
 /**
  * Represents the settings for a single level.
@@ -144,5 +145,21 @@ public class Level {
 
     public String getUnlockCondition() {
         return unlockCondition;
+    }
+
+    public Color getColorForLevel() {
+        switch (this.level) {
+            case 1: return new Color(0x3DDC84); // green
+            case 2: return new Color(0x00BCD4); // cyan
+            case 3: return new Color(0xFF4081); // pink
+            case 4: return new Color(0xFFC107); // amber
+            case 5: return new Color(0x9C27B0); // purple
+            case 6: return new Color(0xFF5722); // deep orange
+            case 7: return new Color(0x8BC34A); // light green
+            case 8: return new Color(0x03A9F4); // light blue
+            case 9: return new Color(0xE91E63); // magenta
+            case 10: return new Color(0x607D8B); // blue gray
+            default: return Color.WHITE;
+        }
     }
 }

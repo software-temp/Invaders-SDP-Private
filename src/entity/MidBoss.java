@@ -19,7 +19,6 @@ public abstract class MidBoss extends Entity implements BossEntity {
 	protected int pointValue=500;
 	protected boolean isDestroyed=false;
 	protected int pattern=1;
-	protected Screen screen;
 	protected Logger logger;
 
 	/**
@@ -49,14 +48,4 @@ public abstract class MidBoss extends Entity implements BossEntity {
 
 	@Override
 	public boolean isDestroyed() { return this.isDestroyed; }
-
-	/**
-	 * Associates the formation to a given screen.
-	 *
-	 * @param newScreen
-	 *            Screen to attach.
-	 */
-	public final void attach(final Screen newScreen) {
-		screen = newScreen;
-	}
 }

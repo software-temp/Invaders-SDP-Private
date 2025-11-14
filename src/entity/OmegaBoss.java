@@ -32,16 +32,20 @@ public class OmegaBoss extends MidBoss {
 	private boolean isRight = true;
 	/** Current vertical movement direction. true for down, false for up. */
 	private boolean isDown = true;
+	/** Boss cannot move over this boundary. */
+	private final int widthBoundary;
 	/** Boss cannot move below this boundary. */
 	private final int bottomBoundary;
 	/**
 	 * Constructor, establishes the boss entity's generic properties.
 	 *
-	 * @param bottomBoundary    The lowermost Y-coordinate for the boss's movement. The boss cannot move below this value.
-	 * @param color     Color of the boss entity.
+ 	 * @param color             Color of the boss entity.
+ 	 * @param widthBoundary		The rightmost X-coordinate for the boss's movement. The boss cannot move over this value.
+ 	 * @param bottomBoundary    The lowermost Y-coordinate for the boss's movement. The boss cannot move below this value.
 	 */
-	public OmegaBoss(Color color,int bottomBoundary) {
+	public OmegaBoss(Color color, int widthBoundary, int bottomBoundary) {
 		super(INIT_POS_X, INIT_POS_Y, OMEGA_WIDTH, OMEGA_HEIGHT, OMEGA_HEALTH, OMEGA_POINT_VALUE, color);
+		this.widthBoundary = widthBoundary;
 		this.bottomBoundary = bottomBoundary;
 		this.spriteType= DrawManager.SpriteType.OmegaBoss1;
 		this.logger.info("OMEGA : Initializing Boss OMEGA");
@@ -91,7 +95,7 @@ public class OmegaBoss extends MidBoss {
 
 		if (this.positionX <= 0) {
 			this.isRight = true;
-		} else if (this.positionX + this.width >= screen.getWidth()) {
+		} else if (this.positionX + this.width >= widthBoundary) {
 			this.isRight = false;
 		}
 	}
@@ -110,8 +114,8 @@ public class OmegaBoss extends MidBoss {
 		if (this.positionX <= 0) {
 			this.positionX = 0;
 			this.isRight = true;
-		} else if (this.positionX + this.width >= screen.getWidth()) {
-			this.positionX = screen.getWidth() - this.width;
+		} else if (this.positionX + this.width >= widthBoundary) {
+			this.positionX = widthBoundary - this.width;
 			this.isRight = false;
 		}
 
