@@ -4,9 +4,8 @@ import engine.BackBuffer;
 import engine.FontPack;
 import engine.ItemHUDManager;
 import entity.Ship;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+
+import java.awt.*;
 
 /**
  * Handles all on-screen HUD rendering such as scores, coins, and timers.
@@ -43,9 +42,15 @@ public final class HUDRenderer {
         long seconds = milliseconds / 1000;
         long minutes = seconds / 60;
         seconds %= 60;
+        // 글자 높이 가져오기
+        FontMetrics fm = g.getFontMetrics();
+        int fontHeight = fm.getHeight();
+
+        // 화면 가장 아래에서 글자 높이만큼 위로 올리기
+        int y = screenHeight - fontHeight;
 
         String timeString = String.format("Time: %02d:%02d", minutes, seconds);
-        g.drawString(timeString, 10, screenHeight - 20);
+        g.drawString(timeString, 10, y);
     }
 
     /** Draw current coin count on screen (bottom-center). */
@@ -96,11 +101,17 @@ public final class HUDRenderer {
     }
 
     /** Draw current level name (bottom-left). */
-    public void drawLevel(final int screenHeight, final String levelName) {
+    public void drawLevel(final int seperateLine, final String levelName) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        g.drawString(levelName, 20, screenHeight - 50);
+        // 글자 높이 가져오기
+        FontMetrics fm = g.getFontMetrics();
+        int fontHeight = fm.getHeight();
+
+        // 화면 가장 아래에서 글자 높이만큼 위로 올리기
+        int y = seperateLine + fontHeight;
+        g.drawString(levelName, 20, y);
     }
 
     /** Draw achievement popup at the top center of the screen. */

@@ -33,8 +33,8 @@ public final class EntityRenderer {
             for (int j = 0; j < image[i].length; j++) {
                 if (image[i][j]) {
                     // 스케일 적용된 좌표 계산
-                    int scaledX = (int) ((positionX + i * 2) * scale);
-                    int scaledY = (int) ((positionY + j * 2) * scale);
+                    int scaledX = (int) ((positionX + i * 2));
+                    int scaledY = (int) ((positionY + j * 2));
                     int pixelSize = (int) Math.max(1, 2 * scale);
                     g.fillRect(scaledX, scaledY, pixelSize, pixelSize);
                 }

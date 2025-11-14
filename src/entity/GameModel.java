@@ -151,6 +151,7 @@ public class GameModel {
         enemyShipFormation.attach(this.screen);
         this.enemyShipFormation.applyEnemyColorByLevel(this.currentLevel);
         this.ship = new Ship(this.width / 4, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT * 19 / 20,Color.green);
+//        logger.info(GameScreen.ITEMS_SEPARATION_LINE_HEIGHT*19/20 + " " + this.width + this.height);
         this.ship.setPlayerId(1);   //=== [ADD] Player 1 ===
 
         this.shipP2 = new Ship(this.width * 3 / 4, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT * 19 / 20,Color.pink);

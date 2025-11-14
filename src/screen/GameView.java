@@ -42,7 +42,7 @@ public class GameView {
         drawManager.getHUDRenderer().drawLivesP2(dto.getWidth(),dto.getHeight(),dto.getLivesP2());
         drawManager.getHUDRenderer().drawTime(dto.getHeight(), dto.getElapsedTimeMillis());
         drawManager.getHUDRenderer().drawItemsHUD(dto.getWidth(), dto.getHeight());
-        drawManager.getHUDRenderer().drawLevel(dto.getHeight(), dto.getLevelName());
+        drawManager.getHUDRenderer().drawLevel(GameScreen.ITEMS_SEPARATION_LINE_HEIGHT, dto.getLevelName());
 
         /** draw Line */
         drawManager.getUIRenderer().drawHorizontalLine(dto.getWidth(), GameScreen.SEPARATION_LINE_HEIGHT - 1);

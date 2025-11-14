@@ -86,7 +86,7 @@ public final class Core {
         WIDTH = (int) (screenSize.getWidth() * 0.8);
         HEIGHT = (int) (screenSize.getHeight() * 0.9);
 
-        //screen 사이즈 비율
+//      screen 사이즈 비율
         double scaleX = (double) WIDTH / 1228.0;
         double scaleY = (double) HEIGHT / 777.0;
 
