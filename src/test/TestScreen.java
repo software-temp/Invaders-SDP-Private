@@ -23,7 +23,7 @@ public class TestScreen extends Screen {
 	public final void initialize(){
 		super.initialize();
 
-		this.model = new TestModel(this.width);
+		this.model = new TestModel(this.width, ITEMS_SEPARATION_LINE_HEIGHT);
 		this.view = new TestView(this.model, this.drawManager, this.width, this.height);
 
 		this.inputDelay = Core.getCooldown(GameModel.INPUT_DELAY);

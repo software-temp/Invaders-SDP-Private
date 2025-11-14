@@ -15,11 +15,13 @@ public class TestModel {
 	// Necessary variables
 	private Ship player;
 	private final int width;
+	private final int height;
 
-	public TestModel(int width) {
+	public TestModel(int width, int height) {
 		this.width = width;
+		this.height = height;
 		this.entity = new OmegaBoss(Color.blue, width, 400);
-		this.player = new Ship(this.width/2, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT-20, Color.GREEN);
+		this.player = new Ship(this.width/2, height-20, Color.GREEN);
 	}
 
 	public void update(){
@@ -60,11 +62,11 @@ public class TestModel {
 				if (!isLeftBorder) player.moveLeft();
 				break;
 			case "UP":
-				boolean isUpBorder = player.getPositionY() - player.getSpeed() < GameScreen.SEPARATION_LINE_HEIGHT;
+				boolean isUpBorder = player.getPositionY() - player.getSpeed() < height;
 				if (!isUpBorder) player.moveUp();
 				break;
 			case "DOWN":
-				boolean isDownBorder = player.getPositionY() + player.getHeight() + player.getSpeed() > GameScreen.ITEMS_SEPARATION_LINE_HEIGHT;
+				boolean isDownBorder = player.getPositionY() + player.getHeight() + player.getSpeed() > height;
 				if (!isDownBorder) player.moveDown();
 				break;
 		}
