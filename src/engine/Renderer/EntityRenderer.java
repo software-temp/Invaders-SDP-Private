@@ -1,6 +1,7 @@
 package engine.Renderer;
 
 import java.awt.Graphics;
+import java.awt.Color;
 import java.util.Map;
 
 import engine.BackBuffer;
@@ -15,6 +16,9 @@ public final class EntityRenderer {
 
     private final Map<SpriteType, boolean[][]> spriteMap;
     private final BackBuffer backBuffer;
+
+    /** BlackHole Color */
+    private static final Color BLACK_HOLE_COLOR = new Color(200, 0, 255);
 
     public EntityRenderer(Map<SpriteType, boolean[][]> spriteMap, BackBuffer backBuffer) {
         this.spriteMap = spriteMap;
@@ -33,6 +37,18 @@ public final class EntityRenderer {
                     g.drawRect(positionX + i * 2, positionY + j * 2, 1, 1);
                 }
             }
+        }
+    }
+
+    /** Draw circle for pull_attack pattern */
+    public void drawBlackHole(final int cx, final int cy, final int radius, final boolean isBlackHoleActive){
+        if(isBlackHoleActive){
+            int x = cx - radius/2;
+            int y = cy - radius/2;
+
+            Graphics g = backBuffer.getGraphics();
+            g.setColor(BLACK_HOLE_COLOR);
+            g.drawOval(x, y, radius, radius);
         }
     }
 }
