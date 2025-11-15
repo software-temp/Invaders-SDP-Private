@@ -10,7 +10,7 @@ import engine.DrawManager.SpriteType;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public class Entity {
+public class Entity implements HasBounds {
 
 	/** Position in the x-axis of the upper left corner of the entity. */
 	protected int positionX;
@@ -68,24 +68,6 @@ public class Entity {
 	}
 
 	/**
-	 * Getter for the X axis position of the entity.
-	 * 
-	 * @return Position of the entity in the X axis.
-	 */
-	public final int getPositionX() {
-		return this.positionX;
-	}
-
-	/**
-	 * Getter for the Y axis position of the entity.
-	 * 
-	 * @return Position of the entity in the Y axis.
-	 */
-	public final int getPositionY() {
-		return this.positionY;
-	}
-
-	/**
 	 * Setter for the X axis position of the entity.
 	 * 
 	 * @param positionX
@@ -114,21 +96,23 @@ public class Entity {
 		return this.spriteType;
 	}
 
-	/**
-	 * Getter for the width of the image associated to the entity.
-	 * 
-	 * @return Width of the entity.
-	 */
-	public final int getWidth() {
+	@Override
+	public int getPositionX() {
+		return this.positionX;
+	}
+
+	@Override
+	public int getPositionY() {
+		return this.positionY;
+	}
+
+	@Override
+	public int getWidth() {
 		return this.width;
 	}
 
-	/**
-	 * Getter for the height of the image associated to the entity.
-	 * 
-	 * @return Height of the entity.
-	 */
-	public final int getHeight() {
+	@Override
+	public int getHeight() {
 		return this.height;
 	}
 }
