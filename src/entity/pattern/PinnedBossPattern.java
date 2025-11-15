@@ -41,7 +41,7 @@ public class PinnedBossPattern extends BossPattern {
 			this.shootCooldown.reset();
 			int[] arr = {0,1,-1,2,-2};
 			for (int i : arr){
-				BossBullet bullet = new BossBullet(this.bossPosition.x + this.bossPosition.y / 2 - 3,this.bossPosition.y + boss.getHeight(),i,4,6,10,Color.yellow);
+				BossBullet bullet = new BossBullet(this.boss.getPositionX() + this.boss.getWidth()/ 2, this.boss.getPositionY() + boss.getHeight(),i,4,6,10,Color.yellow);
 				bullets.add(bullet);
 			}
 		}

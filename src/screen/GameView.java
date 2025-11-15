@@ -1,8 +1,10 @@
 package screen;
 
+import engine.Core;
 import engine.DrawManager;
 import engine.DTO.HUDInfoDTO;
 import entity.GameModel;
+import entity.LaserBullet;
 
 /**
  * GameView
@@ -31,7 +33,12 @@ public class GameView {
         if (model.getEntitiesToRender() != null) {
             for (int i = 0; i < model.getEntitiesToRender().size(); i++) {
                 var e = model.getEntitiesToRender().get(i);
-                drawManager.getEntityRenderer().drawEntity(e, e.getPositionX(), e.getPositionY());
+				if(e instanceof LaserBullet){
+					drawManager.getEntityRenderer().drawEntityRotated(e,((LaserBullet) e).getTargetPosition().x, ((LaserBullet) e).getTargetPosition().y);
+				}
+				else{
+					drawManager.getEntityRenderer().drawEntity(e, e.getPositionX(), e.getPositionY());
+				}
             }
         }
 

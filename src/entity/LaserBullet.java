@@ -11,55 +11,37 @@ public class LaserBullet extends Bullet {
 	private Point velocity;
 	private double theta;
 	private Cooldown chargeCooldown;
-	private int chargeCooldownMilli;
+	private Cooldown remainCooldown;
+	private final int chargeCooldownMilli;
+	private final int remainCooldownMilli;
+	private boolean needToRemove=false;
 
-	private boolean isChargeCooldownFinished=false;
 	double speedPerSecond = 1200.0;
 
-	public LaserBullet(Point startPosition, Point targetPosition, int chargeCooldownMilli) {
+	public LaserBullet(Point startPosition, Point targetPosition, int chargeCooldownMilli, int remainCooldownMilli) {
 		super(startPosition.x, startPosition.y, 0, Color.green);
-//		super.height=40;
-//		super.width=30;
 		this.currentPosition=startPosition;
 		this.targetPosition=targetPosition;
 		this.chargeCooldownMilli=chargeCooldownMilli;
-		this.chargeCooldown = Core.getCooldown(chargeCooldownMilli);
-		this.chargeCooldown.reset();
+		this.remainCooldownMilli=remainCooldownMilli;
 	}
 
 	@Override
 	public void update(){
+		if(this.chargeCooldown==null){
+			this.chargeCooldown = Core.getCooldown(chargeCooldownMilli);
+			chargeCooldown.reset();
+		}
 		if(this.chargeCooldown.checkFinished()){
-			setSpeed();
 			setRotation();
-			isChargeCooldownFinished=true;
+			color = Color.red;
+			if(this.remainCooldown==null){
+				this.remainCooldown = Core.getCooldown(remainCooldownMilli);
+				remainCooldown.reset();
+			}
 		}
-		if(isChargeCooldownFinished){
-			this.positionX+=velocity.x;
-			this.positionY+=velocity.y;
-		}
-	}
-
-	public void setTarget(Point targetPosition){ this.targetPosition = targetPosition; }
-
-	public void setChargeCooldown(int chargeCooldownMilli){
-		this.chargeCooldownMilli=chargeCooldownMilli;
-		this.chargeCooldown = Core.getCooldown(chargeCooldownMilli);
-	}
-
-	private void setSpeed() {
-		double dx = targetPosition.x - this.currentPosition.x;
-		double dy = targetPosition.y - this.currentPosition.y;
-		double dist = Math.sqrt(dx * dx + dy * dy);
-
-		if(dist==0) velocity = new Point(0, 0);
-		else {
-			double speedPerFrame = speedPerSecond / Core.FPS;
-
-			double nx = dx / dist;
-			double ny = dy / dist;
-
-			this.velocity = new Point((int)(nx * speedPerFrame), (int)(ny * speedPerFrame));
+		if(this.remainCooldown!=null && this.remainCooldown.checkFinished()){
+			needToRemove=true;
 		}
 	}
 
@@ -67,5 +49,11 @@ public class LaserBullet extends Bullet {
 		double dx = targetPosition.x - this.currentPosition.x;
 		double dy = targetPosition.y - this.currentPosition.y;
 		this.theta = Math.atan2(dy, dx);
+	}
+	public Point getTargetPosition() {
+		return targetPosition;
+	}
+	public boolean needToRemove() {
+		return needToRemove;
 	}
 }

@@ -104,8 +104,7 @@ public class FinalBoss extends Entity implements BossEntity{
         }
 		else if (this.healPoint <= this.maxHp /6 && this.bossPhase == 4) {
 			++this.bossPhase;
-	        Point position = new Point(positionX,positionY);
-	        bossPattern = new TimeGapAttackPattern(position,playerPosition,screenWidth,screenHeight);
+	        bossPattern = new TimeGapAttackPattern(this,playerPosition,screenWidth,screenHeight);
         }
     }
 
@@ -137,7 +136,7 @@ public class FinalBoss extends Entity implements BossEntity{
 	}
 
 	public int getMaxHp(){
-		return  this.maxHp;
+		return this.maxHp;
 	}
 
 	@Override
@@ -148,4 +147,9 @@ public class FinalBoss extends Entity implements BossEntity{
 	public BossPattern getBossPattern() { return bossPattern; }
 
 	public int getBossPhase() { return bossPhase; }
+
+	public void setTarget(HasBounds target){
+		this.playerPosition = target;
+		if(bossPattern instanceof TimeGapAttackPattern){ ((TimeGapAttackPattern) bossPattern).setTarget(target); }
+	}
 }

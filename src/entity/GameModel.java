@@ -779,6 +779,15 @@ public class GameModel {
 
     public void finalbossManage(){
         if (this.finalBoss != null && !this.finalBoss.isDestroyed()) {
+			if(livesP1>0 && livesP2>0){
+				this.finalBoss.setTarget(Math.random() < 0.5 ? ship : shipP2);
+			}
+			else if(livesP2 > 0){
+				this.finalBoss.setTarget(shipP2);
+			}
+			else if(livesP1 > 0){
+				this.finalBoss.setTarget(ship);
+			}
             this.finalBoss.update();
 			if(this.finalBoss.getBossPhase() == 3 && !this.is_cleared){
 				bossBullets.clear();
@@ -793,7 +802,7 @@ public class GameModel {
             for (Bullet b : bossBullets) {
                 b.update();
                 /** If the bullet goes off the screen */
-                if (b.isOffScreen(width, height)) {
+                if (b.isOffScreen(width, height) || b instanceof LaserBullet && ((LaserBullet) b).needToRemove()) {
                     /** bulletsToRemove carry bullet */
                     bulletsToRemove.add(b);
                 }
@@ -810,7 +819,7 @@ public class GameModel {
                     if (!this.shipP2.isDestroyed()) {
                         this.shipP2.destroy();
                         this.livesP2--;
-                        this.logger.info("Hit on player ship, " + this.livesP2 + " lives remaining.");
+                        this.logger.info("Hit on player ship2, " + this.livesP2 + " lives remaining.");
                     }
                     bulletsToRemove.add(b);
                 }
