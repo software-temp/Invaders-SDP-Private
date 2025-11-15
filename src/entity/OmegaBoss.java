@@ -155,10 +155,4 @@ public class OmegaBoss extends MidBoss {
 	public void update() {
 		this.movePatterns();
 	}
-
-	/** Renders the entity at its current position using the provided DrawManager. */
-	@Override
-	public void draw(DrawManager drawManager) {
-		drawManager.getEntityRenderer().drawEntity(this, this.positionX, this.positionY);
-	}
 }
