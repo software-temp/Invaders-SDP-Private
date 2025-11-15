@@ -64,8 +64,7 @@ public class GameModel {
     private Cooldown screenFinishedCooldown;
     /** OmegaBoss */
     private MidBoss omegaBoss;
-    private DeltaBoss deltaBoss;
-    private List<EnemyShip> deltaBossChilds;
+    private List<MidBossMob> MidBossChilds;
     /** Set of all bullets fired by on-screen ships. */
     private Set<Bullet> bullets;
     /** Set of all dropItems dropped by on screen ships. */
@@ -179,8 +178,7 @@ public class GameModel {
         this.elapsedTime = 0;
         this.finalBoss = null;
         this.omegaBoss = null;
-        this.deltaBoss = null;
-        this.deltaBossChilds = null;
+        this.MidBossChilds = null;
         this.currentPhase = StagePhase.wave;
     }
 
@@ -272,7 +270,7 @@ public class GameModel {
                 }
                 break;
             case boss_wave:
-                if (this.finalBoss == null && this.omegaBoss == null && this.deltaBoss == null) {
+                if (this.finalBoss == null && this.omegaBoss == null) {
                     bossReveal();
                     this.enemyShipFormationModel.clear();
                 }
@@ -290,14 +288,6 @@ public class GameModel {
                             this.levelFinished = true;
                             this.screenFinishedCooldown.reset();
                         }
-                    }
-                }
-                else if (this.deltaBoss != null){
-                    this.deltaBoss.update();
-                    this.deltaBossChilds = this.deltaBoss.getChildShips();
-                    if (this.deltaBoss.isDestroyed()) {
-                        this.levelFinished = true;
-                        this.screenFinishedCooldown.reset();
                     }
                 }
                 else{
@@ -473,33 +463,20 @@ public class GameModel {
                     }
                     recyclable.add(bullet);
                 }
-                if (this.deltaBoss != null && !this.deltaBoss.isDestroyed()) {
-                    if(checkCollision(bullet, this.deltaBoss)) {
-                        this.deltaBoss.takeDamage(2);
-                        if(this.deltaBoss.getHealPoint() <= 0) {
-                            this.shipsDestroyed++;
-                            int pts = this.deltaBoss.getPointValue();
-                            addPointsFor(bullet, pts);
-                            this.coin += (pts / 10);
-                            this.deltaBoss.destroy();
-                            AchievementManager.getInstance().unlockAchievement("Boss Slayer");
-                            this.bossExplosionCooldown.reset();
-                        }
-                        recyclable.add(bullet);
-                    }
-
-                }
-                if(this.deltaBossChilds != null && !this.deltaBossChilds.isEmpty()) {
-                    for(EnemyShip ship : deltaBossChilds){
+                if(this.MidBossChilds != null && !this.MidBossChilds.isEmpty()) {
+                    for(MidBossMob ship : MidBossChilds){
                         if(ship != null
                                 && !ship.isDestroyed()
                                 && checkCollision(bullet, ship)) {
-                            int pts = ship.getPointValue();
-                            addPointsFor(bullet, pts);
-                            this.coin += (pts / 10);
-                            this.shipsDestroyed++;
-                            ship.destroy();
-                            recyclable.add(bullet);
+                            ship.takeDamage(2);
+                            if(ship.getHealPoint() <= 0) {
+                                int pts = ship.getPointValue();
+                                addPointsFor(bullet, pts);
+                                this.coin += (pts / 10);
+                                this.shipsDestroyed++;
+                                ship.destroy();
+                                recyclable.add(bullet);
+                            }
                         }
                     }
                 }
@@ -566,18 +543,8 @@ public class GameModel {
                 return;
             }
 
-            if (this.deltaBoss != null && !this.deltaBoss.isDestroyed()) {
-                if (checkCollision(this.ship, this.deltaBoss)) {
-                    this.ship.destroy();
-                    this.livesP1--;
-                    showHealthPopup("-1 Life (Boss Collision!)");
-                    this.logger.info("Ship collided with delta boss! " + this.livesP1
-                        + " lives remaining.");
-                }
-
-            }
-            if(this.deltaBossChilds != null && !this.deltaBossChilds.isEmpty()){
-                for(EnemyShip ship : deltaBossChilds){
+            if(this.MidBossChilds != null && !this.MidBossChilds.isEmpty()){
+                for(MidBossMob ship : MidBossChilds){
                     if(ship != null
                             && !ship.isDestroyed()
                             && checkCollision(this.ship, ship)){
@@ -644,18 +611,8 @@ public class GameModel {
                 return;
             }
 
-            if (this.deltaBoss != null && !this.deltaBoss.isDestroyed()) {
-                if (checkCollision(this.shipP2, this.deltaBoss)) {
-                    this.shipP2.destroy();
-                    this.livesP2--;
-                    showHealthPopup("-1 Life (Boss Collision!)");
-                    this.logger.info("Ship collided with delta boss! " + this.livesP2
-                            + " lives remaining.");
-                }
-
-            }
-            if(this.deltaBossChilds != null && !this.deltaBossChilds.isEmpty()){
-                for(EnemyShip ship : deltaBossChilds){
+            if(this.MidBossChilds != null && !this.MidBossChilds.isEmpty()){
+                for(MidBossMob ship : MidBossChilds){
                     if(ship != null
                             && !ship.isDestroyed()
                             && checkCollision(this.shipP2, ship)){
@@ -863,10 +820,6 @@ public class GameModel {
                 this.omegaBoss = new OmegaBoss(Color.ORANGE, width, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT);
                 this.logger.info("Omega Boss has spawned!");
                 break;
-            case "deltaBoss":
-                this.deltaBoss = new DeltaBoss(Color.ORANGE, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT,screen.getWidth());
-                this.logger.info("Delta Boss has spawned!");
-                break;
             default:
                 this.logger.warning("Unknown bossId: " + bossName);
                 break;
@@ -1011,8 +964,7 @@ public class GameModel {
     public Set<BossBullet> getBossBullets() { return bossBullets; }
     public EnemyShipFormationModel getEnemyShipFormationModel() { return enemyShipFormationModel; }
     public MidBoss getOmegaBoss() { return omegaBoss; }
-    public MidBoss getDeltaBoss() { return deltaBoss; }
-    public List<EnemyShip> getDeltaBossChilds() { return deltaBossChilds; }
+    public List<MidBossMob> getMidBossChilds() { return MidBossChilds; }
     public Set<Bullet> getBullets() { return bullets; }
     public Set<DropItem> getDropItems() { return dropItems; }
     public int getScoreP1() { return scoreP1; }
@@ -1053,8 +1005,8 @@ public class GameModel {
                 renderList.add(enemy);
             }
         }
-        if (getDeltaBossChilds() != null) {
-            for (EnemyShip child : getDeltaBossChilds()) {
+        if (getMidBossChilds() != null) {
+            for (MidBossMob child : getMidBossChilds()) {
                 renderList.add(child);
             }
         }
@@ -1062,9 +1014,6 @@ public class GameModel {
         // 4. added boss
         if (getOmegaBoss() != null) {
             renderList.add(getOmegaBoss());
-        }
-        if (getDeltaBoss() != null) {
-            renderList.add(getDeltaBoss());
         }
         if (getFinalBoss() != null && !getFinalBoss().isDestroyed()) {
             renderList.add(getFinalBoss());
