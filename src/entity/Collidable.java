@@ -1,11 +1,16 @@
 package entity;
 
 public interface Collidable {
-	
+
 	/**
-	 * Defines the action to be taken when this object collides with another.
-	 *
-	 * @param other The {@code Collidable} object this object has collided with.
+	 * Returns this object as an Entity.
+	 * Used for bounding-box collision checks.
 	 */
-	void onCollision(Collidable other);
+	Entity asEntity();
+
+	/**
+	 * Defines how this object should react when a collision occurs.
+	 * Each entity implements its own collision behavior.
+	 */
+	void onCollision(Collidable other, GameModel gameModel);
 }
