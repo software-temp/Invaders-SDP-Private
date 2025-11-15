@@ -44,6 +44,7 @@ public class FinalBoss extends Entity implements BossEntity{
 
 		this.playerPosition = playerPosition;
 		logger = Core.getLogger();
+	    choosePattern();
 	}
 
     /** for vibrant moving with final boss
