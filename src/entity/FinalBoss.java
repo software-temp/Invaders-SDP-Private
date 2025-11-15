@@ -105,8 +105,7 @@ public class FinalBoss extends Entity implements BossEntity{
 		else if (this.healPoint <= this.maxHp /6 && this.bossPhase == 4) {
 			++this.bossPhase;
 	        Point position = new Point(positionX,positionY);
-	        Point targetPosition = new Point(playerPosition.getPositionX(),playerPosition.getPositionY());
-	        bossPattern = new TimeGapAttackPattern(position,targetPosition,screenWidth,screenHeight);
+	        bossPattern = new TimeGapAttackPattern(position,playerPosition,screenWidth,screenHeight);
         }
     }
 

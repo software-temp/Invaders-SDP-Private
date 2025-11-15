@@ -461,7 +461,7 @@ public class GameModel {
 
                 /** when final boss collide with bullet */
                 if(this.finalBoss != null && !this.finalBoss.isDestroyed() && checkCollision(bullet,this.finalBoss)){
-                    this.finalBoss.takeDamage(5);
+                    this.finalBoss.takeDamage(1);
                     if(this.finalBoss.getHealPoint() <= 0){
                         int pts = this.finalBoss.getPointValue();
                         addPointsFor(bullet, pts);
