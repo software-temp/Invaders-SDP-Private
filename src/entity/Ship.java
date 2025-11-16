@@ -60,7 +60,7 @@ public class Ship extends Entity {
             this.isP1Ship = false;
         }
 
-		this.shootingCooldown = Core.getCooldown(ShopItem.getShootingInterval());
+		this.shootingCooldown = Core.getCooldown(100);//ShopItem.getShootingInterval()
 		this.destructionCooldown = Core.getCooldown(1000);
 		this.shieldCooldown = Core.getCooldown(0);
 		this.isInvincible = false;
