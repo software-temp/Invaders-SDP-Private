@@ -42,6 +42,7 @@ public class ItemHUDManager {
 
     /** Duration to show dropped items (in milliseconds) */
     private static final long DROPPED_ITEM_DISPLAY_DURATION = 10000; // 10 seconds
+    private final Font shop_item_font =  new Font("Arial", Font.PLAIN, 12);
 
     /**
      * Information about a dropped item being displayed
@@ -181,7 +182,7 @@ public class ItemHUDManager {
         Color bgColor = isActive ? Color.GREEN : Color.DARK_GRAY;
         graphics.setColor(bgColor);
         graphics.fillRect(x, y, ITEM_SQUARE_SIZE, ITEM_SQUARE_SIZE);
-        graphics.setFont(new Font("Arial", Font.PLAIN, 12));
+        graphics.setFont(shop_item_font);
         // Draw border
         graphics.setColor(Color.WHITE);
         graphics.drawRect(x, y, ITEM_SQUARE_SIZE, ITEM_SQUARE_SIZE);

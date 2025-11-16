@@ -39,9 +39,9 @@ public class Frame extends JFrame {
 		setVisible(true);
 
 		Insets insets = getInsets();
-        insets.set(30,7,7,7);
+
 		this.width = width - insets.left - insets.right;
-		this.height = height - insets.top + insets.bottom;
+		this.height = height - insets.top - insets.bottom;
 		setTitle("Invaders");
 
 		addKeyListener(Core.getInputManager());

@@ -265,9 +265,9 @@ public class TitleScreen extends Screen {
 					this.soundButton.changeSoundState();
 
 					if (SoundButton.getIsSoundOn()) {
-						SoundManager.uncutAllSound();
+						SoundManager.uncutBGM();
 					} else {
-						SoundManager.cutAllSound();
+						SoundManager.cutBGM();
 					}
 
 					if (this.soundButton.isTeamCreditScreenPossible()) {

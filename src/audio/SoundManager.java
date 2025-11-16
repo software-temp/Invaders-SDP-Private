@@ -57,25 +57,25 @@ public class SoundManager {
         }
     }
 
-    public static void cutAllSound() {
+    public static void cutBGM() {
         muted = true;
-        for (Clip c : CACHE.values()) {
+        if (currentLooping != null) {
+            Clip c = CACHE.get(currentLooping);
             c.stop();
             setVolume(c, -80.0f);  // 완전 무음
         }
         System.out.println("[Sound] Global sound muted.");
     }
 
-    public static void uncutAllSound() {
+    public static void uncutBGM() {
         muted = false;
         System.out.println("[Sound] Global sound unmuted");
         System.out.println("[Sound] current looping : " + currentLooping);
 
-        if (currentLooping != null) {  // when unmute
-            for (Clip c : CACHE.values()) {
-                c.start();
-                setVolume(c, 0.0f);  // 완전 무음
-            }
+        if (currentLooping != null) {
+            Clip c = CACHE.get(currentLooping);
+            c.start();
+            setVolume(c, 0.0f);
         }
     }
 
