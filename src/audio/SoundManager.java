@@ -61,7 +61,7 @@ public class SoundManager {
         if (currentLooping != null) {
             Clip c = CACHE.get(currentLooping);
             c.stop();
-            setVolume(c, -80.0f);  // 완전 무음
+            setVolume(c, -80.0f);
         }
         System.out.println("[Sound] Global sound muted.");
     }
