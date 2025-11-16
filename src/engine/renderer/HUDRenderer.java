@@ -103,11 +103,9 @@ public final class HUDRenderer {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        // 글자 높이 가져오기
         FontMetrics fm = g.getFontMetrics();
         int fontHeight = fm.getHeight();
 
-        // 화면 가장 아래에서 글자 높이만큼 위로 올리기
         int y = seperateLine + fontHeight;
         g.drawString(levelName, 20, y);
     }
