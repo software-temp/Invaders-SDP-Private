@@ -390,6 +390,10 @@ public class GameModel {
 		for (DropItem dropItem : this.dropItems) {
 			dropItem.update();
 		}
+
+		for (BossBullet b : bossBullets) {
+			b.update();
+		}
 	}
 
 	/**
@@ -769,7 +773,7 @@ public class GameModel {
 				break;
 			case "omegaBoss":
 			case "omegaAndFinal":
-				this.omegaBoss = new OmegaBoss(Color.ORANGE, width, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT);
+				this.omegaBoss = new OmegaBoss(Color.ORANGE, width, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT, this);
 				this.logger.info("Omega Boss has spawned!");
 				break;
 			default:
@@ -1039,7 +1043,7 @@ public class GameModel {
 		if (getBullets() != null) {
 			renderList.addAll(getBullets());
 		}
-		if (getBossBullets() != null && getFinalBoss() != null && !getFinalBoss().isDestroyed()) {
+		if (getBossBullets() != null) {
 			renderList.addAll(getBossBullets());
 		}
 		if (getDropItems() != null) {
