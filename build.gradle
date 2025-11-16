@@ -36,12 +36,6 @@ repositories {
 dependencies {
     // Add JUnit 5 (Jupiter) as a dependency for our test code
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-
-    // Mockito core library
-    testImplementation 'org.mockito:mockito-core:4.11.0'
-
-    // Mockito for mocking static methods
-    testImplementation 'org.mockito:mockito-inline:4.11.0'
 }
 
 // 6. Configure the 'test' task to use JUnit 5

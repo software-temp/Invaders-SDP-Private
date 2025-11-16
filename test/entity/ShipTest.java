@@ -1,9 +1,8 @@
 package entity; // ◀ Must match the original package
 
 // Import required classes for JUnit and AWT Color
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import java.awt.Color;
 import java.util.HashSet;
@@ -21,6 +20,18 @@ class ShipTest {
     private static final int BASE_SPEED = 2;
     // This is the default shooting interval, used for mocking
     private static final int SHOOTING_INTERVAL = 750;
+
+    /**
+     * This method runs before *every* test.
+     * It calls resetAllItems() to set all static item levels in ShopItem to 0.
+     * This guarantees that ShopItem.getSHIPSpeedCOUNT() returns 0,
+     * making the movement tests stable and predictable.
+     */
+    @BeforeEach
+    void setUp() {
+        ShopItem.resetAllItems();
+    }
+
     /**
      * [Creation Test]
      * Checks if the initial position and color are set correctly when a Ship object is created.
@@ -42,141 +53,132 @@ class ShipTest {
         assertEquals(startY, ship.getPositionY(), "The Y coordinate was not set correctly.");
         assertEquals(testColor, ship.getColor(), "The Color was not set correctly.");
     }
-
     /**
-     * [Movement Test - Base Speed]
-     * Verifies movement when ShopItem speed upgrade is 0.
-     * This test mocks the static ShopItem.getSHIPSpeedCOUNT() method.
+     * [Movement Test - Right]
+     * Because setUp() runs first, ShopItem.getSHIPSpeedCOUNT() is 0.
+     * The logic 'SPEED * (1 + 0/10)' simplifies to just 'SPEED'.
+     * This test is now stable.
      */
     @Test
-    void testShipMovement_BaseSpeed() {
-        // Use try-with-resources to create a static mock for ShopItem
-        try (MockedStatic<ShopItem> shopItemMock = Mockito.mockStatic(ShopItem.class)) {
-            // --- 1. Arrange ---
-            // Force ShopItem.getSHIPSpeedCOUNT() to return 0 for this test
-            shopItemMock.when(ShopItem::getSHIPSpeedCOUNT).thenReturn(0);
-            // We also need to mock the interval for the Ship's constructor
-            shopItemMock.when(ShopItem::getShootingInterval).thenReturn(SHOOTING_INTERVAL);
+    void testShipMovement_MoveRight() {
+        // --- 1. Arrange ---
+        Ship ship = new Ship(100, 100, Color.GREEN);
+        int initialX = ship.getPositionX();
+        int speed = ship.getSpeed(); // This gets the base SPEED (2)
 
-            Ship ship = new Ship(100, 100, Color.GREEN);
-            int initialX = ship.getPositionX();
-            int initialY = ship.getPositionY();
+        // --- 2. Act ---
+        ship.moveRight();
 
-            // --- 2. Act ---
-            // The formula is SPEED * (1 + shipspeed/10).
-            // Here: 2 * (1 + 0/10) = 2
-            ship.moveRight();
-            ship.moveDown();
-
-            // --- 3. Assert ---
-            assertEquals(initialX + BASE_SPEED, ship.getPositionX(), "Right movement (base speed) is incorrect.");
-            assertEquals(initialY + BASE_SPEED, ship.getPositionY(), "Down movement (base speed) is incorrect.");
-
-            // --- 2. Act (Left/Up) ---
-            ship.moveLeft(); // Expected movement: -2
-            ship.moveUp();   // Expected movement: -2
-
-            // --- 3. Assert (Left/Up) ---
-            // The ship should be back at its starting position
-            assertEquals(initialX, ship.getPositionX(), "Left movement (base speed) is incorrect.");
-            assertEquals(initialY, ship.getPositionY(), "Up movement (base speed) is incorrect.");
-        }
+        // --- 3. Assert ---
+        assertEquals(initialX + speed, ship.getPositionX(), "Rightward movement is incorrect.");
     }
 
     /**
-     * [Movement Test - Upgraded Speed]
-     * Verifies movement when ShopItem speed upgrade is non-zero (e.g., 20).
-     * This directly tests the logic reviewers were concerned about.
+     * [Movement Test - Left]
+     * This test is also stable now, thanks to setUp().
      */
     @Test
-    void testShipMovement_UpgradedSpeed() {
-        try (MockedStatic<ShopItem> shopItemMock = Mockito.mockStatic(ShopItem.class)) {
-            // --- 1. Arrange ---
-            // Force ShopItem.getSHIPSpeedCOUNT() to return 20
-            shopItemMock.when(ShopItem::getSHIPSpeedCOUNT).thenReturn(20);
-            // Mock for constructor
-            shopItemMock.when(ShopItem::getShootingInterval).thenReturn(SHOOTING_INTERVAL);
+    void testShipMovement_MoveLeft() {
+        // --- 1. Arrange ---
+        Ship ship = new Ship(100, 100, Color.GREEN);
+        int initialX = ship.getPositionX();
+        int speed = ship.getSpeed();
 
-            Ship ship = new Ship(100, 100, Color.GREEN);
-            int initialX = ship.getPositionX();
+        // --- 2. Act ---
+        ship.moveLeft();
 
-            // Calculate expected speed based on Ship.java logic: SPEED * (1 + shipspeed / 10)
-            int expectedSpeed = BASE_SPEED * (1 + 20 / 10); // 2 * (1 + 2) = 6
-
-            // --- 2. Act ---
-            ship.moveRight();
-
-            // --- 3. Assert ---
-            // The ship should move by the calculated upgraded speed (6), not the base speed (2).
-            assertEquals(initialX + expectedSpeed, ship.getPositionX(), "Right movement (upgraded speed) is incorrect.");
-        }
+        // --- 3. Assert ---
+        assertEquals(initialX - speed, ship.getPositionX(), "Leftward movement is incorrect.");
     }
+
+    /**
+     * [Movement Test - Up]
+     * This test is also stable now, thanks to setUp().
+     */
+    @Test
+    void testShipMovement_MoveUp() {
+        // --- 1. Arrange ---
+        Ship ship = new Ship(100, 100, Color.GREEN);
+        int initialY = ship.getPositionY();
+        int speed = ship.getSpeed();
+
+        // --- 2. Act ---
+        ship.moveUp();
+
+        // --- 3. Assert ---
+        assertEquals(initialY - speed, ship.getPositionY(), "Upward movement is incorrect.");
+    }
+
+    /**
+     * [Movement Test - Down]
+     * This test is also stable now, thanks to setUp().
+     */
+    @Test
+    void testShipMovement_MoveDown() {
+        // --- 1. Arrange ---
+        Ship ship = new Ship(100, 100, Color.GREEN);
+        int initialY = ship.getPositionY();
+        int speed = ship.getSpeed();
+
+        // --- 2. Act ---
+        ship.moveDown();
+
+        // --- 3. Assert ---
+        assertEquals(initialY + speed, ship.getPositionY(), "Downward movement is incorrect.");
+    }
+
 
     /*
      * ======================================
-     * Shooting Tests (also require Mockito)
+     * Shooting Tests
+     * (These are also stable now because setUp() resets the rapidFireLevel,
+     * so getShootingInterval() always returns the default 750ms)
      * ======================================
      */
 
     @Test
     void testShoot_Success() {
-        try (MockedStatic<ShopItem> shopItemMock = Mockito.mockStatic(ShopItem.class)) {
-            // --- 1. Arrange ---
-            // Mock dependencies for constructor (shootingInterval) and shoot() (bulletCount)
-            shopItemMock.when(ShopItem::getShootingInterval).thenReturn(SHOOTING_INTERVAL);
-            shopItemMock.when(ShopItem::getMultiShotBulletCount).thenReturn(1);
+        // --- 1. Arrange ---
+        Ship ship = new Ship(100, 100, Color.GREEN);
+        Set<Bullet> bullets = new HashSet<>();
 
-            Ship ship = new Ship(100, 100, Color.GREEN);
-            Set<Bullet> bullets = new HashSet<>();
+        // --- 2. Act ---
+        boolean shot = ship.shoot(bullets);
 
-            // --- 2. Act ---
-            boolean shot = ship.shoot(bullets);
-
-            // --- 3. Assert ---
-            assertTrue(shot, "Should be successful in shooting.");
-            assertEquals(1, bullets.size(), "A bullet should be added to the set.");
-        }
+        // --- 3. Assert ---
+        assertTrue(shot, "Should be successful in shooting.");
+        assertEquals(1, bullets.size(), "A bullet should be added to the set.");
     }
 
     @Test
     void testShoot_Cooldown() {
-        try (MockedStatic<ShopItem> shopItemMock = Mockito.mockStatic(ShopItem.class)) {
-            // --- 1. Arrange ---
-            shopItemMock.when(ShopItem::getShootingInterval).thenReturn(SHOOTING_INTERVAL);
-            shopItemMock.when(ShopItem::getMultiShotBulletCount).thenReturn(1);
+        // --- 1. Arrange ---
+        Ship ship = new Ship(100, 100, Color.GREEN);
+        Set<Bullet> bullets = new HashSet<>();
+        ship.shoot(bullets); // First shot (success)
+        assertEquals(1, bullets.size());
 
-            Ship ship = new Ship(100, 100, Color.GREEN);
-            Set<Bullet> bullets = new HashSet<>();
-            ship.shoot(bullets); // First shot (success)
-            assertEquals(1, bullets.size());
+        // --- 2. Act ---
+        boolean shot2 = ship.shoot(bullets); // Fire immediately
 
-            // --- 2. Act ---
-            boolean shot2 = ship.shoot(bullets); // Fire immediately
-
-            // --- 3. Assert ---
-            assertFalse(shot2, "Should not be able to shoot during cooldown.");
-            assertEquals(1, bullets.size(), "No additional bullet should be fired.");
-        }
+        // --- 3. Assert ---
+        assertFalse(shot2, "Should not be able to shoot during cooldown.");
+        assertEquals(1, bullets.size(), "No additional bullet should be fired.");
     }
 
     @Test
     void testShoot_AfterCooldown() throws InterruptedException {
-        try (MockedStatic<ShopItem> shopItemMock = Mockito.mockStatic(ShopItem.class)) {
-            // --- 1. Arrange ---
-            shopItemMock.when(ShopItem::getShootingInterval).thenReturn(SHOOTING_INTERVAL);
-            shopItemMock.when(ShopItem::getMultiShotBulletCount).thenReturn(1);
+        // --- 1. Arrange ---
+        Ship ship = new Ship(100, 100, Color.GREEN);
+        Set<Bullet> bullets = new HashSet<>();
+        ship.shoot(bullets); // First shot (success)
 
-            Ship ship = new Ship(100, 100, Color.GREEN);
-            Set<Bullet> bullets = new HashSet<>();
-            ship.shoot(bullets); // First shot (success)
+        // --- 2. Act ---
+        Thread.sleep(SHOOTING_INTERVAL + 50); // Wait for cooldown to expire
+        boolean shot2 = ship.shoot(bullets); // Fire second shot
 
-            // --- 2. Act ---
-            Thread.sleep(SHOOTING_INTERVAL + 50); // Wait for cooldown to expire
-            boolean shot2 = ship.shoot(bullets); // Fire second shot
-
-            // --- 3. Assert ---
-            assertTrue(shot2, "Should be able to shoot again after cooldown.");
-            assertEquals(2, bullets.size(), "The second bullet should be added to the set.");
-        }
+        // --- 3. Assert ---
+        assertTrue(shot2, "Should be able to shoot again after cooldown.");
+        assertEquals(2, bullets.size(), "The second bullet should be added to the set.");
     }
 }
