@@ -1,7 +1,6 @@
 package engine;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +26,10 @@ public class ItemHUDManager {
 
     /** Spacing between squares */
     private static final int SQUARE_SPACING = 3;
-
     /** Y position for fixed shop items (bottom row) */
-    private static final int FIXED_ITEMS_Y = 450;
-
+    private static int fixedItemsY;
     /** Y position for dynamic dropped items (top row) */
-    private static final int DYNAMIC_ITEMS_Y = 420;
+    private static int dynamicItemsY;
 
     /** X position to start drawing items (right side) */
     private int startX;
@@ -45,6 +42,7 @@ public class ItemHUDManager {
 
     /** Duration to show dropped items (in milliseconds) */
     private static final long DROPPED_ITEM_DISPLAY_DURATION = 10000; // 10 seconds
+    private final Font shop_item_font =  new Font("Arial", Font.PLAIN, 12);
 
     /**
      * Information about a dropped item being displayed
@@ -77,7 +75,12 @@ public class ItemHUDManager {
         if (instance == null) {
             instance = new ItemHUDManager();
         }
+
         return instance;
+    }
+    public void setHUDPositions(int screenHeight) {
+        dynamicItemsY = (int) (screenHeight * 0.9 + 10);
+        fixedItemsY = dynamicItemsY + 30;
     }
 
     /**
@@ -131,7 +134,7 @@ public class ItemHUDManager {
      */
     private void drawFixedShopItems(Graphics graphics) {
         int x = startX;
-        int y = FIXED_ITEMS_Y;
+        int y = fixedItemsY;
 
         // Shop items in order: MultiShot, RapidFire, Penetration, BulletSpeed, ShipSpeed
         ShopItemType[] shopItems = {
@@ -153,7 +156,7 @@ public class ItemHUDManager {
      */
     private void drawDynamicDroppedItems(Graphics graphics) {
         int x = startX;
-        int y = DYNAMIC_ITEMS_Y;
+        int y = dynamicItemsY;
 
         // Draw up to 6 dynamic items
         for (int i = 0; i < MAX_DYNAMIC_ITEMS; i++) {
@@ -179,11 +182,10 @@ public class ItemHUDManager {
         Color bgColor = isActive ? Color.GREEN : Color.DARK_GRAY;
         graphics.setColor(bgColor);
         graphics.fillRect(x, y, ITEM_SQUARE_SIZE, ITEM_SQUARE_SIZE);
-
+        graphics.setFont(shop_item_font);
         // Draw border
         graphics.setColor(Color.WHITE);
         graphics.drawRect(x, y, ITEM_SQUARE_SIZE, ITEM_SQUARE_SIZE);
-
         // Draw item icon/letter
         graphics.setColor(Color.WHITE);
         String itemLetter = getShopItemLetter(itemType);

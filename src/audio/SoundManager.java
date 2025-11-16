@@ -56,18 +56,26 @@ public class SoundManager {
         }
     }
 
-    public static void cutAllSound() {
+    public static void cutBGM() {
         muted = true;
-        stopAll();
+        if (currentLooping != null) {
+            Clip c = CACHE.get(currentLooping);
+            c.stop();
+            setVolume(c, -80.0f);
+        }
         System.out.println("[Sound] Global sound muted.");
     }
 
-    public static void uncutAllSound() {
+    public static void uncutBGM() {
         muted = false;
         System.out.println("[Sound] Global sound unmuted");
         System.out.println("[Sound] current looping : " + currentLooping);
-        if (currentLooping != null) {  // when unmute
-            playLoop(currentLooping);
+
+        if (currentLooping != null) {
+            Clip c = CACHE.get(currentLooping);
+            c.start();
+            setVolume(c, 0.0f);
+            c.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
@@ -87,5 +95,18 @@ public class SoundManager {
         for (Clip c : CACHE.values()) {
             if (c.isRunning()) c.stop();
         }
+    }
+    public static void setVolume(Clip clip, float dB) {
+        try {
+            FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gain.setValue(dB);
+        }
+        catch (Exception e) {
+            System.err.println("[Sound] Volume control failed: " + e.getMessage());
+        }
+    }
+
+    public static boolean isCurrentLoop(String path) {
+        return currentLooping != null && currentLooping.equals(path);
     }
 }

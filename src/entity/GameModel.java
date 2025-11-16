@@ -14,8 +14,6 @@ import engine.GameTimer;
 import engine.AchievementManager;
 import engine.ItemHUDManager;
 import engine.level.Level;
-import screen.GameScreen;
-import screen.Screen;
 
 /**
  * Implements the Model for the game screen.
@@ -112,19 +110,15 @@ public class GameModel {
     private Logger logger;
     private int width;
     private int height;
-    private int bottomHeight;
-    private Screen screen; // Needed for attach()
 
     /** Milliseconds until the screen accepts user input. */
     private Cooldown inputDelay;
 
 
-    public GameModel(GameState gameState, Level level, boolean bonusLife, int maxLives, int width, int height,int ITEMS_SEPARATION_LINE_HEIGHT, Screen screen) {
+    public GameModel(GameState gameState, Level level, boolean bonusLife, int maxLives, int width, int height) {
         this.logger = Core.getLogger();
         this.width = width;
         this.height = height;
-        this.bottomHeight = ITEMS_SEPARATION_LINE_HEIGHT;
-        this.screen = screen; // Store screen context
 
         this.currentLevel = level;
         this.bonusLife = bonusLife;
@@ -149,18 +143,18 @@ public class GameModel {
     public final void initialize() {
         /** Initialize the bullet Boss fired */
         this.bossBullets = new HashSet<>();
-        enemyShipFormationModel = new EnemyShipFormationModel(this.currentLevel, bottomHeight, width);
+        enemyShipFormationModel = new EnemyShipFormationModel(this.currentLevel, width);
         this.enemyShipFormationModel.applyEnemyColor(this.currentLevel.getColorForLevel());
-        this.ship = new Ship(this.width / 2 - 100, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT - 20,Color.green);
+        this.ship = new Ship(this.width / 4, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT * 19 / 20,Color.green);
         this.ship.setPlayerId(1);   //=== [ADD] Player 1 ===
 
-        this.shipP2 = new Ship(this.width / 2 + 100, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT - 20,Color.pink);
+        this.shipP2 = new Ship(this.width * 3 / 4, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT * 19 / 20,Color.pink);
         this.shipP2.setPlayerId(2); // === [ADD] Player2 ===
         // special enemy initial
+
         enemyShipSpecialFormation = new EnemyShipSpecialFormation(this.currentLevel,
                 Core.getVariableCooldown(BONUS_SHIP_INTERVAL, BONUS_SHIP_VARIANCE),
                 Core.getCooldown(BONUS_SHIP_EXPLOSION));
-        enemyShipSpecialFormation.attach(this.screen);
         this.bossExplosionCooldown = Core
                 .getCooldown(BOSS_EXPLOSION);
         this.screenFinishedCooldown = Core.getCooldown(SCREEN_CHANGE_INTERVAL);
@@ -215,11 +209,11 @@ public class GameModel {
                 if (!isLeftBorder) ship.moveLeft();
                 break;
             case "UP":
-                boolean isUpBorder = ship.getPositionY() - ship.getSpeed() < GameScreen.SEPARATION_LINE_HEIGHT;
+                boolean isUpBorder = ship.getPositionY() - ship.getSpeed() < GameConstant.STAT_SEPARATION_LINE_HEIGHT;
                 if (!isUpBorder) ship.moveUp();
                 break;
             case "DOWN":
-                boolean isDownBorder = ship.getPositionY() + ship.getHeight() + ship.getSpeed() > GameScreen.ITEMS_SEPARATION_LINE_HEIGHT;
+                boolean isDownBorder = ship.getPositionY() + ship.getHeight() + ship.getSpeed() > GameConstant.ITEMS_SEPARATION_LINE_HEIGHT;
                 if (!isDownBorder) ship.moveDown();
                 break;
         }
@@ -331,7 +325,7 @@ public class GameModel {
     private void cleanBullets() {
         Set<Bullet> recyclable = new HashSet<Bullet>();
         for (Bullet bullet : this.bullets) {
-            if (bullet.getPositionY() < GameScreen.SEPARATION_LINE_HEIGHT
+            if (bullet.getPositionY() < GameConstant.STAT_SEPARATION_LINE_HEIGHT
                     || bullet.getPositionY() > this.height)
                 recyclable.add(bullet);
         }
@@ -346,7 +340,7 @@ public class GameModel {
     private void cleanItems() {
         Set<DropItem> recyclable = new HashSet<DropItem>();
         for (DropItem dropItem : this.dropItems) {
-            if (dropItem.getPositionY() < GameScreen.SEPARATION_LINE_HEIGHT
+            if (dropItem.getPositionY() < GameConstant.STAT_SEPARATION_LINE_HEIGHT
                     || dropItem.getPositionY() > this.height)
                 recyclable.add(dropItem);
         }
@@ -765,12 +759,12 @@ public class GameModel {
         this.logger.info("Spawning boss: " + bossName);
         switch (bossName) {
             case "finalBoss":
-                this.finalBoss = new FinalBoss(this.width / 2 - 50, 50, this.width, this.height);
+                this.finalBoss = new FinalBoss(this.width / 2 - 50, 80, this.width, this.height);
                 this.logger.info("Final Boss has spawned!");
                 break;
             case "omegaBoss":
             case "omegaAndFinal":
-                this.omegaBoss = new OmegaBoss(Color.ORANGE, width, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT);
+                this.omegaBoss = new OmegaBoss(Color.ORANGE, width, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT);
                 this.logger.info("Omega Boss has spawned!");
                 break;
             default:

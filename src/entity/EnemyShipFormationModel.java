@@ -68,7 +68,7 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
      *
      * @param level The level data (for speed, shooting, etc.).
      */
-    public EnemyShipFormationModel(final Level level,int bottomLimit, int screenWidth) {
+    public EnemyShipFormationModel(final Level level, int screenWidth) {
         this.logger = Core.getLogger();
         this.movementInterval = 0;
         this.levelObj = level;
@@ -80,7 +80,7 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
                 level.getFormationHeight()
         );
 
-        this.movementStrategy = new EnemyShipFormationMovement(this,bottomLimit,screenWidth);
+        this.movementStrategy = new EnemyShipFormationMovement(this,GameConstant.ITEMS_SEPARATION_LINE_HEIGHT,screenWidth);
         this.shootingManager = new FormationShootingManager(level, this.enemyShips);
 
         this.nShipsWide = level.getFormationWidth();

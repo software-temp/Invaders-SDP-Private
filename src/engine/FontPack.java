@@ -17,8 +17,8 @@ public final class FontPack {
 
     public FontPack(Graphics graphics, FileManager fm) {
         try {
-            fontRegular = fm.loadFont(14f);
-            fontBig = fm.loadFont(24f);
+            fontRegular = fm.loadFont(18f);
+            fontBig = fm.loadFont(30f);
             fontSmall = fm.loadFont(9f);
 
             regularMetrics = graphics.getFontMetrics(fontRegular);
