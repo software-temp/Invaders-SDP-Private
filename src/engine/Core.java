@@ -9,6 +9,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import entity.GameConstant;
 import entity.ShopItem;
 import engine.level.LevelManager;
 import screen.*;
@@ -21,10 +22,13 @@ import test.TestScreen;
  * 
  */
 public final class Core {
-
-	/** Width of current screen. */
+    /** Width of current screen */
+    public static int FRAME_WIDTH_TOTAL;
+    /** Height of current screen. */
+    public static int FRAME_HEIGHT_TOTAL;
+	/** Width of current screen. (excepting white space) */
 	public static int FRAME_WIDTH;
-	/** Height of current screen. */
+	/** Height of current screen. (excepting white space)*/
 	public static int FRAME_HEIGHT;
 	/** Max fps of current screen. */
 	private static final int FPS = 60;
@@ -76,19 +80,20 @@ public final class Core {
 			e.printStackTrace();
 		}
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        FRAME_WIDTH = (int) (screenSize.getWidth() * 0.8);
-        FRAME_HEIGHT = (int) (screenSize.getHeight() * 0.9);
+        FRAME_WIDTH_TOTAL = (int) (screenSize.getWidth() * 0.8);
+        FRAME_HEIGHT_TOTAL = (int) (screenSize.getHeight() * 0.9);
 
-//      screen 사이즈 비율
-        double scaleX = (double) FRAME_WIDTH / 1228.0;
-        double scaleY = (double) FRAME_HEIGHT / 777.0;
+//      screen size ratio
+        double scaleX = (double) FRAME_WIDTH_TOTAL / 1228.0;
+        double scaleY = (double) FRAME_HEIGHT_TOTAL / 777.0;
 
         DrawManager.getInstance().setScale(scaleX, scaleY);
 
-		frame = new Frame(FRAME_WIDTH, FRAME_HEIGHT);
+		frame = new Frame(FRAME_WIDTH_TOTAL, FRAME_HEIGHT_TOTAL);
 		DrawManager.getInstance().setFrame(frame);
 		FRAME_WIDTH = frame.getWidth();
 		FRAME_HEIGHT = frame.getHeight();
+        GameConstant.initialize(FRAME_WIDTH, FRAME_HEIGHT);
 
 		levelManager = new LevelManager();
 		GameState gameState = new GameState(1, 0, MAX_LIVES, MAX_LIVES, 0, 0,0);
