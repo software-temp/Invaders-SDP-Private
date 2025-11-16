@@ -6,6 +6,7 @@ import java.util.Map;
 import engine.BackBuffer;
 import entity.Entity;
 import engine.DrawManager.SpriteType;
+import entity.LaserBullet;
 
 /**
  * Handles rendering of all game entities using the shared back buffer.
@@ -35,6 +36,16 @@ public final class EntityRenderer {
             }
         }
     }
+
+	public void drawEntity(final Entity entity) {
+		if (entity instanceof LaserBullet) {
+			LaserBullet laser = (LaserBullet) entity;
+			drawLaserRotated(laser, laser.getTargetPosition().x, laser.getTargetPosition().y);
+		} else {
+			drawEntity(entity, entity.getPositionX(), entity.getPositionY());
+		}
+	}
+
 	public void drawLaserRotated(Entity entity, int posX, int posY) {
 		Graphics g = backBuffer.getGraphics();
 		g.setColor(entity.getColor());

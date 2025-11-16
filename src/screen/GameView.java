@@ -32,12 +32,7 @@ public class GameView {
         if (model.getEntitiesToRender() != null) {
             for (int i = 0; i < model.getEntitiesToRender().size(); i++) {
                 var e = model.getEntitiesToRender().get(i);
-				if(e instanceof LaserBullet){
-					drawManager.getEntityRenderer().drawLaserRotated(e,((LaserBullet) e).getTargetPosition().x, ((LaserBullet) e).getTargetPosition().y);
-				}
-				else{
-					drawManager.getEntityRenderer().drawEntity(e, e.getPositionX(), e.getPositionY());
-				}
+				drawManager.getEntityRenderer().drawEntity(e);
             }
         }
 
