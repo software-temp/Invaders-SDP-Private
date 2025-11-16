@@ -3,7 +3,7 @@ package engine;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import engine.FileManager;
+
 import engine.DrawManager.SpriteType;
 
 public final class SpriteAtlas {

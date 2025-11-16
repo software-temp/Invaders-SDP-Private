@@ -4,12 +4,10 @@ import audio.SoundManager;
 import engine.DrawManager;
 import engine.Cooldown;
 import engine.Core;
-import screen.GameScreen;
 
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class FinalBoss extends Entity implements BossEntity{
 
@@ -39,7 +37,7 @@ public class FinalBoss extends Entity implements BossEntity{
 
     public FinalBoss(int positionX, int positionY, int screenWidth, int screenHeight){
 
-        super(positionX,positionY,100,80, Color.RED);
+        super(positionX,positionY,50 * 2,40 * 2, Color.RED);
         this.healPoint = 80;
         this.maxHp = healPoint;
         this.pointValue = 1000;

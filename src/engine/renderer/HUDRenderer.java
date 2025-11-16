@@ -1,12 +1,11 @@
-package engine.Renderer;
+package engine.renderer;
 
 import engine.BackBuffer;
 import engine.FontPack;
 import engine.ItemHUDManager;
 import entity.Ship;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+
+import java.awt.*;
 
 /**
  * Handles all on-screen HUD rendering such as scores, coins, and timers.
@@ -43,9 +42,11 @@ public final class HUDRenderer {
         long seconds = milliseconds / 1000;
         long minutes = seconds / 60;
         seconds %= 60;
-
+        FontMetrics fm = g.getFontMetrics();
+        int fontHeight = fm.getHeight();
+        int y = screenHeight + 2 * fontHeight;
         String timeString = String.format("Time: %02d:%02d", minutes, seconds);
-        g.drawString(timeString, 10, screenHeight - 20);
+        g.drawString(timeString, 10, y);
     }
 
     /** Draw current coin count on screen (bottom-center). */
@@ -53,11 +54,13 @@ public final class HUDRenderer {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
+        FontMetrics fm = g.getFontMetrics();
+        int fontHeight = fm.getHeight();
 
         String coinString = String.format("%03d$", coin);
         int textWidth = fontPack.getRegularMetrics().stringWidth(coinString);
         int x = screenWidth / 2 - textWidth / 2;
-        int y = screenHeight - 50;
+        int y = screenHeight - fontHeight;
 
         g.drawString(coinString, x, y);
     }
@@ -67,8 +70,7 @@ public final class HUDRenderer {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        g.drawString("P1:", 15, 25);
-
+        g.drawString("P1:", 10, 25);
         Ship dummyShip = new Ship(0, 0, Color.GREEN);
         for (int i = 0; i < lives; i++) {
             entityRenderer.drawEntity(dummyShip, 40 + 35 * i, 10);
@@ -80,28 +82,32 @@ public final class HUDRenderer {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        g.drawString("P2:", 15, 40);
-
+        g.drawString("P2:", 10, 55);
         Ship dummyShip = new Ship(0, 0, Color.PINK);
         for (int i = 0; i < lives; i++) {
-            entityRenderer.drawEntity(dummyShip, 40 + 35 * i, 30);
+            entityRenderer.drawEntity(dummyShip, 40 + 35 * i, 40);
         }
     }
 
     /** Draw all item icons on HUD. */
-    public void drawItemsHUD(final int screenWidth) {
+    public void drawItemsHUD(final int screenWidth, final int screenHeight) {
         Graphics g = backBuffer.getGraphics();
         ItemHUDManager hud = ItemHUDManager.getInstance();
+        hud.setHUDPositions(screenHeight);
         hud.initialize(screenWidth);
         hud.drawItems(g);
     }
 
     /** Draw current level name (bottom-left). */
-    public void drawLevel(final int screenHeight, final String levelName) {
+    public void drawLevel(final int seperateLine, final String levelName) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
-        g.drawString(levelName, 20, screenHeight - 50);
+        FontMetrics fm = g.getFontMetrics();
+        int fontHeight = fm.getHeight();
+
+        int y = seperateLine + fontHeight;
+        g.drawString(levelName, 20, y);
     }
 
     /** Draw achievement popup at the top center of the screen. */

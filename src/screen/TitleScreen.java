@@ -8,7 +8,6 @@ import java.util.Random;
 
 import engine.Cooldown;
 import engine.Core;
-import engine.DrawManager;
 import engine.DrawManager.SpriteType;
 import entity.Entity;
 import entity.SoundButton;
@@ -266,9 +265,9 @@ public class TitleScreen extends Screen {
 					this.soundButton.changeSoundState();
 
 					if (SoundButton.getIsSoundOn()) {
-						SoundManager.uncutAllSound();
+						SoundManager.uncutBGM();
 					} else {
-						SoundManager.cutAllSound();
+						SoundManager.cutBGM();
 					}
 
 					if (this.soundButton.isTeamCreditScreenPossible()) {
@@ -298,7 +297,6 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the next menu item.
 	 */
 	private void nextMenuItem() {
-		SoundManager.play("sfx/menu_select.wav");
         switch (this.returnCode) {
             case 0 -> this.returnCode = 2; // Exit → Play
             case 2 -> this.returnCode = 3; // Play → High Scores
@@ -315,7 +313,6 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the previous menu item.
 	 */
 	private void previousMenuItem() {
-		SoundManager.play("sfx/menu_select.wav");
         switch (this.returnCode) {
             case 0 -> this.returnCode = 6; // Exit → Achievements
             case 6 -> this.returnCode = 4; // Achievements → Shop
