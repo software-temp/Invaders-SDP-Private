@@ -1,4 +1,4 @@
-package engine.Renderer;
+package engine.renderer;
 
 import engine.BackBuffer;
 import engine.FontPack;

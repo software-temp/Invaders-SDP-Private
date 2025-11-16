@@ -4,12 +4,10 @@ import audio.SoundManager;
 import engine.DrawManager;
 import engine.Cooldown;
 import engine.Core;
-import screen.GameScreen;
 
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class FinalBoss extends Entity implements BossEntity{
 

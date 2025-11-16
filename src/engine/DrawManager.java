@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import engine.Renderer.EntityRenderer;
-import engine.Renderer.HUDRenderer;
-import engine.Renderer.ShopRenderer;
-import engine.Renderer.UIRenderer;
+import engine.renderer.EntityRenderer;
+import engine.renderer.HUDRenderer;
+import engine.renderer.ShopRenderer;
+import engine.renderer.UIRenderer;
 import screen.TitleScreen.Star;
 import screen.TitleScreen.ShootingStar;
 

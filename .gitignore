@@ -179,3 +179,7 @@ log*
 .checkstyle
 production
 achievements.dat
+
+# Gradle
+/.gradle/
+build/

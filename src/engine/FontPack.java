@@ -5,7 +5,6 @@ import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.io.IOException;
-import engine.FileManager;
 
 public final class FontPack {
     private final Font fontRegular;

@@ -1,7 +1,6 @@
 package entity;
 
 import engine.Core;
-import screen.Screen;
 
 import java.awt.*;
 import java.util.logging.Logger;
