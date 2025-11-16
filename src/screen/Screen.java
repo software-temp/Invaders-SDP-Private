@@ -16,11 +16,6 @@ import engine.InputManager;
  * 
  */
 public class Screen {
-
-	/** Height of the interface separation line. */
-	public static final int SEPARATION_LINE_HEIGHT = 45;
-	/** Height of the items separation line (above items). */
-	public static final int ITEMS_SEPARATION_LINE_HEIGHT = 400;
 	/** Milliseconds until the screen accepts user input. */
 	private static final int INPUT_DELAY = 1000;
 

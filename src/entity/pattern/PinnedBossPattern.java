@@ -1,7 +1,6 @@
 package entity.pattern;
 
 import engine.Cooldown;
-import engine.Core;
 import entity.BossBullet;
 import entity.Bullet;
 import entity.HasBounds;
