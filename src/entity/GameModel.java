@@ -14,9 +14,6 @@ import engine.GameTimer;
 import engine.AchievementManager;
 import engine.ItemHUDManager;
 import engine.level.Level;
-import entity.pattern.MidBossMob;
-import screen.GameScreen;
-import screen.Screen;
 
 /**
  * Implements the Model for the game screen.
@@ -64,8 +61,7 @@ public class GameModel {
     /** Time from finishing the level to screen change. */
     private Cooldown screenFinishedCooldown;
     /** OmegaBoss */
-    private OmegaBoss omegaBoss;
-    private List<MidBossMob> midBossChilds;
+    private MidBoss omegaBoss;
     /** Set of all bullets fired by on-screen ships. */
     private Set<Bullet> bullets;
     /** Set of all dropItems dropped by on screen ships. */
@@ -114,19 +110,15 @@ public class GameModel {
     private Logger logger;
     private int width;
     private int height;
-    private int bottomHeight;
-    private Screen screen; // Needed for attach()
 
     /** Milliseconds until the screen accepts user input. */
     private Cooldown inputDelay;
 
 
-    public GameModel(GameState gameState, Level level, boolean bonusLife, int maxLives, int width, int height,int ITEMS_SEPARATION_LINE_HEIGHT, Screen screen) {
+    public GameModel(GameState gameState, Level level, boolean bonusLife, int maxLives, int width, int height) {
         this.logger = Core.getLogger();
         this.width = width;
         this.height = height;
-        this.bottomHeight = ITEMS_SEPARATION_LINE_HEIGHT;
-        this.screen = screen; // Store screen context
 
         this.currentLevel = level;
         this.bonusLife = bonusLife;
@@ -151,18 +143,18 @@ public class GameModel {
     public final void initialize() {
         /** Initialize the bullet Boss fired */
         this.bossBullets = new HashSet<>();
-        enemyShipFormationModel = new EnemyShipFormationModel(this.currentLevel, bottomHeight, width);
+        enemyShipFormationModel = new EnemyShipFormationModel(this.currentLevel, width);
         this.enemyShipFormationModel.applyEnemyColor(this.currentLevel.getColorForLevel());
-        this.ship = new Ship(this.width / 2 - 100, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT - 20,Color.green);
+        this.ship = new Ship(this.width / 4, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT * 19 / 20,Color.green);
         this.ship.setPlayerId(1);   //=== [ADD] Player 1 ===
 
-        this.shipP2 = new Ship(this.width / 2 + 100, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT - 20,Color.pink);
+        this.shipP2 = new Ship(this.width * 3 / 4, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT * 19 / 20,Color.pink);
         this.shipP2.setPlayerId(2); // === [ADD] Player2 ===
         // special enemy initial
+
         enemyShipSpecialFormation = new EnemyShipSpecialFormation(this.currentLevel,
                 Core.getVariableCooldown(BONUS_SHIP_INTERVAL, BONUS_SHIP_VARIANCE),
                 Core.getCooldown(BONUS_SHIP_EXPLOSION));
-        enemyShipSpecialFormation.attach(this.screen);
         this.bossExplosionCooldown = Core
                 .getCooldown(BOSS_EXPLOSION);
         this.screenFinishedCooldown = Core.getCooldown(SCREEN_CHANGE_INTERVAL);
@@ -179,7 +171,6 @@ public class GameModel {
         this.elapsedTime = 0;
         this.finalBoss = null;
         this.omegaBoss = null;
-        this.midBossChilds = null;
         this.currentPhase = StagePhase.wave;
     }
 
@@ -218,11 +209,11 @@ public class GameModel {
                 if (!isLeftBorder) ship.moveLeft();
                 break;
             case "UP":
-                boolean isUpBorder = ship.getPositionY() - ship.getSpeed() < GameScreen.SEPARATION_LINE_HEIGHT;
+                boolean isUpBorder = ship.getPositionY() - ship.getSpeed() < GameConstant.STAT_SEPARATION_LINE_HEIGHT;
                 if (!isUpBorder) ship.moveUp();
                 break;
             case "DOWN":
-                boolean isDownBorder = ship.getPositionY() + ship.getHeight() + ship.getSpeed() > GameScreen.ITEMS_SEPARATION_LINE_HEIGHT;
+                boolean isDownBorder = ship.getPositionY() + ship.getHeight() + ship.getSpeed() > GameConstant.ITEMS_SEPARATION_LINE_HEIGHT;
                 if (!isDownBorder) ship.moveDown();
                 break;
         }
@@ -271,7 +262,7 @@ public class GameModel {
                 }
                 break;
             case boss_wave:
-                if (this.finalBoss == null && this.omegaBoss == null) {
+                if (this.finalBoss == null && this.omegaBoss == null){
                     bossReveal();
                     this.enemyShipFormationModel.clear();
                 }
@@ -334,7 +325,7 @@ public class GameModel {
     private void cleanBullets() {
         Set<Bullet> recyclable = new HashSet<Bullet>();
         for (Bullet bullet : this.bullets) {
-            if (bullet.getPositionY() < GameScreen.SEPARATION_LINE_HEIGHT
+            if (bullet.getPositionY() < GameConstant.STAT_SEPARATION_LINE_HEIGHT
                     || bullet.getPositionY() > this.height)
                 recyclable.add(bullet);
         }
@@ -349,7 +340,7 @@ public class GameModel {
     private void cleanItems() {
         Set<DropItem> recyclable = new HashSet<DropItem>();
         for (DropItem dropItem : this.dropItems) {
-            if (dropItem.getPositionY() < GameScreen.SEPARATION_LINE_HEIGHT
+            if (dropItem.getPositionY() < GameConstant.STAT_SEPARATION_LINE_HEIGHT
                     || dropItem.getPositionY() > this.height)
                 recyclable.add(dropItem);
         }
@@ -464,24 +455,7 @@ public class GameModel {
                     }
                     recyclable.add(bullet);
                 }
-                if(this.midBossChilds != null && !this.midBossChilds.isEmpty()) {
-                    for(MidBossMob ship : midBossChilds){
-                        if(ship != null
-                                && !ship.isDestroyed()
-                                && checkCollision(bullet, ship)) {
-                            ship.takeDamage(2);
-                            if(ship.getHealPoint() <= 0) {
-                                int pts = ship.getPointValue();
-                                addPointsFor(bullet, pts);
-                                this.coin += (pts / 10);
-                                this.shipsDestroyed++;
-                                ship.destroy();
-                            }
-                            recyclable.add(bullet);
-                            if(!bullet.penetration()){break;}
-                        }
-                    }
-                }
+
                 /** when final boss collide with bullet */
                 if(this.finalBoss != null && !this.finalBoss.isDestroyed() && checkCollision(bullet,this.finalBoss)){
                     this.finalBoss.takeDamage(1);
@@ -545,21 +519,6 @@ public class GameModel {
                 return;
             }
 
-            if(this.midBossChilds != null && !this.midBossChilds.isEmpty()){
-                for(MidBossMob ship : midBossChilds){
-                    if(ship != null
-                            && !ship.isDestroyed()
-                            && checkCollision(this.ship, ship)){
-                        this.ship.destroy();
-                        this.livesP1--;
-                        showHealthPopup("-1 Life (Collision!)");
-                        this.logger.info("Ship collided with enemy! " + this.livesP1
-                                + " lives remaining.");
-                        return;
-                    }
-                }
-            }
-
             // Check collision with final boss
             if (this.finalBoss != null && !this.finalBoss.isDestroyed()
                     && checkCollision(this.ship, this.finalBoss)) {
@@ -613,20 +572,6 @@ public class GameModel {
                 return;
             }
 
-            if(this.midBossChilds != null && !this.midBossChilds.isEmpty()){
-                for(MidBossMob ship : midBossChilds){
-                    if(ship != null
-                            && !ship.isDestroyed()
-                            && checkCollision(this.shipP2, ship)){
-                        this.shipP2.destroy();
-                        this.livesP2--;
-                        showHealthPopup("-1 Life (Collision!)");
-                        this.logger.info("Ship collided with enemy! " + this.livesP2
-                                + " lives remaining.");
-                        return;
-                    }
-                }
-            }
             // Check collision with final boss
             if (this.finalBoss != null && !this.finalBoss.isDestroyed()
                     && checkCollision(this.shipP2, this.finalBoss)) {
@@ -814,12 +759,12 @@ public class GameModel {
         this.logger.info("Spawning boss: " + bossName);
         switch (bossName) {
             case "finalBoss":
-                this.finalBoss = new FinalBoss(this.width / 2 - 50, 50, this.width, this.height);
+                this.finalBoss = new FinalBoss(this.width / 2 - 50, 80, this.width, this.height);
                 this.logger.info("Final Boss has spawned!");
                 break;
             case "omegaBoss":
             case "omegaAndFinal":
-                this.omegaBoss = new OmegaBoss(Color.ORANGE, width, GameScreen.ITEMS_SEPARATION_LINE_HEIGHT);
+                this.omegaBoss = new OmegaBoss(Color.ORANGE, width, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT);
                 this.logger.info("Omega Boss has spawned!");
                 break;
             default:
@@ -966,7 +911,6 @@ public class GameModel {
     public Set<BossBullet> getBossBullets() { return bossBullets; }
     public EnemyShipFormationModel getEnemyShipFormationModel() { return enemyShipFormationModel; }
     public MidBoss getOmegaBoss() { return omegaBoss; }
-    public List<MidBossMob> getMidBossChilds() { return midBossChilds; }
     public Set<Bullet> getBullets() { return bullets; }
     public Set<DropItem> getDropItems() { return dropItems; }
     public int getScoreP1() { return scoreP1; }
@@ -1005,11 +949,6 @@ public class GameModel {
         if (getEnemyShipFormationModel() != null) {
             for (EnemyShip enemy : getEnemyShipFormationModel()) {
                 renderList.add(enemy);
-            }
-        }
-        if (getMidBossChilds() != null) {
-            for (MidBossMob child : getMidBossChilds()) {
-                renderList.add(child);
             }
         }
 
