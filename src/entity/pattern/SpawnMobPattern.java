@@ -1,10 +1,9 @@
-package entity;
+package entity.pattern;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.awt.*;
-import engine.DrawManager;
 import java.util.logging.Logger;
 import engine.Core;
 
@@ -89,7 +88,8 @@ public class SpawnMobPattern {
                 this.screenWidth,
                 this.BOSS_WIDTH,
                 this.BOSS_HEIGHT,
-                this.Child_Speed);
+                this.Child_Speed
+        );
     }
 
     /**
@@ -162,12 +162,12 @@ public class SpawnMobPattern {
      * @param shipCount The *total* number of children to be created in this wave.
      */
     public void createChild(int shipCount) {
-        this.Logger.info("Delta: Create Child");
+        this.Logger.info("Create Child");
         for (int count = 0; count < shipCount; count++) {
             MidBossMob ship = new MidBossMob(
                     this.BOSS_PositionX ,
                     BOSS_PositionY + (int)(60.0/shipCount * (count+1)),
-                    6,
+                    4,
                     10,
                     colorPalette[count % colorPalette.length]
             );

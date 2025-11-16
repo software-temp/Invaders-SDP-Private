@@ -52,11 +52,4 @@ public interface BossEntity {
 	 * Updates the boss's state, typically used for animation or behavior changes.
 	 */
 	void update();
-
-	/**
-	 * Draws the boss entity on the screen.
-	 *
-	 * @param drawManager the {@link DrawManager} responsible for rendering the boss
-	 */
-	void draw(DrawManager drawManager);
 }

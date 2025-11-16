@@ -1,6 +1,7 @@
-package entity;
+package entity.pattern;
 
 import engine.DrawManager;
+import entity.MidBoss;
 
 import java.awt.*;
 
@@ -56,14 +57,8 @@ public class MidBossMob extends MidBoss {
     public void destroy() {
         this.isDestroyed = true;
         this.spriteType = DrawManager.SpriteType.Explosion;
-        this.logger.info("Child Destroyed");
+        this.logger.info("Mob Destroyed");
     }
-    /**
-     * Draws the entity on the screen using the DrawManager.
-     * @param drawManager The DrawManager instance responsible for rendering.
-     */
-    @Override
-    public void draw(DrawManager drawManager) {drawManager.getEntityRenderer().drawEntity(this,this.positionX,this.positionY);}
 
     @Override
     public int getHealPoint() { return this.healPoint; }

@@ -199,9 +199,4 @@ public class FinalBoss extends Entity implements BossEntity{
     public boolean isDestroyed(){
         return this.isDestroyed;
     }
-
-    @Override
-    public void draw(DrawManager drawManager) {
-        drawManager.getEntityRenderer().drawEntity(this, this.positionX, this.positionY);
-    }
 }

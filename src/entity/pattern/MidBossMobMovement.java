@@ -1,4 +1,4 @@
-package entity;
+package entity.pattern;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  * Defines the movement strategy for MidBossMob child entities.
  * Implements two distinct movement patterns based on the boss's health.
  */
-public class MidBossMobMovement implements IMovementStrategy{
+public class MidBossMobMovement {
 
     /** The width of the screen, used for wall collision checks. */
     private int wallWidth;
@@ -56,12 +56,7 @@ public class MidBossMobMovement implements IMovementStrategy{
         double dx = targetX - ship.getPositionX();
         double dy = targetY - ship.getPositionY();
         double distance = Math.sqrt(dx*dx + dy*dy);
-        // SAFETY CHECK: Prevent division by zero or large errors when close to target
-        if (distance < 1.0) {
-            ship.move((int) dx, (int) dy);
-            return;
-        }
-        double speedMultiplier = (distance > 10) ? 2.0 : 1.0;
+        double speedMultiplier = (distance > 10) ? 10.0 : 1.0;
         // Calculate movement based on unit vector * speed * multiplier
         int moveX = (int) (dx * this.speed / distance * speedMultiplier);
         int moveY = (int) (dy * this.speed / distance * speedMultiplier);
@@ -79,7 +74,7 @@ public class MidBossMobMovement implements IMovementStrategy{
      * @param bossX The X position of the main boss.
      * @param bossY The Y position of the main boss.
      * @param Boss_Delta_Childs The list of child entities.
-     * @param initialChildCount The total number of children spawned (used for orbit spacing).
+     * @param initialChildCount The total number of children spawned
      */
     public void pattern_1_Movement(int bossX, int bossY, List<MidBossMob> Boss_Delta_Childs, int initialChildCount){
         this.frameCount++;
@@ -110,11 +105,11 @@ public class MidBossMobMovement implements IMovementStrategy{
                 int finalTargetX = orbitTargetX - child.getWidth()/ 2;
                 int finalTargetY = orbitTargetY - child.getHeight()/ 2;
 
-                if(finalTargetY < 50) {
-                    moveToTarget(child, finalTargetX, 50);
-                }else {
-                    moveToTarget(child, finalTargetX, finalTargetY);
-                }
+                boolean isTopWall = finalTargetY < 50;
+                boolean isBottomWall = finalTargetY + child.getHeight() > bottomHeight;
+                if(isTopWall){finalTargetY = 51;}
+                if(isBottomWall){finalTargetY = bottomHeight - child.getHeight();}
+                moveToTarget(child, finalTargetX, finalTargetY);
             }
         }
     }
@@ -145,11 +140,12 @@ public class MidBossMobMovement implements IMovementStrategy{
 
                 int finalTargetX = orbitTargetX - child.getWidth()/ 2;
                 int finalTargetY = orbitTargetY - child.getHeight()/ 2;
-                if(finalTargetY < 50) {
-                    moveToTarget(child, finalTargetX, 50);
-                }else {
-                    moveToTarget(child, finalTargetX, finalTargetY);
-                }
+
+                boolean isTopWall = finalTargetY < 50;
+                boolean isBottomWall = finalTargetY + child.getHeight() > bottomHeight;
+                if(isTopWall){finalTargetY = 51;}
+                if(isBottomWall){finalTargetY = bottomHeight - child.getHeight();}
+                moveToTarget(child, finalTargetX, finalTargetY);
             }else {
                 boolean isBottom = child.getPositionY() + child.getHeight() + this.speed > this.bottomHeight - this.Bottom_Margin;
                 int moveX = (int) (Math.cos(this.frameCount * this.OSCILLATION_FREQUENCY) * (this.speed * 3));
@@ -161,15 +157,5 @@ public class MidBossMobMovement implements IMovementStrategy{
 
             }
         }
-    }
-
-    @Override
-    public void updateMovement() {
-
-    }
-
-    @Override
-    public void activateSlowdown() {
-
     }
 }
