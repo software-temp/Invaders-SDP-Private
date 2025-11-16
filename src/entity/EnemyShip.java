@@ -93,7 +93,7 @@ public class EnemyShip extends Entity {
 	 * known starting properties.
 	 */
 	public EnemyShip(Color color, Direction direction, int x_speed) {
-		super(-32, 60, 16 * 2, 7 * 2, color);
+        super(-32, GameConstant.STAT_SEPARATION_LINE_HEIGHT, 16 * 2, 7 * 2, color);
 
 		this.direction = direction;
 		this.X_SPEED = x_speed;

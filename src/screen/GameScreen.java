@@ -43,15 +43,14 @@ public class GameScreen extends Screen {
      * Frames per second, frame rate at which the game is run.
      */
     public GameScreen(final GameState gameState,
-                      final Level level, final boolean bonusLife, final int maxLives,
-                      final int width, final int height, final int fps) {
+                        final Level level, final boolean bonusLife, final int maxLives,
+                        final int width, final int height, final int fps) {
         super(width, height, fps);
         this.currentLevel = level;
         this.bonusLife = bonusLife;
         this.maxLives = maxLives;
         this.gameState = gameState;
     }
-
     /**
      * Initializes the Model and View.
      */
@@ -63,7 +62,7 @@ public class GameScreen extends Screen {
         this.model = new GameModel(
                 this.gameState, this.currentLevel,
                 this.bonusLife, this.maxLives,
-                this.width, this.height, ITEMS_SEPARATION_LINE_HEIGHT,this
+                this.width, this.height
         );
         this.view = new GameView(this.model,this.drawManager);
 

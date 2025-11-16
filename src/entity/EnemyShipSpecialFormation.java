@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
 
-import screen.Screen;
 import engine.level.Level;
 import engine.Cooldown;
 import engine.Core;
@@ -42,10 +41,6 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
      * Application logger.
      */
     private Logger logger;
-    /**
-     * Screen to draw ships on.
-     */
-    private Screen screen;
 
     private EnemyShip enemyShipSpecialRed;
     private EnemyShip enemyShipSpecialBlue;
@@ -77,7 +72,6 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
     // Cooldown Field
     private Cooldown enemyShipSpecialCooldown;
     private Cooldown enemyShipSpecialExplosionCooldown;
-
     /**
      * Constructor, sets the initial conditions.
      *
@@ -130,15 +124,6 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
     }
 
     /**
-     * Associates the formation to a given screen.
-     *
-     * @param newScreen Screen to attach.
-     */
-    public final void attach(final Screen newScreen) {
-        screen = newScreen;
-    }
-
-    /**
      * Draws every component of the formation.
      */
     public final void draw() {
@@ -186,7 +171,7 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
             Color color = enemyShipSpecial.getColor();
 
             /** Varidation Check : left & right possible move point **/
-            boolean isAtRightSide = enemyShipSpecial.getPositionX() + this.shipWidth >= screen.getWidth() - SIDE_MARGIN;
+            boolean isAtRightSide = enemyShipSpecial.getPositionX() + this.shipWidth >= GameConstant.SCREEN_WIDTH - SIDE_MARGIN;
             boolean isAtLeftSide = enemyShipSpecial.getPositionX() <= SIDE_MARGIN;
 
             /** moving logic **/

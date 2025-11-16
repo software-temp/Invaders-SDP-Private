@@ -28,14 +28,44 @@ public final class UIRenderer {
 
     public void drawTitle(final int screenWidth, final int screenHeight) {
         Graphics g = backBuffer.getGraphics();
+
         g.setFont(fontPack.getFontBig());
         g.setColor(Color.GREEN);
-        g.drawString("Invaders", screenWidth / 2 - 100, screenHeight / 3);
+        String title = "Space Invaders extension";
+        FontMetrics fm = g.getFontMetrics();
+        int textWidth = fm.stringWidth(title);
+        int x = (screenWidth - textWidth) / 2;
+        int y = screenHeight / 3;
+        g.drawString(title, x, y);
 
         g.setFont(fontPack.getRegular());
-        g.setColor(Color.GRAY);
-        g.drawString("Select with W/S or Arrows, Confirm with Space",
-                screenWidth / 2 - 180, screenHeight / 2);
+        g.setColor(Color.GREEN);
+        String str = "with temp";
+        fm = g.getFontMetrics();
+        textWidth = fm.stringWidth(str);
+        x = (screenWidth - textWidth) / 2 + 200;
+        y = screenHeight / 3 + 30;
+        g.drawString(str,
+                x, y);
+
+        g.setFont(fontPack.getRegular());
+        g.setColor(Color.YELLOW);
+        String explain1 = "Player 1: move: W.A.S.D / shoot: space";
+
+        fm = g.getFontMetrics();
+        textWidth = fm.stringWidth(explain1);
+        x = (screenWidth - textWidth) / 2;
+        y = screenHeight / 2;
+        g.drawString(explain1,
+                x, y);
+
+        String explain2 = "Player 2: move: arrow keys / shoot: enter";
+        fm = g.getFontMetrics();
+        textWidth = fm.stringWidth(explain2);
+        x = (screenWidth - textWidth) / 2;
+        y = screenHeight / 2 + 30;
+        g.drawString(explain2,
+                x, y);
     }
 
     /** Draws main menu options with pulsing selection effect. */
@@ -43,7 +73,7 @@ public final class UIRenderer {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
 
-        String[] options = { "Exit", "Play", "High Scores", "Shop", "Achievements" };
+        String[] options = { "Play", "High Scores", "Shop", "Achievements","Exit"};
 
         // Pulse effect for selection
         float pulse = (float) ((Math.sin(System.currentTimeMillis() / 200.0) + 1.0) / 2.0);
@@ -53,11 +83,12 @@ public final class UIRenderer {
         int spacing = fontPack.getRegularMetrics().getHeight();
 
         int selectedIndex = switch (option){
-            case 0 -> 0;
-            case 2 -> 1; // Play
-            case 3 -> 2; // High Scores
-            case 4 -> 3; // Shop
-            case 6 -> 4; // Achievements
+            case 2 -> 0; // Play
+            case 3 -> 1; // High Scores
+            case 4 -> 2; // Shop
+            case 6 -> 3; // Achievements
+            case 0 -> 4; // Exit
+
             default -> -1; // none (ex. sound button focus)
         };
 
