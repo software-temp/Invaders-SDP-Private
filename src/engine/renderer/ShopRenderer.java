@@ -29,14 +29,14 @@ public final class ShopRenderer {
         // --- Coin balance ---
         g.setColor(Color.YELLOW);
         String balanceString = String.format("Your Balance: %d coins", dto.getCoinBalance());
-        drawCenteredString(dto.getScreenWidth(), balanceString, 120, fontPack.getRegular());
+        drawCenteredString(dto.getScreenWidth(), balanceString, dto.getScreenHeight() / 6, fontPack.getRegular());
 
         // --- Instructions ---
         g.setColor(Color.GRAY);
         String instructions = (dto.getSelectionMode() == 0)
                 ? "W/S: Navigate | SPACE: Select | ESC: Exit"
                 : "A/D: Change Level | SPACE: Buy | ESC: Back";
-        drawCenteredString(dto.getScreenWidth(), instructions, 145, fontPack.getRegular());
+        drawCenteredString(dto.getScreenWidth(), instructions, dto.getScreenHeight() / 6 + 20, fontPack.getRegular());
 
         // --- Layout ---
         int headerHeight = 165;
@@ -65,7 +65,9 @@ public final class ShopRenderer {
         }
 
         // --- Exit ---
-        int exitY = dto.getScreenHeight() - 30;
+        FontMetrics fm = g.getFontMetrics();
+        int fontHeight = fm.getHeight();
+        int exitY = dto.getScreenHeight() - fontHeight;
         g.setColor((dto.getSelectedItem() == dto.getTotalItems() && dto.getSelectionMode() == 0) ? Color.GREEN : Color.WHITE);
         String exitText = dto.isBetweenLevels() ? "< Back to Game >" : "< Back to Main Menu >";
         drawCenteredString(dto.getScreenWidth(), exitText, exitY, fontPack.getRegular());
@@ -102,14 +104,17 @@ public final class ShopRenderer {
         // instruction
         if (isSelected || isLevelSelection) {
             g.setColor(Color.GRAY);
-            g.drawString(description, 30, yPosition + 15);
+            FontMetrics fm = g.getFontMetrics();
+            int fontHeight = fm.getHeight();
+            g.drawString(description, 30, yPosition + fontHeight);
         }
 
         // level chose
         if (isLevelSelection) {
             int levelStartX = 30;
             int currX = levelStartX;
-            int currY = yPosition + 35;
+            FontMetrics fm = g.getFontMetrics();
+            int currY = yPosition + 2 * fm.getHeight();
             int maxWidth = screenWidth - 60;
             int spaceBetween = 18;
 
@@ -132,7 +137,7 @@ public final class ShopRenderer {
 
                 if (currX + textWidth > levelStartX + maxWidth) {
                     currX = levelStartX;
-                    currY += metrics.getHeight() + 3;
+                    currY += (metrics.getHeight()) + 3;
                 }
 
                 g.drawString(text, currX, currY);
@@ -147,9 +152,9 @@ public final class ShopRenderer {
     public void drawShopFeedback(final int screenWidth, final String message) {
         Graphics g = backBuffer.getGraphics();
         g.setFont(fontPack.getRegular());
-
-        int popupWidth = 300;
-        int popupHeight = 50;
+        FontMetrics fm = g.getFontMetrics();
+        int popupWidth = fm.stringWidth(message) + 50;
+        int popupHeight = fm.getHeight() + 50;
         int x = screenWidth / 2 - popupWidth / 2;
         int y = 70;
 

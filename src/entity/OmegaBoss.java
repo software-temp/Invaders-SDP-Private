@@ -12,7 +12,7 @@ public class OmegaBoss extends MidBoss {
 	/** Initial position in the x-axis. */
 	private static final int INIT_POS_X = 224;
 	/** Initial position in the y-axis. */
-	private static final int INIT_POS_Y = 50;
+	private static final int INIT_POS_Y = 80;
 	/** Width of Omega */
 	private static final int OMEGA_WIDTH = 64;
 	/** Height of Omega */
