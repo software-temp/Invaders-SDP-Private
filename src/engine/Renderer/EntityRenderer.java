@@ -35,7 +35,7 @@ public final class EntityRenderer {
             }
         }
     }
-	public void drawEntityRotated(Entity entity, int posX, int posY) {
+	public void drawLaserRotated(Entity entity, int posX, int posY) {
 		Graphics g = backBuffer.getGraphics();
 		g.setColor(entity.getColor());
 		int x1 = posX;
@@ -47,17 +47,14 @@ public final class EntityRenderer {
 		double dy = y2 - y1;
 		double len = Math.sqrt(dx * dx + dy * dy);
 		if (len == 0) {
-			return; // 같은 점이면 그릴 선이 없음
+			return;
 		}
 
-		// 단위 방향 벡터
 		dx /= len;
 		dy /= len;
 
-		// 화면 대각선보다 조금 더 크게
-		double big = Math.max(1000, 1000) * 2.0;
+		double big = 2000.0;
 
-		// 양쪽으로 big만큼 뻗음
 		int sx = (int) Math.round(x1 - dx * big);
 		int sy = (int) Math.round(y1 - dy * big);
 		int ex = (int) Math.round(x1 + dx * big);
