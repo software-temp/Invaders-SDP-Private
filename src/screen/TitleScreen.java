@@ -8,7 +8,6 @@ import java.util.Random;
 
 import engine.Cooldown;
 import engine.Core;
-import engine.DrawManager;
 import engine.DrawManager.SpriteType;
 import entity.Entity;
 import entity.SoundButton;

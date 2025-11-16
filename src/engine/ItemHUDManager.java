@@ -7,7 +7,6 @@ import java.util.List;
 
 import entity.ShopItem;
 import entity.DropItem;
-import screen.Screen;
 
 /**
  * Manages the display of items in the HUD.

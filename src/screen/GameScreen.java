@@ -15,11 +15,6 @@ import entity.GameModel;
  */
 public class GameScreen extends Screen {
 
-    /** Height of the interface separation line. */
-    public static final int SEPARATION_LINE_HEIGHT = 45;
-    /** Height of the items separation line (above items). */
-    public static final int ITEMS_SEPARATION_LINE_HEIGHT = 400;
-
     /** Current level data. */
     private final Level currentLevel;
     private final boolean bonusLife;

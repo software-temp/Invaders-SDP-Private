@@ -3,8 +3,6 @@ package engine;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import engine.Frame;
-import screen.Screen;
 
 public final class BackBuffer {
 

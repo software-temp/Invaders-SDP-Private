@@ -1,4 +1,4 @@
-package engine.Renderer;
+package engine.renderer;
 
 import java.awt.Graphics;
 import java.util.Map;

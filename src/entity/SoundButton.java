@@ -3,7 +3,6 @@ package entity;
 import java.awt.Color;
 
 import engine.DrawManager.SpriteType;
-import audio.SoundManager;
 
 /**
  * Implements a sound button, to change sound state such as on/off.

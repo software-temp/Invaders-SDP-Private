@@ -1,9 +1,5 @@
 package screen;
 
-import engine.Core;
-
-import java.util.logging.Logger;
-
 public interface IView {
 	/** Loads all resources needed by this view (fonts, images, sounds, etc.). */
 	void loadAssets();

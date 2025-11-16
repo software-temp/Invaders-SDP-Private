@@ -1,0 +1,73 @@
+// 1. Apply only the necessary plugins
+plugins {
+    // 'application' plugin allows us to run the game (e.g., 'gradlew run')
+    id 'application'
+
+    // 'java' plugin provides standard Java build tasks (e.g., 'compileJava', 'test')
+    id 'java'
+}
+
+// 2. Specify the main class for the application
+application {
+    // Set the main entry point to engine.Core.java
+    mainClass = 'engine.Core'
+}
+
+// 3. Set the project's Java version to 21 (LTS)
+java {
+    // Set the Java version this source code is written in
+    sourceCompatibility = JavaVersion.VERSION_21
+
+    // Set the Java version to compile the bytecode for
+    targetCompatibility = JavaVersion.VERSION_21
+
+    // This tells Gradle to find and use Java 21 automatically
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+// 4. Specify the repository to download JUnit
+repositories {
+    mavenCentral()
+}
+
+// 5. Define project dependencies (Only JUnit for testing)
+dependencies {
+    // Add JUnit 5 (Jupiter) as a dependency for our test code
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
+
+// 6. Configure the 'test' task to use JUnit 5
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+// 8. (Most Important) Tell Gradle about the custom folder structure
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src'] // Java source code is in 'src'
+        }
+        resources {
+            srcDirs = ['res'] // Resource files are in 'res'
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test'] // Test code is in 'test'
+        }
+        resources {
+            srcDirs = ['test-res'] // Test-specific resources
+        }
+    }
+}
+
+// 10. Ensure Java files are compiled using UTF-8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
