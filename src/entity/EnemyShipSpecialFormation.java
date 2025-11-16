@@ -193,7 +193,7 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
                 enemyShipSpecial.move(movementX, movementY,true);
 
             /** explosion logic **/
-            } else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
+            } else if (enemyShipSpecial.isExplosionFinished())
                 if (color == Color.RED) {
                     this.enemyShipSpecialRed = null;
                 } else if (color == Color.BLUE) {
