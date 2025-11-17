@@ -41,11 +41,11 @@ public class Entity {
 	 */
 	public Entity(final int positionX, final int positionY, final int width,
 			final int height, final Color color) {
-		this.positionX = positionX;
-		this.positionY = positionY;
 		this.width = width;
 		this.height = height;
 		this.color = color;
+        this.positionX = positionX;
+        this.positionY = positionY;
 	}
 
 	/**

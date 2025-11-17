@@ -2,6 +2,7 @@ package engine;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -41,7 +42,7 @@ public final class DrawManager {
     private double scale;
 
 	/** Sprite types mapped to their images. */
-	private static Map<SpriteType, boolean[][]> spriteMap;
+	private static Map<SpriteType, BufferedImage[][]> spriteMap;
 
 	/** Sprite types. */
     public static enum SpriteType {

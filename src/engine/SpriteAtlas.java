@@ -15,9 +15,9 @@ public final class SpriteAtlas {
     public SpriteAtlas(FileManager fileManager) {
         try {
             spriteMap = new LinkedHashMap<SpriteType, BufferedImage>();
-            spriteMap.put(SpriteType.ShipP1, new BufferedImage(13,8,BufferedImage.TYPE_INT_ARGB));
+            spriteMap.put(SpriteType.ShipP1, new BufferedImage(25,31,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.ShipP2, new BufferedImage(13,13,BufferedImage.TYPE_INT_ARGB));
-            spriteMap.put(SpriteType.ShipP1Move, new BufferedImage(13,13,BufferedImage.TYPE_INT_ARGB));
+            spriteMap.put(SpriteType.ShipP1Move, new BufferedImage(25,43,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.ShipP2Move, new BufferedImage(13,13,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.ShipP2Explosion1, new BufferedImage(13,13,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.ShipP2Explosion2, new BufferedImage(13,13,BufferedImage.TYPE_INT_ARGB));
@@ -28,8 +28,8 @@ public final class SpriteAtlas {
             spriteMap.put(SpriteType.ShipP1Explosion3, new BufferedImage(13,13,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.Bullet, new BufferedImage(3,5,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.EnemyBullet, new BufferedImage(3,5,BufferedImage.TYPE_INT_ARGB));
-            spriteMap.put(SpriteType.EnemyShipA1, new BufferedImage(50,50,BufferedImage.TYPE_INT_ARGB));
-            spriteMap.put(SpriteType.EnemyShipA2, new BufferedImage(50,50,BufferedImage.TYPE_INT_ARGB));
+            spriteMap.put(SpriteType.EnemyShipA1, new BufferedImage(25,25,BufferedImage.TYPE_INT_ARGB));
+            spriteMap.put(SpriteType.EnemyShipA2, new BufferedImage(25,25,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.EnemyShipB1, new BufferedImage(12,8,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.EnemyShipB2, new BufferedImage(12,8,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.EnemyShipC1, new BufferedImage(12,8,BufferedImage.TYPE_INT_ARGB));
@@ -37,7 +37,7 @@ public final class SpriteAtlas {
             spriteMap.put(SpriteType.EnemyShipSpecial, new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.EnemyShipSpecialLeft, new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.EnemySpecialExplosion, new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB));
-            spriteMap.put(SpriteType.Explosion, new BufferedImage(13,13,BufferedImage.TYPE_INT_ARGB));
+            spriteMap.put(SpriteType.Explosion, new BufferedImage(25,25,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.SoundOn, new BufferedImage(15,15,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.SoundOff, new BufferedImage(15,15,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.Item_Explode, new BufferedImage(10,10,BufferedImage.TYPE_INT_ARGB));

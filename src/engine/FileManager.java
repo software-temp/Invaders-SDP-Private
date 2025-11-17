@@ -79,7 +79,6 @@ public final class FileManager {
             try {
                 BufferedImage img = ImageIO.read(file);
                 String fileName = file.getName().replace(".png", "");
-                // 파일명과 SpriteType 이름 매칭
                 for (SpriteType type : SpriteType.values()) {
                     if (type.name().equalsIgnoreCase(fileName)) {
                         spriteMap.put(type, img);

@@ -33,7 +33,6 @@ public final class EntityRenderer {
         }
         int originalW = img.getWidth();
         int originalH = img.getHeight();
-
         int scaledW = (int) (originalW * scale * 2);
         int scaledH = (int) (originalH * scale * 2);
 
@@ -42,8 +41,9 @@ public final class EntityRenderer {
 
             img = tintImage(img, entity.getColor());
         }
-
-        g2d.drawImage(img, positionX, positionY, scaledW, scaledH, null);
+        int drawX = positionX; // 가운데 정렬: int drawX = positionX- scaledW / 2
+        int drawY = positionY; // 가운데 정렬: int drawY = positionY - scaledH / 2
+        g2d.drawImage(img, drawX, drawY, scaledW, scaledH, null);
     }
 
     private BufferedImage tintImage(BufferedImage src, Color color) {
