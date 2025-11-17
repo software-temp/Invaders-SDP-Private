@@ -1,8 +1,8 @@
 package screen;
 
-import engine.Core;
-import engine.GameState;
+import engine.Cooldown;
 import engine.DTO.HUDInfoDTO;
+import engine.GameState;
 import engine.level.Level;
 import entity.GameModel;
 
@@ -69,7 +69,7 @@ public class GameScreen extends Screen {
         // Initialize Model
         this.model.initialize();
 
-        this.inputDelay = Core.getCooldown(GameModel.INPUT_DELAY);
+        this.inputDelay = new Cooldown(GameModel.INPUT_DELAY);
         this.inputDelay.reset();
     }
 

@@ -1,13 +1,12 @@
 package screen;
 
 import java.awt.event.KeyEvent;
-
 import audio.SoundManager;
 import engine.Cooldown;
-import engine.Core;
+import engine.DTO.ShopInfoDTO;
 import engine.GameState;
 import entity.ShopItem;
-import engine.DTO.ShopInfoDTO;
+
 
 /**
  * Implements the shop screen where players can purchase item upgrades.
@@ -109,10 +108,10 @@ public class ShopScreen extends Screen {
         // If opened between levels : back to game, otherwise : back to menu
         this.returnCode = betweenLevels ? 2 : 1;
 
-        this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
+        this.selectionCooldown = new Cooldown(SELECTION_TIME);
         this.selectionCooldown.reset();
 
-        this.purchaseFeedbackCooldown = Core.getCooldown(2000);
+        this.purchaseFeedbackCooldown = new Cooldown(2000);
         this.feedbackMessage = "";
 
         this.logger.info("Shop screen initialized with " +

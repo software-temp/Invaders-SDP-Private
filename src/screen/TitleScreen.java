@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import engine.Cooldown;
-import engine.Core;
 import engine.DrawManager.SpriteType;
 import entity.Entity;
 import entity.SoundButton;
@@ -135,9 +134,9 @@ public class TitleScreen extends Screen {
 		// Defaults to play.
 		this.returnCode = 2;
 		this.soundButton = new SoundButton(0, 0);
-		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
-		this.enemySpawnCooldown = Core.getCooldown(ENEMY_SPAWN_COOLDOWN);
-		this.shootingStarCooldown = Core.getCooldown(SHOOTING_STAR_COOLDOWN);
+		this.selectionCooldown = new Cooldown(SELECTION_TIME);
+		this.enemySpawnCooldown = new Cooldown(ENEMY_SPAWN_COOLDOWN);
+		this.shootingStarCooldown = new Cooldown(SHOOTING_STAR_COOLDOWN);
 		this.selectionCooldown.reset();
 		this.enemySpawnCooldown.reset();
 		this.shootingStarCooldown.reset();

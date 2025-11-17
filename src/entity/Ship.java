@@ -1,12 +1,11 @@
 package entity;
+
 import audio.SoundManager;
-
-import java.awt.Color;
-import java.util.Set;
-
 import engine.Cooldown;
-import engine.Core;
 import engine.DrawManager.SpriteType;
+
+import java.awt.*;
+import java.util.Set;
 
 /**
  * Implements a ship, to be controlled by the player.
@@ -60,9 +59,9 @@ public class Ship extends Entity {
             this.isP1Ship = false;
         }
 
-		this.shootingCooldown = Core.getCooldown(100);//ShopItem.getShootingInterval()
-		this.destructionCooldown = Core.getCooldown(1000);
-		this.shieldCooldown = Core.getCooldown(0);
+		this.shootingCooldown = new Cooldown(100);//ShopItem.getShootingInterval()
+		this.destructionCooldown = new Cooldown(1000);
+		this.shieldCooldown = new Cooldown(0);
 		this.isInvincible = false;
 
 	}

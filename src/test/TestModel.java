@@ -1,6 +1,7 @@
 package test;
 
 import entity.Entity;
+import entity.GameConstant;
 import entity.OmegaBoss;
 import entity.Ship;
 
@@ -20,7 +21,7 @@ public class TestModel {
 	public TestModel(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.entity = new OmegaBoss(Color.blue, width, 400);
+		this.entity = new OmegaBoss(Color.blue, width, height);
 		this.player = new Ship(this.width/2, height-20, true);
 	}
 
@@ -48,8 +49,6 @@ public class TestModel {
 	 * @param direction ("RIGHT", "LEFT", "UP", "DOWN")
 	 */
 	public void playerMove(String direction) {
-		// If the ship doesn't exist or is destroyed, do nothing
-		if (!playerAvailable()) return;
 
 		// Boundary logic brought over from the original processPlayerInput
 		switch (direction) {
@@ -62,11 +61,11 @@ public class TestModel {
 				if (!isLeftBorder) player.moveLeft();
 				break;
 			case "UP":
-				boolean isUpBorder = player.getPositionY() - player.getSpeed() < this.height;
+				boolean isUpBorder = player.getPositionY() - player.getSpeed() < GameConstant.STAT_SEPARATION_LINE_HEIGHT;
 				if (!isUpBorder) player.moveUp();
 				break;
 			case "DOWN":
-				boolean isDownBorder = player.getPositionY() + player.getHeight() + player.getSpeed() > this.height;
+				boolean isDownBorder = player.getPositionY() + player.getHeight() + player.getSpeed() > GameConstant.ITEMS_SEPARATION_LINE_HEIGHT;
 				if (!isDownBorder) player.moveDown();
 				break;
 		}

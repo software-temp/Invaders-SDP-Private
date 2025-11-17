@@ -68,7 +68,7 @@ public class Bullet extends Entity {
 	/**
 	 * Updates the bullet's position.
 	 */
-	public final void update() {
+	public void update() {
 		this.positionY += this.speed;
 	}
 
@@ -117,4 +117,18 @@ public class Bullet extends Entity {
 		this.maxPenetration = ShopItem.getPenetrationCount();
 	}
 
+	/**
+	 * does the bullet go off the screen
+	 */
+	public boolean isOffScreen(int screenWidth, int screenHeight) {
+		return positionX < 0 || positionX > screenWidth ||
+				positionY < 0 || positionY > screenHeight;
+	}
+
+	/**
+	 * does the bullet has to be removed
+	 */
+	public boolean shouldBeRemoved() {
+		return false;
+	}
 }
