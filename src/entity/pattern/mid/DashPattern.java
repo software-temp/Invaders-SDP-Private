@@ -20,6 +20,7 @@ public class DashPattern extends BossPattern {
     private boolean isDashing = false;
     private boolean isShowingPath = false;
     private HasBounds target;
+    private HasBounds boss;
     private double dashDirectionX;
     private double dashDirectionY;
     private long pathShowStartTime;
@@ -30,6 +31,7 @@ public class DashPattern extends BossPattern {
     public DashPattern(HasBounds boss, HasBounds target, int screenWidth, int lowerBoundary, int upperBoundary) {
         super(new Point(boss.getPositionX(), boss.getPositionY()));
         this.target = target;
+        this.boss = boss;
         this.screenWidth = screenWidth;
         this.lowerBoundary = lowerBoundary;
         this.upperBoundary = upperBoundary;
@@ -83,17 +85,39 @@ public class DashPattern extends BossPattern {
     /**
      * Dash 이동 로직
      */
-    private void dashToTarget() {
-        // double 방향값으로 정밀하게 이동
-        this.bossPosition.x += (int)(dashDirectionX * DASH_SPEED);
-        this.bossPosition.y += (int)(dashDirectionY * DASH_SPEED);
 
-        // 벽에 닿으면 돌진 종료 및 패턴 완료 플래그 설정
-        if (this.bossPosition.x <= 0 || this.bossPosition.x >= screenWidth ||
-                this.bossPosition.y <= upperBoundary || this.bossPosition.y >= lowerBoundary) {
+    private void dashToTarget() {
+        // Move precisely using double direction values
+        int newX = boss.getPositionX() + (int)(dashDirectionX * DASH_SPEED);
+        int newY = boss.getPositionY() + (int)(dashDirectionY * DASH_SPEED);
+
+        // Check boundaries with boss size
+        boolean hitBoundary = false;
+
+        if (newX <= 0) {
+            newX = 0;
+            hitBoundary = true;
+        } else if (newX + boss.getWidth() >= screenWidth) {
+            newX = screenWidth - boss.getWidth();
+            hitBoundary = true;
+        }
+
+        if (newY <= upperBoundary) {
+            newY = upperBoundary;
+            hitBoundary = true;
+        } else if (newY + boss.getHeight() >= lowerBoundary) {
+            newY = lowerBoundary - boss.getHeight();
+            hitBoundary = true;
+        }
+
+        // Update boss position
+        this.bossPosition.x = newX;
+        this.bossPosition.y = newY;
+
+        // End dash when hitting wall
+        if (hitBoundary) {
             logger.info("OMEGA : Dash completed, hit the wall");
             isDashing = false;
-            // 이 시점에서 OmegaBoss가 패턴을 변경할 수 있도록 플래그 설정
         }
     }
 
