@@ -11,7 +11,6 @@ import engine.renderer.EntityRenderer;
 import engine.renderer.HUDRenderer;
 import engine.renderer.ShopRenderer;
 import engine.renderer.UIRenderer;
-import entity.DropItem;
 import screen.TitleScreen.Star;
 import screen.TitleScreen.ShootingStar;
 
@@ -45,10 +44,6 @@ public final class DrawManager {
 
 	/** Sprite types mapped to their images. */
 	private static Map<SpriteType, boolean[][]> spriteMap;
-
-	public void draw(DropItem item) {
-		itemRenderer.render(item);
-	}
 
 	/** Sprite types. */
 	public static enum SpriteType {
@@ -168,5 +163,7 @@ public void setFrame(final Frame currentFrame) {
     public HUDRenderer getHUDRenderer() { return hudRenderer; }
 
     public UIRenderer getUIRenderer() { return uiRenderer; }
+
+	public ItemRenderer getItemRenderer() { return itemRenderer; }
 
 }

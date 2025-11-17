@@ -34,7 +34,7 @@ public class GameView {
         if (model.getEntitiesToRender() != null) {
             for (var e : model.getEntitiesToRender()) {
 	            if (e instanceof DropItem) {
-		            drawManager.draw((DropItem) e);
+		            drawManager.getItemRenderer().render((DropItem) e);
 		            continue;
 	            }
 				drawManager.getEntityRenderer().drawEntity(e);
