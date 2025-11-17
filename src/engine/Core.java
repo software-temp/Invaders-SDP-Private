@@ -91,7 +91,7 @@ public final class Core {
 		FRAME_HEIGHT = frame.getHeight();
 
 		levelManager = new LevelManager();
-		GameState gameState = new GameState(2, 0, MAX_LIVES, MAX_LIVES, 0, 0,0);
+		GameState gameState = new GameState(1, 0, MAX_LIVES, MAX_LIVES, 0, 0,0);
 
 		if (isTest){
 			while (true) {
@@ -101,7 +101,7 @@ public final class Core {
 		}
         int returnCode = 1;
 		do {
-            gameState = new GameState(2, 0, MAX_LIVES,MAX_LIVES, 0, 0,gameState.getCoin());
+            gameState = new GameState(1, 0, MAX_LIVES,MAX_LIVES, 0, 0,gameState.getCoin());
 			switch (returnCode) {
                 case 1:
                     // Main menu.

@@ -66,7 +66,7 @@ public class DropItem extends Entity {
     /** Type of the item. */
     private ItemType itemType;
     public DropItem(final int positionX, final int positionY, final int speed, final ItemType itemType) {
-        super(positionX, positionY, 5 * 2, 5 * 2, Color.WHITE);
+        super(positionX, positionY, 20 * 2, 20 * 2, Color.WHITE);
         this.speed = speed;
         this.itemType = itemType;
         this.color = Color.WHITE;
