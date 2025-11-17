@@ -41,8 +41,8 @@ public class Bullet extends Entity {
 	 *            Speed of the bullet, positive or negative depending on
 	 *            direction - positive is down.
 	 */
-	public Bullet(final int positionX, final int positionY, final int speed) {
-		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
+	public Bullet(final int positionX, final int positionY, final int speed, Color color) {
+		super(positionX, positionY, 3 * 2, 5 * 2, color);
 
 		this.speed = speed;
 		this.penetrationCount = 0;
@@ -64,7 +64,7 @@ public class Bullet extends Entity {
 	/**
 	 * Updates the bullet's position.
 	 */
-	public final void update() {
+	public void update() {
 		this.positionY += this.speed;
 	}
 
@@ -113,4 +113,18 @@ public class Bullet extends Entity {
 		this.maxPenetration = ShopItem.getPenetrationCount();
 	}
 
+	/**
+	 * does the bullet go off the screen
+	 */
+	public boolean isOffScreen(int screenWidth, int screenHeight) {
+		return positionX < 0 || positionX > screenWidth ||
+				positionY < 0 || positionY > screenHeight;
+	}
+
+	/**
+	 * does the bullet has to be removed
+	 */
+	public boolean shouldBeRemoved() {
+		return false;
+	}
 }

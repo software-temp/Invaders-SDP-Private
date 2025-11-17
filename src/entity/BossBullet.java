@@ -5,7 +5,7 @@ import engine.DrawManager;
 import java.awt.*;
 
 
-public class BossBullet extends Entity{
+public class BossBullet extends Bullet {
     /** amount of horizontal change*/
     private int dx;
     /** amount of vertical change*/
@@ -30,7 +30,9 @@ public class BossBullet extends Entity{
      *            bullet's color
      */
     public BossBullet(int x, int y, int dx, int dy, int width, int height, Color color) {
-        super(x, y, width, height, color);
+        super(x, y, 0, color);
+		super.width = width;
+		super.height = height;
         this.dx = dx;
         this.dy = dy;
         this.spriteType = DrawManager.SpriteType.FinalBossBullet; // boss's bullet image = enemyBullet
@@ -38,21 +40,9 @@ public class BossBullet extends Entity{
     /**
      * move a bullet
      */
+	@Override
     public void update() {
         this.positionX += this.dx;
         this.positionY += this.dy;
     }
-    /**
-     * does the bullet go off the screen
-     */
-    public boolean isOffScreen(int screenWidth, int screenHeight) {
-        return positionX < 0 || positionX > screenWidth ||
-                positionY < 0 || positionY > screenHeight;
-    }
-
-
-
-
-
-
 }

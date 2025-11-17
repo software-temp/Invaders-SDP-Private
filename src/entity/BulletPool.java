@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ public final class BulletPool {
 			bullet.resetPenetration();
 			bullet.setSprite();
 		} else {
-			bullet = new Bullet(positionX, positionY, speed);
+			bullet = new Bullet(positionX, positionY, speed, Color.WHITE);
 			bullet.setPositionX(positionX - bullet.getWidth() / 2);
 		}
 		return bullet;
