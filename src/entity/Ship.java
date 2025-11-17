@@ -233,8 +233,8 @@ public class Ship extends Entity {
 	 */
 	public final void destroy() {
         if (!this.isInvincible) {
-			SoundManager.stop("sfx/impact.wav");
-            SoundManager.play("sfx/impact.wav");
+			SoundManager.stop("sfx/destroy.wav");
+            SoundManager.play("sfx/destroy.wav");
             this.destructionCooldown.reset();
         }
     }

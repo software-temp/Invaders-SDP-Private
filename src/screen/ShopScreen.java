@@ -1,6 +1,8 @@
 package screen;
 
 import java.awt.event.KeyEvent;
+
+import audio.SoundManager;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
@@ -115,6 +117,8 @@ public class ShopScreen extends Screen {
 
         this.logger.info("Shop screen initialized with " +
                 gameState.getCoin() + " coins. BetweenLevels=" + betweenLevels);
+        SoundManager.stop("sfx/Shop.wav");
+        SoundManager.playLoop("sfx/Shop.wav");
     }
 
 
@@ -209,6 +213,7 @@ public class ShopScreen extends Screen {
         // Quick exit with ESC
         if (inputManager.isKeyDown(KeyEvent.VK_ESCAPE)) {
             this.isRunning = false;
+            SoundManager.stopAll();
         }
     }
 

@@ -42,7 +42,7 @@ public class Bullet extends Entity {
 	 *            direction - positive is down.
 	 */
 	public Bullet(final int positionX, final int positionY, final int speed) {
-		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
+		super(positionX, positionY, 5 * 2, 15 * 2, Color.WHITE);
 
 		this.speed = speed;
 		this.penetrationCount = 0;
@@ -55,10 +55,14 @@ public class Bullet extends Entity {
 	 * Sets correct sprite for the bullet, based on speed.
 	 */
 	public final void setSprite() {
-		if (speed < 0)
-			this.spriteType = SpriteType.Bullet;
-		else
-			this.spriteType = SpriteType.EnemyBullet;
+		if (speed < 0){
+            this.spriteType = SpriteType.Bullet;
+        }
+
+		else{
+            this.spriteType = SpriteType.EnemyBullet;
+        }
+
 	}
 
 	/**
