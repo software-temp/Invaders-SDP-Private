@@ -1,7 +1,7 @@
 package entity;
 
 import engine.DrawManager;
-
+import entity.pattern.ApocalypseAttackPattern;
 import java.awt.*;
 
 /**
@@ -37,6 +37,10 @@ public class OmegaBoss extends MidBoss {
 	private final int widthBoundary;
 	/** Boss cannot move below this boundary. */
 	private final int bottomBoundary;
+
+    private ApocalypseAttackPattern apocalypsePattern;
+    private boolean hasUsedApocalypse = false;
+
 	/**
 	 * Constructor, establishes the boss entity's generic properties.
 	 *
@@ -51,6 +55,7 @@ public class OmegaBoss extends MidBoss {
 		this.spriteType= DrawManager.SpriteType.OmegaBoss1;
 		this.logger.info("OMEGA : Initializing Boss OMEGA");
 		this.logger.info("OMEGA : move using the default pattern");
+        this.apocalypsePattern = new ApocalypseAttackPattern();
 	}
 
 	/** move simple */
@@ -154,7 +159,22 @@ public class OmegaBoss extends MidBoss {
 	 */
 	@Override
 	public void update() {
-		this.movePatterns();
+        // 1. If the pattern component is active, the boss does not move.
+        if (this.apocalypsePattern.isPatternActive()) {
+            return;
+        }
+
+        // 2. If HP is 50% or less and the apocalypse attack hasn't been used yet, activate it.
+        if (!this.hasUsedApocalypse && this.healPoint <= this.maxHp / 2) {
+            // Call start() to start apocalypse
+            this.apocalypsePattern.start(1);
+            this.hasUsedApocalypse = true;
+            this.logger.info("OMEGA : Starting Apocalypse Pattern (delegated to component).");
+        }
+        // 3. Only perform normal patterns when not casting the apocalypse attack.
+        else {
+            this.movePatterns();
+        }
 	}
 
 	/** Renders the entity at its current position using the provided DrawManager. */
@@ -162,4 +182,19 @@ public class OmegaBoss extends MidBoss {
 	public void draw(DrawManager drawManager) {
 		drawManager.getEntityRenderer().drawEntity(this, this.positionX, this.positionY);
 	}
+
+    @Override
+    public boolean isApocalypseWarning() {
+        return this.apocalypsePattern.isWarningActive();
+    }
+
+    @Override
+    public int getSafeZoneColumn() {
+        return this.apocalypsePattern.getSafeZoneColumn();
+    }
+
+    @Override
+    public ApocalypseAttackPattern getApocalypsePattern() {
+        return this.apocalypsePattern;
+    }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import entity.pattern.ApocalypseAttackPattern;
 import java.util.logging.Logger;
 
 import engine.Cooldown;
@@ -271,7 +272,23 @@ public class GameModel {
                 }
                 else if (this.omegaBoss != null){
                     this.omegaBoss.update();
-                    if (this.omegaBoss.isDestroyed()) {
+
+                    // GameModel gets the pattern component
+                    ApocalypseAttackPattern pattern = this.omegaBoss.getApocalypsePattern();
+
+                    // If the pattern component exists and is active
+                    if (pattern.isPatternActive()) {
+
+                        // Check if the warning cooldown (2 seconds) is finished
+                        if (pattern.isWarningFinished()) {
+                            // If time is up, execute the attack and reset the boss's state
+                            executeApocalypseDamage(pattern.getSafeZoneColumn());
+                            pattern.finishPattern(); // Reset pattern component state
+                        }
+                        // (If 2 seconds haven't passed: do nothing. Boss is paused, View draws the warning)
+                    }
+
+                    else if (this.omegaBoss.isDestroyed()) {
                         if ("omegaAndFinal".equals(this.currentLevel.getBossId())) {
                             this.omegaBoss = null;
                             this.finalBoss = new FinalBoss(this.width / 2 - 50, 50, this.width, this.height);
@@ -316,6 +333,46 @@ public class GameModel {
     private void cleanupAllEntities() {
         cleanBullets();
         cleanItems();
+    }
+
+    /**
+     * Determines the damage for the boss's area-wide attack. (General method)
+     * @param safeZoneColumn (0-9) Safe zone column index
+     */
+    public void executeApocalypseDamage(int safeZoneColumn) {
+        if (safeZoneColumn < 0 || safeZoneColumn > 9) {
+            return;
+        }
+
+        int columnWidth = this.width / 10;
+
+        // --- Player 1 Check ---
+        if (this.livesP1 > 0 && this.ship != null && !this.ship.isDestroyed() && !this.ship.isInvincible()) {
+            // Based on the player's center X-coordinate
+            int playerX = this.ship.getPositionX() + (this.ship.getWidth() / 2);
+            int playerColumn = playerX / columnWidth; // Column index where the player is located
+
+            // If the player is not in the safe zone, process damage
+            if (playerColumn != safeZoneColumn) {
+                this.ship.destroy();
+                this.livesP1--;
+                showHealthPopup("-1 Life (Apocalypse!)");
+                this.logger.info("Hit by Apocalypse, " + this.livesP1 + " lives remaining.");
+            }
+        }
+
+        // --- Player 2 Check ---
+        if (this.shipP2 != null && this.livesP2 > 0 && !this.shipP2.isDestroyed() && !this.shipP2.isInvincible()) {
+            int playerX = this.shipP2.getPositionX() + (this.shipP2.getWidth() / 2);
+            int playerColumn = playerX / columnWidth;
+
+            if (playerColumn != safeZoneColumn) {
+                this.shipP2.destroy();
+                this.livesP2--;
+                showHealthPopup("-1 Life (Apocalypse!)");
+                this.logger.info("P2 Hit by Apocalypse, " + this.livesP2 + " lives remaining.");
+            }
+        }
     }
 
 
