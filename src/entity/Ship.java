@@ -48,8 +48,8 @@ public class Ship extends Entity {
 	 * @param positionY
 	 *            Initial position of the ship in the Y axis.
 	 */
-	public Ship(final int positionX, final int positionY,final boolean isP1Ship) {
-        super(positionX, positionY, 25 * 2, 31 * 2, Color.green);
+	public Ship(final int positionX, final int positionY,final Color color,final boolean isP1Ship) {
+        super(positionX, positionY, 25 * 2, 31 * 2, color);
         if (isP1Ship){
             this.spriteType = SpriteType.ShipP1;
             this.isP1Ship = true;
