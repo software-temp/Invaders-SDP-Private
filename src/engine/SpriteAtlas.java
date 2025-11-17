@@ -66,7 +66,7 @@ public final class SpriteAtlas {
             spriteMap.put(SpriteType.OmegaBossMoving4, mirrorSprite(spriteMap.get(SpriteType.OmegaBossMoving2)));
             spriteMap.put(SpriteType.OmegaBoss101, mirrorSprite(spriteMap.get(SpriteType.OmegaBoss100)));
             spriteMap.put(SpriteType.EnemyShipSpecialLeft, mirrorSprite(spriteMap.get(SpriteType.EnemyShipSpecial)));
-            fileManager.loadSprite(spriteMap);
+
         } catch (IOException e) {
             Core.getLogger().warning("[SpriteAtlas] Failed to load sprites: " + e.getMessage());
         }
