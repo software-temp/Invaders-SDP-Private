@@ -55,7 +55,7 @@ public class OmegaBoss extends MidBoss {
 		this.widthBoundary = widthBoundary;
 		this.bottomBoundary = bottomBoundary;
         this.spriteType= DrawManager.SpriteType.OmegaBoss4;
-        this.animationCooldown = Core.getCooldown(200);
+        this.animationCooldown = new Cooldown(200);
 		this.logger.info("OMEGA : Initializing Boss OMEGA");
 		this.logger.info("OMEGA : move using the default pattern");
         SoundManager.stop("sfx/OmegaBossAppearance.wav");
@@ -81,7 +81,7 @@ public class OmegaBoss extends MidBoss {
 		if(this.pattern!=2 && this.healPoint < this.maxHp/2){
 			this.pattern=2;
             this.isMove = true;
-            this.animationCooldown = Core.getCooldown(50);
+            this.animationCooldown = new Cooldown(50);
 			this.color=PATTERN_2_COLOR;
 			this.spriteType = DrawManager.SpriteType.OmegaBoss2;
 			logger.info("OMEGA : move using second pattern");
