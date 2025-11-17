@@ -9,11 +9,11 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import entity.ShopItem;
 import engine.level.LevelManager;
+import entity.GameConstant;
 import screen.*;
 import test.TestScreen;
-
+import entity.GameConstant;
 /**
  * Implements core game logic.
  * 
@@ -22,12 +22,10 @@ import test.TestScreen;
  */
 public final class Core {
 
-	/** Width of current screen. */
+	/** Width of current screen. (excepting white space) */
 	public static int FRAME_WIDTH;
-	/** Height of current screen. */
+	/** Height of current screen. (excepting white space) */
 	public static int FRAME_HEIGHT;
-	/** Max fps of current screen. */
-	private static final int FPS = 60;
 
 	/** Max lives. */
 	private static final int MAX_LIVES = 3;
@@ -47,9 +45,6 @@ public final class Core {
 	private static Handler fileHandler;
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
-
-	private static boolean isTest = false;
-
 
 	/**
 	 * Test implementation.
@@ -75,27 +70,29 @@ public final class Core {
 			// TODO handle exception
 			e.printStackTrace();
 		}
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        FRAME_WIDTH = (int) (screenSize.getWidth() * 0.8);
-        FRAME_HEIGHT = (int) (screenSize.getHeight() * 0.9);
+        int FRAME_HEIGHT_TOTAL, FRAME_WIDTH_TOTAL;
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        FRAME_WIDTH_TOTAL = (int) (screenSize.getWidth() * 0.8);
+        FRAME_HEIGHT_TOTAL = (int) (screenSize.getHeight() * 0.9);
 
-//      screen 사이즈 비율
-        double scaleX = (double) FRAME_WIDTH / 1228.0;
-        double scaleY = (double) FRAME_HEIGHT / 777.0;
+//      screen size ratio
+        double scaleX = (double) FRAME_WIDTH_TOTAL / 1228.0;
+        double scaleY = (double) FRAME_HEIGHT_TOTAL / 777.0;
 
         DrawManager.getInstance().setScale(scaleX, scaleY);
 
-		frame = new Frame(FRAME_WIDTH, FRAME_HEIGHT);
+		frame = new Frame(FRAME_WIDTH_TOTAL, FRAME_HEIGHT_TOTAL);
 		DrawManager.getInstance().setFrame(frame);
 		FRAME_WIDTH = frame.getWidth();
 		FRAME_HEIGHT = frame.getHeight();
+        GameConstant.initialize(FRAME_WIDTH, FRAME_HEIGHT);
 
 		levelManager = new LevelManager();
 		GameState gameState = new GameState(1, 0, MAX_LIVES, MAX_LIVES, 0, 0,0);
 
-		if (isTest){
+		if (GameConstant.isTest){
 			while (true) {
-				currentScreen = new TestScreen(FRAME_WIDTH, FRAME_HEIGHT, FPS);
+				currentScreen = new TestScreen(FRAME_WIDTH, FRAME_HEIGHT);
 				frame.setScreen(currentScreen);
 			}
 		}
@@ -105,12 +102,12 @@ public final class Core {
 			switch (returnCode) {
                 case 1:
                     // Main menu.
-                    currentScreen = new TitleScreen(FRAME_WIDTH, FRAME_HEIGHT, FPS);
+                    currentScreen = new TitleScreen(FRAME_WIDTH, FRAME_HEIGHT, GameConstant.FPS);
                     if (!SoundManager.isCurrentLoop("sfx/menu_music.wav")) {
                         SoundManager.playLoop("sfx/menu_music.wav");
                     }
                     LOGGER.info("Starting " + Core.FRAME_WIDTH + "x" + Core.FRAME_HEIGHT
-                            + " title screen at " + FPS + " fps.");
+                            + " title screen at " + GameConstant.FPS + " fps.");
                     returnCode = frame.setScreen(currentScreen);
                     LOGGER.info("Closing title screen.");
                     break;
@@ -145,11 +142,11 @@ public final class Core {
                                 MAX_LIVES,
                                 FRAME_WIDTH,
                                 FRAME_HEIGHT,
-                                FPS
+                                GameConstant.FPS
                         );
 
                         LOGGER.info("Starting " + Core.FRAME_WIDTH + "x" + Core.FRAME_HEIGHT
-                                + " game screen at " + FPS + " fps.");
+                                + " game screen at " + GameConstant.FPS + " fps.");
                         frame.setScreen(currentScreen);
                         LOGGER.info("Closing game screen.");
                         gameState = ((GameScreen) currentScreen).getGameState();
@@ -161,7 +158,7 @@ public final class Core {
                                     + gameState.getCoin() + " coins.");
 
                             //Launch the ShopScreen (between levels)
-                            currentScreen = new ShopScreen(gameState, FRAME_WIDTH, FRAME_HEIGHT, FPS, true);
+                            currentScreen = new ShopScreen(gameState, FRAME_WIDTH, FRAME_HEIGHT, GameConstant.FPS, true);
 
                             frame.setScreen(currentScreen);
                             LOGGER.info("Closing shop screen.");
@@ -183,42 +180,42 @@ public final class Core {
 					SoundManager.play("sfx/gameover.wav");
 
                     LOGGER.info("Starting " + Core.FRAME_WIDTH + "x" + Core.FRAME_HEIGHT
-                            + " score screen at " + FPS + " fps, with a score of "
+                            + " score screen at " + GameConstant.FPS + " fps, with a score of "
                             + gameState.getScore() + ", "
                             + gameState.getLivesRemaining() + " lives remaining, "
                             + gameState.getBulletsShot() + " bullets shot and "
                             + gameState.getShipsDestroyed() + " ships destroyed.");
 
-                    currentScreen = new ScoreScreen(FRAME_WIDTH, FRAME_HEIGHT, FPS, gameState);
+                    currentScreen = new ScoreScreen(FRAME_WIDTH, FRAME_HEIGHT, GameConstant.FPS, gameState);
                     returnCode = frame.setScreen(currentScreen);
                     LOGGER.info("Closing score screen.");
                     break;
                 case 3:
                     // High scores
-                    currentScreen = new HighScoreScreen(FRAME_WIDTH, FRAME_HEIGHT, FPS);
+                    currentScreen = new HighScoreScreen(FRAME_WIDTH, FRAME_HEIGHT, GameConstant.FPS);
                     LOGGER.info("Starting " + Core.FRAME_WIDTH + "x" + Core.FRAME_HEIGHT
-                            + " high score screen at " + FPS + " fps.");
+                            + " high score screen at " + GameConstant.FPS + " fps.");
                     returnCode = frame.setScreen(currentScreen);
                     LOGGER.info("Closing high score screen.");
                     break;
                 case 4:
                     // Shop opened manually from main menu
 
-                    currentScreen = new ShopScreen(gameState, FRAME_WIDTH, FRAME_HEIGHT, FPS, false);
+                    currentScreen = new ShopScreen(gameState, FRAME_WIDTH, FRAME_HEIGHT, GameConstant.FPS, false);
                     LOGGER.info("Starting shop screen (menu) with " + gameState.getCoin() + " coins.");
                     returnCode = frame.setScreen(currentScreen);
                     LOGGER.info("Closing shop screen (menu).");
                     break;
                 case 6:
                     // Achievements
-                    currentScreen = new AchievementScreen(FRAME_WIDTH, FRAME_HEIGHT, FPS);
+                    currentScreen = new AchievementScreen(FRAME_WIDTH, FRAME_HEIGHT, GameConstant.FPS);
                     LOGGER.info("Starting " + Core.FRAME_WIDTH + "x" + Core.FRAME_HEIGHT
-                            + " achievement screen at " + FPS + " fps.");
+                            + " achievement screen at " + GameConstant.FPS + " fps.");
                     returnCode = frame.setScreen(currentScreen);
                     LOGGER.info("Closing achievement screen.");
                     break;
 				case 8: // (추가) CreditScreen
-					currentScreen = new CreditScreen(FRAME_WIDTH, FRAME_HEIGHT, FPS);
+					currentScreen = new CreditScreen(FRAME_WIDTH, FRAME_HEIGHT, GameConstant.FPS);
 					LOGGER.info("Starting " + currentScreen.getClass().getSimpleName() + " screen.");
 					returnCode = frame.setScreen(currentScreen);
 					break;
@@ -274,17 +271,6 @@ public final class Core {
 	 */
 	public static FileManager getFileManager() {
 		return FileManager.getInstance();
-	}
-
-	/**
-	 * Controls creation of new cooldowns.
-	 * 
-	 * @param milliseconds
-	 *            Duration of the cooldown.
-	 * @return A new cooldown.
-	 */
-	public static Cooldown getCooldown(final int milliseconds) {
-		return new Cooldown(milliseconds);
 	}
 
 	/**

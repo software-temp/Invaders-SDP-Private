@@ -2,6 +2,8 @@ package entity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +40,7 @@ class BulletPoolTest {
     @Test
     void testRecycleAndReuse() {
         // 1. Given a manually created Bullet,
-        Bullet b1 = new Bullet(100, 100, 100);
+        Bullet b1 = new Bullet(100, 100, 100, Color.WHITE);
         Set<Bullet> bulletsToRecycle = new HashSet<>();
         bulletsToRecycle.add(b1);
 
@@ -61,7 +63,7 @@ class BulletPoolTest {
     void testPoolEmptiesAfterGet() throws Exception {
         // 1. Given an object recycled into the pool.
         Set<Bullet> bulletsToRecycle = new HashSet<>();
-        bulletsToRecycle.add(new Bullet(1, 1, 1));
+        bulletsToRecycle.add(new Bullet(1, 1, 1, Color.WHITE));
         BulletPool.recycle(bulletsToRecycle);
         assertEquals(1, getInternalPool().size(), "Pool should contain one object.");
 

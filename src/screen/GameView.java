@@ -3,15 +3,16 @@ package screen;
 import engine.DrawManager;
 import engine.DTO.HUDInfoDTO;
 import entity.GameModel;
+import entity.LaserBullet;
 import entity.GameConstant;
 
 /**
  * GameView
  * ----------
- * - View 계층 (MVC의 V)
- * - Controller(GameScreen)나 Screen 객체에 의존하지 않음
- * - HUDInfoDTO에서 HUD 데이터를 받고,
- *   Model에서 렌더링할 엔티티 리스트를 직접 받아서 그린다.
+ * - View layer (the V in MVC)
+ * - Does not depend on the Controller (GameScreen) or any Screen objects
+ * - Receives HUD data from HUDInfoDTO
+ *   and directly gets the list of entities to render from the Model
  */
 public class GameView {
 
@@ -32,7 +33,7 @@ public class GameView {
         if (model.getEntitiesToRender() != null) {
             for (int i = 0; i < model.getEntitiesToRender().size(); i++) {
                 var e = model.getEntitiesToRender().get(i);
-                drawManager.getEntityRenderer().drawEntity(e, e.getPositionX(), e.getPositionY());
+				drawManager.getEntityRenderer().drawEntity(e);
             }
         }
 
