@@ -42,7 +42,7 @@ public class Bullet extends Entity {
 	 *            direction - positive is down.
 	 */
 	public Bullet(final int positionX, final int positionY, final int speed) {
-		super(positionX, positionY, 5 * 2, 15 * 2, Color.WHITE);
+		super(positionX, positionY, 5 * 2, 10 * 2, Color.WHITE);
 
 		this.speed = speed;
 		this.penetrationCount = 0;
