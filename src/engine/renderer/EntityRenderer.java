@@ -68,5 +68,14 @@ public final class EntityRenderer {
             }
         }
     }
+    public void drawLife(final int positionX, final int positionY){
+        Color[][] image = spriteMap.get(SpriteType.Life);
+        for (int i = 0; i < image.length; i++) {
+            for (int j = 0; j < image[i].length; j++) {
+                backBuffer.getGraphics().setColor(image[i][j]);
+                backBuffer.getGraphics().drawRect(positionX + i * 2, positionY + j * 2, 1, 1);
+            }
+        }
+    }
 
 }

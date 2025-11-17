@@ -71,9 +71,9 @@ public final class HUDRenderer {
         g.setFont(fontPack.getRegular());
         g.setColor(Color.WHITE);
         g.drawString("P1:", 10, 25);
-        Ship dummyShip = new Ship(0, 0, true);
+
         for (int i = 0; i < lives; i++) {
-            entityRenderer.drawEntity(dummyShip, 40 + 35 * i, 10);
+            entityRenderer.drawLife(50 + 35 * i, 10);
         }
     }
 
@@ -85,7 +85,7 @@ public final class HUDRenderer {
         g.drawString("P2:", 10, 55);
         Ship dummyShip = new Ship(0, 0, false);
         for (int i = 0; i < lives; i++) {
-            entityRenderer.drawEntity(dummyShip, 40 + 35 * i, 40);
+            entityRenderer.drawLife(50 + 35 * i, 40);
         }
     }
 
@@ -144,4 +144,5 @@ public final class HUDRenderer {
         int textWidth = fontPack.getBigMetrics().stringWidth(text);
         g.drawString(text, (screenWidth - textWidth) / 2, y + popupHeight / 2 + 5);
     }
+
 }
