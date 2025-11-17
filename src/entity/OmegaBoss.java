@@ -155,4 +155,15 @@ public class OmegaBoss extends MidBoss {
 	public void update() {
 		this.movePatterns();
 	}
+
+	@Override
+	public void onCollision(Collidable other, GameModel model) {
+		other.onCollideWithBoss(this, model);
+	}
+
+	@Override
+	public void onHitByPlayerBullet(Bullet bullet, GameModel model) {
+		model.requestBossHitByPlayerBullet(bullet, this);
+	}
+
 }

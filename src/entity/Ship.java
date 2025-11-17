@@ -218,20 +218,39 @@ public class Ship extends Entity implements Collidable {
 	}
 
 	@Override
-	public void onCollision(Collidable other, GameModel game) {
+	public void onCollision(Collidable other, GameModel model) {
+		if (model.isLevelFinished()) return;
+		other.onCollideWithShip(this, model);
+	}
 
-		if (game.isLevelFinished()) return;
-
-		// 1. Player ship hits enemy ship
-		if (other instanceof EnemyShip) {
-			game.handlePlayerCrash(this, (EnemyShip) other);
-			return;
+	@Override
+	public void onHitByEnemyBullet(Bullet bullet, GameModel model) {
+		if (!this.isInvincible()) {
+			model.requestShipDamage(this, 1);
 		}
+		model.requestRemoveBullet(bullet);
+	}
 
-		// 2. Player ship hits boss (FinalBoss, OmegaBoss)
-		if (other instanceof BossEntity) {
-			game.handlePlayerCrash(this, other.asEntity());
-			return;
+	@Override
+	public void onHitByBossBullet(BossBullet b, GameModel model) {
+		if (!this.isInvincible()) {
+			model.requestShipDamage(this, 1);
 		}
+		model.requestRemoveBossBullet(b);
+	}
+
+	@Override
+	public void onCollideWithEnemyShip(EnemyShip enemy, GameModel model) {
+		model.requestPlayerCrash(this, enemy);
+	}
+
+	@Override
+	public void onCollideWithBoss(BossEntity boss, GameModel model) {
+		model.requestPlayerCrash(this, (Entity) boss);
+	}
+
+	@Override
+	public void onCollideWithDropItem(DropItem item, GameModel model) {
+		model.requestApplyItem(this, item);
 	}
 }

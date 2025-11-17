@@ -130,26 +130,18 @@ public class Bullet extends Entity implements Collidable {
 		return false;
 	}
 
-	/**
-	 * Handles collision behavior for bullets.
-	 * Enemy bullets damage the player, and player bullets damage enemies/bosses.
-	 */
+
 	@Override
-	public void onCollision(Collidable other, GameModel game) {
-		Entity o = other.asEntity();
+	public void onCollision(Collidable other, GameModel model) {
 
-		if (this.speed > 0 && o instanceof Ship) {
-			// Enemy bullet → Player
-			game.handleEnemyBulletHitPlayer(this, (Ship) o);
+		if (this.speed < 0) {
+			other.onHitByPlayerBullet(this, model);
+			return;
+		}
 
-		} else if (this.speed < 0) {
-			// Player bullet → Enemy/Boss
-			if (o instanceof EnemyShip) {
-				game.handlePlayerBulletHitEnemy(this, (EnemyShip) o);
-
-			} else if (o instanceof BossEntity) {
-				game.handlePlayerBulletHitBoss(this, (BossEntity) o);
-			}
+		if (this.speed > 0) {
+			other.onHitByEnemyBullet(this, model);
+			return;
 		}
 	}
 }

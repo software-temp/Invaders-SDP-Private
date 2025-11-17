@@ -163,9 +163,7 @@ public class DropItem extends Entity implements Collidable {
 	}
 
 	@Override
-	public void onCollision(Collidable other, GameModel game) {
-		if (other instanceof Ship) {
-			game.handleItemCollected((Ship) other, this);
-		}
+	public void onCollision(Collidable other, GameModel model) {
+		other.onCollideWithDropItem(this, model);
 	}
 }

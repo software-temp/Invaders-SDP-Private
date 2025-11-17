@@ -227,4 +227,30 @@ public class EnemyShip extends Entity implements Collidable {
 				return null;
 		}
 	}
+
+	@Override
+	public void onCollision(Collidable other, GameModel model) {
+		other.onCollideWithEnemyShip(this, model);
+	}
+
+	@Override
+	public void onHitByPlayerBullet(Bullet bullet, GameModel model) {
+
+		if (this.isDestroyed()) return;
+
+		model.requestEnemyHitByPlayerBullet(bullet, this);
+	}
+
+	@Override
+	public void onHitByEnemyBullet(Bullet bullet, GameModel model) {
+	}
+
+	@Override
+	public void onHitByBossBullet(BossBullet bullet, GameModel model) {
+	}
+
+	@Override
+	public void onCollideWithShip(Ship ship, GameModel model) {
+		model.requestPlayerCrash(ship, this);
+	}
 }

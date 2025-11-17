@@ -351,11 +351,15 @@ public class GameModel {
 		}
 	}
 
+	// =====================================================
+	//  Collision Request API (called from entities)
+	//  엔티티들이 충돌 시 GameModel에게 보내는 요청 메서드
+	// =====================================================
 
 	/**
 	 * Handles damage and rewards when a player bullet hits a normal enemy.
 	 */
-	public void handlePlayerBulletHitEnemy(Bullet bullet, EnemyShip enemy) {
+	public void requestEnemyHitByPlayerBullet(Bullet bullet, EnemyShip enemy) {
 
 		if (!bullets.contains(bullet)) return;
 		if (enemy.isDestroyed()) return;
@@ -378,46 +382,49 @@ public class GameModel {
 				enemyShipFormationModel.destroy(enemy);
 			}
 		}
+
 		if (!bullet.penetration()) {
 			bullets.remove(bullet);
 		}
 	}
 
+
 	/**
 	 * Applies damage to a player ship.
 	 * Handles hit effect, invincibility, life reduction, and game-over check.
 	 */
-	public void playerTakeDamage(Ship ship, int amount) {
+	public void requestShipDamage(Ship ship, int amount) {
 
 		if (ship.isInvincible()) return;
 
+		// 파괴 효과
 		ship.destroy();
 		ship.activateInvincibility(2000);
 
+		// 체력 감소
 		if (ship.getPlayerId() == 1) {
 			livesP1 -= amount;
 		} else {
 			livesP2 -= amount;
 		}
 
+		// 게임 오버 확인
 		if (this.isGameOver()) {
 			this.setGameOver();
 		}
 	}
 
-	/**
-	 * When an enemy bullet hits the player, apply damage and remove the bullet.
-	 */
-	public void handleEnemyBulletHitPlayer(Bullet b, Ship ship) {
-		if (!bullets.contains(b)) return;
-		playerTakeDamage(ship, 1);
-		bullets.remove(b);
+	public void requestRemoveBullet(Bullet bullet) {
+		bullets.remove(bullet);
 	}
 
-	/**
-	 * Handles all logic when a player bullet hits any boss (FinalBoss or OmegaBoss).
-	 */
-	public void handlePlayerBulletHitBoss(Bullet bullet, BossEntity boss) {
+	public void requestRemoveBossBullet(BossBullet bullet) {
+		bossBullets.remove(bullet);
+	}
+
+
+	public void requestBossHitByPlayerBullet(Bullet bullet, BossEntity boss) {
+
 
 		boss.takeDamage(2);
 
@@ -431,25 +438,17 @@ public class GameModel {
 			int pts = boss.getPointValue();
 			addPointsFor(bullet, pts);
 			this.coin += pts / 10;
+
 			AchievementManager.getInstance().unlockAchievement("Boss Slayer");
 		}
 	}
 
 	/**
-	 * When a boss bullet hits a player ship, apply damage and remove the bullet.
-	 */
-	public void handleBossBulletHitPlayer(BossBullet b, Ship ship) {
-		playerTakeDamage(ship, 1);
-		bossBullets.remove(b);
-	}
-
-	/**
 	 * When the player collides with an enemy, apply crash damage.
 	 */
-	public void handlePlayerCrash(Ship ship, Entity enemy) {
+	public void requestPlayerCrash(Ship ship, Entity enemy) {
 
-		if (enemy instanceof EnemyShip) {
-			EnemyShip e = (EnemyShip) enemy;
+		if (enemy instanceof EnemyShip e) {
 			if (!e.isDestroyed()) {
 				String type = e.getEnemyType();
 
@@ -464,51 +463,52 @@ public class GameModel {
 				}
 			}
 		}
-		playerTakeDamage(ship, 1);
+		requestShipDamage(ship, 1);
 	}
+
 
 	/**
 	 * Applies the effect of a collected drop item to the player ship.
 	 */
-	public void handleItemCollected(Ship ship, DropItem item) {
+	public void requestApplyItem(Ship ship, DropItem item) {
 
 		if (!dropItems.contains(item)) return;
 
 		ItemHUDManager.getInstance().addDroppedItem(item.getItemType());
 
-		if (item.getItemType() == DropItem.ItemType.Heal) {
-			if (ship.getPlayerId() == 1) gainLife();
-			else gainLifeP2();
-		}
+		switch (item.getItemType()) {
+			case Heal:
+				if (ship.getPlayerId() == 1) gainLife();
+				else gainLifeP2();
+				break;
 
-		if (item.getItemType() == DropItem.ItemType.Shield) {
-			ship.activateInvincibility(5000);
-		}
+			case Shield:
+				ship.activateInvincibility(5000);
+				break;
 
-		if (item.getItemType() == DropItem.ItemType.Stop) {
-			DropItem.applyTimeFreezeItem(3000);
-		}
+			case Stop:
+				DropItem.applyTimeFreezeItem(3000);
+				break;
 
-		if (item.getItemType() == DropItem.ItemType.Push) {
-			pushEnemiesBack();
-		}
+			case Push:
+				pushEnemiesBack();
+				break;
 
-		if (item.getItemType() == DropItem.ItemType.Explode) {
-			int destroyed = enemyShipFormationModel.destroyAll();
-			int pts = destroyed * 5;
-			if (ship.getPlayerId() == 2) {
-				this.scoreP2 += pts;
-			} else {
-				this.scoreP1 += pts;
-			}
-		}
+			case Explode:
+				int destroyed = enemyShipFormationModel.destroyAll();
+				int pts = destroyed * 5;
+				if (ship.getPlayerId() == 2) scoreP2 += pts;
+				else scoreP1 += pts;
+				break;
 
-		if (item.getItemType() == DropItem.ItemType.Slow) {
-			enemyShipFormationModel.activateSlowdown();
+			case Slow:
+				enemyShipFormationModel.activateSlowdown();
+				break;
 		}
 
 		dropItems.remove(item);
 	}
+
 
 
 	/**

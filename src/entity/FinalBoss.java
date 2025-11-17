@@ -9,7 +9,7 @@ import entity.pattern.*;
 import java.awt.*;
 import java.util.logging.Logger;
 
-public class FinalBoss extends Entity implements BossEntity{
+public class FinalBoss extends Entity implements BossEntity, Collidable{
 
     private int healPoint;
     private final int maxHp;
@@ -153,5 +153,14 @@ public class FinalBoss extends Entity implements BossEntity{
 		if(bossPattern != null){
 			bossPattern.setTarget(target);
 		}
+	}
+	@Override
+	public void onCollision(Collidable other, GameModel model) {
+		other.onCollideWithBoss(this, model);
+	}
+
+	@Override
+	public void onHitByPlayerBullet(Bullet bullet, GameModel model) {
+		model.requestBossHitByPlayerBullet(bullet, this);
 	}
 }

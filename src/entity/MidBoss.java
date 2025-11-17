@@ -53,4 +53,15 @@ public abstract class MidBoss extends Entity implements BossEntity {
 	public boolean isDestroyed() {
 		return this.isDestroyed;
 	}
+
+	@Override
+	public void onCollision(Collidable other, GameModel model) {
+		other.onCollideWithBoss(this, model);
+	}
+
+	@Override
+	public void onHitByPlayerBullet(Bullet bullet, GameModel model) {
+		model.requestBossHitByPlayerBullet(bullet, this);
+	}
+
 }

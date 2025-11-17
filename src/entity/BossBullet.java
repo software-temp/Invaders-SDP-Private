@@ -51,9 +51,17 @@ public class BossBullet extends Bullet implements Collidable {
 	 * Boss bullets damage the player when they collide.
 	 */
 	@Override
-	public void onCollision(Collidable other, GameModel game) {
-		if (other instanceof Ship) {
-			game.handleBossBulletHitPlayer(this, (Ship) other);
-		}
+	public void onCollision(Collidable other, GameModel model) {
+		other.onHitByBossBullet(this, model);
 	}
+
+	@Override
+	public void onHitByPlayerBullet(Bullet bullet, GameModel model) {
+	}
+
+	@Override
+	public void onCollideWithShip(Ship ship, GameModel model) {
+		ship.onHitByBossBullet(this, model);
+	}
+
 }
