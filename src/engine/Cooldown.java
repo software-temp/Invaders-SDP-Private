@@ -43,6 +43,7 @@ public class Cooldown {
 	protected Cooldown(final int milliseconds, final int variance) {
 		this.milliseconds = milliseconds;
 		this.variance = variance;
+        this.duration = milliseconds;
 		this.time = 0;
 	}
 

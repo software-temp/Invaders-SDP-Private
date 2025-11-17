@@ -21,7 +21,7 @@ public class ApocalypseAttackPattern {
     private Random random;
 
     public ApocalypseAttackPattern() {
-        this.warningCooldown = Core.getCooldown(2000); // 2초
+        this.warningCooldown = Core.getVariableCooldown(10000, 0); // 2second
         this.random = new Random();
     }
 

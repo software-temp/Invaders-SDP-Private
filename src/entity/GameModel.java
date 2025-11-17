@@ -342,12 +342,15 @@ public class GameModel {
 
         // --- Player 1 Check ---
         if (this.livesP1 > 0 && this.ship != null && !this.ship.isDestroyed() && !this.ship.isInvincible()) {
-            // Based on the player's center X-coordinate
-            int playerX = this.ship.getPositionX() + (this.ship.getWidth() / 2);
-            int playerColumn = playerX / columnWidth; // Column index where the player is located
+            // Based on the player's end X-coordinate
+            int playerLeftX = this.ship.getPositionX();
+            int playerRightX = this.ship.getPositionX() + this.ship.getWidth() - 1;
+
+            int leftColumn = playerLeftX / columnWidth;
+            int rightColumn = playerRightX / columnWidth;
 
             // If the player is not in the safe zone, process damage
-            if (playerColumn != safeZoneColumn) {
+            if (leftColumn != safeZoneColumn || rightColumn != safeZoneColumn) {
                 this.ship.destroy();
                 this.livesP1--;
                 showHealthPopup("-1 Life (Apocalypse!)");
@@ -357,10 +360,13 @@ public class GameModel {
 
         // --- Player 2 Check ---
         if (this.shipP2 != null && this.livesP2 > 0 && !this.shipP2.isDestroyed() && !this.shipP2.isInvincible()) {
-            int playerX = this.shipP2.getPositionX() + (this.shipP2.getWidth() / 2);
-            int playerColumn = playerX / columnWidth;
+            int playerLeftX = this.shipP2.getPositionX(); //
+            int playerRightX = this.shipP2.getPositionX() + this.shipP2.getWidth() - 1; //
 
-            if (playerColumn != safeZoneColumn) {
+            int leftColumn = playerLeftX / columnWidth;
+            int rightColumn = playerRightX / columnWidth;
+
+            if (leftColumn != safeZoneColumn || rightColumn != safeZoneColumn) {
                 this.shipP2.destroy();
                 this.livesP2--;
                 showHealthPopup("-1 Life (Apocalypse!)");
