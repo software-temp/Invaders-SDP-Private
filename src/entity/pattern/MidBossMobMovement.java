@@ -35,7 +35,7 @@ public class MidBossMobMovement {
     /** Distance required to trigger an acceleration towards the target. */
     private static final double DISTANCE_THRESHOLD_FOR_SPEED_BOOST = 10.0;
     /** The highest Y-coordinate (ceiling) the child ships can move up to. */
-    private static final int TOP_MARGIN = 50;
+    private static final int TOP_MARGIN = 80;
     /** Margin distance from the bottom boundary used for descent stop. */
     private static final int BOTTOM_MARGIN = 50;
     /**
@@ -96,8 +96,13 @@ public class MidBossMobMovement {
 
         boolean isTopWall = finalTargetY < TOP_MARGIN;
         boolean isBottomWall = finalTargetY + child.getHeight() > bottomHeight;
+        boolean isRightWall = finalTargetX + child.getWidth() > this.wallWidth;
+        boolean isLeftWall = finalTargetX < 0;
+
         if(isTopWall){finalTargetY = TOP_MARGIN;}
         if(isBottomWall){finalTargetY = bottomHeight - child.getHeight();}
+        if(isRightWall){finalTargetX = this.wallWidth - child.getWidth();}
+        if(isLeftWall){finalTargetX = 0;}
 
         moveToTarget(child, finalTargetX, finalTargetY);
     }
