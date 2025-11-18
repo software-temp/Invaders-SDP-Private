@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import engine.renderer.ItemRenderer;
 import engine.renderer.EntityRenderer;
 import engine.renderer.HUDRenderer;
 import engine.renderer.ShopRenderer;
 import engine.renderer.UIRenderer;
+import entity.DropItem;
 import screen.TitleScreen.Star;
 import screen.TitleScreen.ShootingStar;
 
@@ -38,10 +40,15 @@ public final class DrawManager {
     private HUDRenderer hudRenderer;
     private ShopRenderer shopRenderer;
     private UIRenderer uiRenderer;
-    private double scale;
+	private ItemRenderer itemRenderer;
+	private double scale;
 
 	/** Sprite types mapped to their images. */
 	private static Map<SpriteType, boolean[][]> spriteMap;
+
+	public void draw(DropItem item) {
+		itemRenderer.render(item);
+	}
 
 	/** Sprite types. */
 	public static enum SpriteType {
@@ -93,7 +100,8 @@ public void setFrame(final Frame currentFrame) {
         if(fontPack == null){
             fontPack = new FontPack(backBuffer.getGraphics(), fileManager);
             entityRenderer = new EntityRenderer(spriteAtlas.getSpriteMap(),backBuffer,this.scale);
-            hudRenderer = new HUDRenderer(backBuffer, fontPack, entityRenderer);
+			itemRenderer = new ItemRenderer(backBuffer, spriteAtlas.getSpriteMap(), this.scale);
+			hudRenderer = new HUDRenderer(backBuffer, fontPack, entityRenderer);
             shopRenderer = new ShopRenderer(backBuffer,fontPack);
             uiRenderer = new UIRenderer(backBuffer,fontPack);
         }

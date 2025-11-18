@@ -114,6 +114,28 @@ public class Bullet extends Entity {
 	}
 
 	/**
+	 * Handles collision behavior for bullets.
+	 * Enemy bullets damage the player, and player bullets damage enemies/bosses.
+	 */
+	@Override
+	public void onCollision(Collidable other, GameModel game) {
+		Entity o = other.asEntity();
+
+		if (this.speed > 0 && o instanceof Ship) {
+			// Enemy bullet → Player
+			game.handleEnemyBulletHitPlayer(this, (Ship) o);
+
+		} else if (this.speed < 0) {
+			// Player bullet → Enemy/Boss
+			if (o instanceof EnemyShip) {
+				game.handlePlayerBulletHitEnemy(this, (EnemyShip) o);
+
+			} else if (o instanceof BossEntity) {
+				game.handlePlayerBulletHitBoss(this, (BossEntity) o);
+			}
+		}
+	}
+	/**
 	 * does the bullet go off the screen
 	 */
 	public boolean isOffScreen(int screenWidth, int screenHeight) {

@@ -9,7 +9,7 @@ import entity.pattern.*;
 import java.awt.*;
 import java.util.logging.Logger;
 
-public class FinalBoss extends Entity implements BossEntity{
+public class FinalBoss extends Entity implements BossEntity, HasBounds{
 
     private int healPoint;
     private final int maxHp;

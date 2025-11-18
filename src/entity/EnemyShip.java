@@ -1,7 +1,12 @@
 package entity;
 
 import audio.SoundManager;
+
+
+import java.awt.Color;
+
 import engine.Cooldown;
+import engine.Core;
 import engine.DrawManager.SpriteType;
 
 import java.awt.*;
@@ -12,9 +17,11 @@ import java.awt.*;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public class EnemyShip extends Entity {
-	
-	/** Point value of a type A enemy. */
+public class EnemyShip extends Entity implements Collidable {
+
+	/**
+	 * Point value of a type A enemy.
+	 */
 	private static final int A_TYPE_POINTS = 10;
 	/** Point value of a type B enemy. */
 	private static final int B_TYPE_POINTS = 20;
@@ -64,7 +71,7 @@ public class EnemyShip extends Entity {
 
 		this.spriteType = spriteType;
 		this.animationCooldown = new Cooldown(500);
-        this.explosionCooldown = new Cooldown(500);
+		this.explosionCooldown = new Cooldown(500);
 		this.isDestroyed = false;
 
 		switch (this.spriteType) {
@@ -86,13 +93,25 @@ public class EnemyShip extends Entity {
 		}
 	}
 
+	public enum SpecialType {
+		RED,
+		BLUE
+	}
+
+	public SpecialType getSpecialType() {
+		return this.specialType;
+	}
+
+	private SpecialType specialType; // 추가
+
 	/**
 	 * Constructor, establishes the ship's properties for a special ship, with
 	 * known starting properties.
 	 */
-	public EnemyShip(Color color, Direction direction, int x_speed) {
-        super(-32, GameConstant.STAT_SEPARATION_LINE_HEIGHT, 16 * 2, 7 * 2, color);
+	public EnemyShip(SpecialType type, Direction direction, int x_speed) {
+        super(-32, GameConstant.STAT_SEPARATION_LINE_HEIGHT, 16 * 2, 7 * 2, Color.white);
 
+		this.specialType = type;
 		this.direction = direction;
 		this.X_SPEED = x_speed;
 		this.spriteType = SpriteType.EnemyShipSpecial;
@@ -213,6 +232,8 @@ public class EnemyShip extends Entity {
 			case EnemyShipC1:
 			case EnemyShipC2:
 				return "enemyC";
+			case EnemyShipSpecial:
+				return "enemySpecial";
 			default:
 				return null;
 		}

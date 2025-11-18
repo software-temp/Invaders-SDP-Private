@@ -307,19 +307,6 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
         this.shootingManager = new FormationShootingManager(this.levelObj, this.enemyShips);
     }
 
-    /**
-     * Applies a specific color to all ships in the formation.
-     * @param color The color to apply.
-     */
-    public void applyEnemyColor(final Color color) {
-        for (java.util.List<EnemyShip> column : this.getEnemyShips()) {
-            for (EnemyShip ship : column) {
-                if (ship != null && !ship.isDestroyed()) {
-                    ship.setColor(color);
-                }
-            }
-        }
-    }
 
     /**
      * Gets the current X position of the formation's top-left corner.

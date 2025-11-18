@@ -10,7 +10,7 @@ import engine.DrawManager.SpriteType;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public class Entity implements HasBounds {
+public class Entity implements Collidable {
 
 	/** Position in the x-axis of the upper left corner of the entity. */
 	protected int positionX;
@@ -68,6 +68,24 @@ public class Entity implements HasBounds {
 	}
 
 	/**
+	 * Getter for the X axis position of the entity.
+	 * 
+	 * @return Position of the entity in the X axis.
+	 */
+	public final int getPositionX() {
+		return this.positionX;
+	}
+
+	/**
+	 * Getter for the Y axis position of the entity.
+	 * 
+	 * @return Position of the entity in the Y axis.
+	 */
+	public final int getPositionY() {
+		return this.positionY;
+	}
+
+	/**
 	 * Setter for the X axis position of the entity.
 	 * 
 	 * @param positionX
@@ -96,23 +114,34 @@ public class Entity implements HasBounds {
 		return this.spriteType;
 	}
 
-	@Override
-	public int getPositionX() {
-		return this.positionX;
-	}
-
-	@Override
-	public int getPositionY() {
-		return this.positionY;
-	}
-
-	@Override
-	public int getWidth() {
+	/**
+	 * Getter for the width of the image associated to the entity.
+	 * 
+	 * @return Width of the entity.
+	 */
+	public final int getWidth() {
 		return this.width;
 	}
 
-	@Override
-	public int getHeight() {
+	/**
+	 * Getter for the height of the image associated to the entity.
+	 * 
+	 * @return Height of the entity.
+	 */
+	public final int getHeight() {
 		return this.height;
+	}
+
+	@Override
+	public Entity asEntity() {
+		return this;
+	}
+
+	/**
+	 * Default collision handler for all entities.
+	 * Specific entities override this to implement their own collision logic.
+	 */
+	@Override
+	public void onCollision(Collidable other, GameModel gameModel) {
 	}
 }
