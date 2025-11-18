@@ -1,6 +1,7 @@
 package entity;
 
 import engine.Core;
+import screen.HealthBar;
 
 import java.awt.*;
 import java.util.logging.Logger;
@@ -19,6 +20,7 @@ public abstract class MidBoss extends Entity implements BossEntity {
 	protected boolean isDestroyed=false;
 	protected int pattern=1;
 	protected Logger logger;
+    protected HealthBar healthBar;
 
 	/**
 	 * Constructor, establishes the boss entity's generic properties.
@@ -47,4 +49,5 @@ public abstract class MidBoss extends Entity implements BossEntity {
 
 	@Override
 	public boolean isDestroyed() { return this.isDestroyed; }
+    public HealthBar getHealthBar() {return this.healthBar;}
 }

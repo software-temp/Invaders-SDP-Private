@@ -3,6 +3,7 @@ package entity;
 import audio.SoundManager;
 import engine.Cooldown;
 import engine.Core;
+import screen.HealthBar;
 import engine.DrawManager;
 import entity.pattern.*;
 
@@ -19,6 +20,9 @@ public class FinalBoss extends Entity implements BossEntity{
     private Cooldown animationCooldown;
     private int screenWidth;
     private int screenHeight;
+    /** random x coordinate of Shoot2's bullet  */
+    private int random_x;
+    private HealthBar healthBar;
 
 	private BossPattern bossPattern;
 	private HasBounds playerPosition;
@@ -41,6 +45,8 @@ public class FinalBoss extends Entity implements BossEntity{
         this.screenHeight = screenHeight;
 
         this.animationCooldown = new Cooldown(500);
+        this.healthBar = new HealthBar(this.getHealPoint(), this.getPositionX(), this.getPositionY(), this.getWidth(),this.getHeight());
+
 
 		this.playerPosition = playerPosition;
 		logger = Core.getLogger();
@@ -154,4 +160,8 @@ public class FinalBoss extends Entity implements BossEntity{
 			bossPattern.setTarget(target);
 		}
 	}
+
+    public HealthBar getHealthBar(){
+        return this.healthBar;
+    }
 }

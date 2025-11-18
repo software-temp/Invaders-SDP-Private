@@ -265,6 +265,8 @@ public class GameModel {
                 }
                 else if (this.omegaBoss != null){
                     this.omegaBoss.update();
+                    this.omegaBoss.getHealthBar().setPosition(this.omegaBoss.getPositionX(), this.omegaBoss.getPositionY(), this.omegaBoss.getWidth());
+                    this.omegaBoss.getHealthBar().setCurrent_HP(this.omegaBoss.getHealPoint());
                     if (this.omegaBoss.isDestroyed()) {
                         if ("omegaAndFinal".equals(this.currentLevel.getBossId())) {
                             this.omegaBoss = null;
@@ -780,6 +782,8 @@ public class GameModel {
 				this.finalBoss.setTarget(ship);
 			}
             this.finalBoss.update();
+            this.finalBoss.getHealthBar().setPosition(this.finalBoss.getPositionX(), this.finalBoss.getPositionY(), this.finalBoss.getWidth());
+            this.finalBoss.getHealthBar().setCurrent_HP(this.finalBoss.getHealPoint());
 			if(this.finalBoss.getBossPhase() == 3 && !this.is_cleared){
 				bossBullets.clear();
 				is_cleared = true;

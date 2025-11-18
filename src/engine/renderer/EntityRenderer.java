@@ -1,12 +1,13 @@
 package engine.renderer;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.Map;
 
 import engine.BackBuffer;
 import entity.Entity;
 import engine.DrawManager.SpriteType;
 import entity.LaserBullet;
+import screen.HealthBar;
 
 /**
  * Handles rendering of all game entities using the shared back buffer.
@@ -40,6 +41,22 @@ public final class EntityRenderer {
                 }
             }
         }
+    }
+    public void drawHealthBar(final HealthBar healthBar){
+        int [] position = healthBar.getPosition();
+        float ratio_hp = healthBar.getRatio_HP();
+
+        int width = healthBar.getWidth();
+        Graphics2D g2 = (Graphics2D) backBuffer.getGraphics();
+        g2.setColor(Color.GREEN);
+        Stroke oldStroke = g2.getStroke(); // 선 굵기 백업
+        g2.setStroke(new BasicStroke(3));
+        g2.drawLine(position[0], position[1], position[2], position[3]);
+        if ((int)((float)position[0] + (width * ratio_hp)) != position[2]){
+            g2.setColor(Color.RED);
+            g2.drawLine((int) ((float)position[0] + (width * ratio_hp)), position[1], position[2], position[3]);
+        }
+        g2.setStroke(oldStroke); // 백업 받은거 원위치
     }
 
 	public void drawEntity(final Entity entity) {
