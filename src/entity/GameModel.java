@@ -393,18 +393,15 @@ public class GameModel {
 
 		if (ship.isInvincible()) return;
 
-		// 파괴 효과
 		ship.destroy();
 		ship.activateInvincibility(2000);
 
-		// 체력 감소
 		if (ship.getPlayerId() == 1) {
-			livesP1 -= amount;
+			livesP1 = Math.max(0, livesP1 - amount);  // ★ 여기!!
 		} else {
-			livesP2 -= amount;
+			livesP2 = Math.max(0, livesP2 - amount);  // ★ 여기!!
 		}
 
-		// 게임 오버 확인
 		if (this.isGameOver()) {
 			this.setGameOver();
 		}
@@ -550,12 +547,6 @@ public class GameModel {
 	 */
 	public void pushEnemiesBack() {
 		for (EnemyShip enemy : enemyShipFormationModel) {
-			if (enemy != null && !enemy.isDestroyed()) {
-				enemy.move(0, -20);
-			}
-		}
-
-		for (EnemyShip enemy : enemyShipSpecialFormation) {
 			if (enemy != null && !enemy.isDestroyed()) {
 				enemy.move(0, -20);
 			}
@@ -733,16 +724,14 @@ public class GameModel {
                 /** If the bullet collides with ship */
                 else if (this.livesP1 > 0 && this.checkCollision(b, this.ship)) {
                     if (!this.ship.isDestroyed()) {
-                        this.ship.destroy();
-                        this.livesP1--;
+						requestShipDamage(this.ship, 1);
                         this.logger.info("Hit on player ship, " + this.livesP1 + " lives remaining.");
                     }
                     bulletsToRemove.add(b);
                 }
                 else if (this.shipP2 != null && this.livesP2 > 0 && !this.shipP2.isDestroyed() && this.checkCollision(b, this.shipP2)) {
                     if (!this.shipP2.isDestroyed()) {
-                        this.shipP2.destroy();
-                        this.livesP2--;
+						requestShipDamage(this.shipP2, 1);
                         this.logger.info("Hit on player ship2, " + this.livesP2 + " lives remaining.");
                     }
                     bulletsToRemove.add(b);
