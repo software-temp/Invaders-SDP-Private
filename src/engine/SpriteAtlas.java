@@ -53,7 +53,7 @@ public final class SpriteAtlas {
             spriteMap.put(SpriteType.OmegaBoss1, new BufferedImage(43,41,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.OmegaBoss2, new BufferedImage(43,41,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.OmegaBossHitting, new BufferedImage(43,41,BufferedImage.TYPE_INT_ARGB));
-            spriteMap.put(SpriteType.OmegaBossHitting1, new BufferedImage(43,41,BufferedImage.TYPE_INT_ARGB));
+
             spriteMap.put(SpriteType.OmegaBossMoving1, new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.OmegaBossMoving2, new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB));
             spriteMap.put(SpriteType.OmegaBossDeath, new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB));
@@ -67,6 +67,7 @@ public final class SpriteAtlas {
             spriteMap.put(SpriteType.OmegaBossMoving4, mirrorSprite(spriteMap.get(SpriteType.OmegaBossMoving2)));
             spriteMap.put(SpriteType.OmegaBoss101, mirrorSprite(spriteMap.get(SpriteType.OmegaBoss100)));
             spriteMap.put(SpriteType.EnemyShipSpecialLeft, mirrorSprite(spriteMap.get(SpriteType.EnemyShipSpecial)));
+            spriteMap.put(SpriteType.OmegaBossHitting1, mirrorSprite(spriteMap.get(SpriteType.OmegaBossHitting)));
 
         } catch (IOException e) {
             Core.getLogger().warning("[SpriteAtlas] Failed to load sprites: " + e.getMessage());

@@ -17,9 +17,9 @@ public class OmegaBoss extends MidBoss {
 	/** Initial position in the y-axis. */
 	private static final int INIT_POS_Y = 80;
 	/** Width of Omega */
-    private static final int OMEGA_WIDTH = 43 * 2;
+    private static final int OMEGA_WIDTH = 70 * 2;
     /** Height of Omega */
-    private static final int OMEGA_HEIGHT = 41 * 2;
+    private static final int OMEGA_HEIGHT = 51 * 2;
 	/** Current Health of Omega */
 	private static final int OMEGA_HEALTH = 45;
 	/** Point of Omega when destroyed */

@@ -42,7 +42,7 @@ public final class DrawManager {
     private double scale;
 
 	/** Sprite types mapped to their images. */
-	private static Map<SpriteType, BufferedImage[][]> spriteMap;
+	private static Map<SpriteType, BufferedImage> spriteMap;
 
 	/** Sprite types. */
     public static enum SpriteType {
