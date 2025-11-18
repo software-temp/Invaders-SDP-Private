@@ -27,9 +27,11 @@ public class BossBullet extends Bullet implements Collidable {
 	 * @param color  bullet's color
 	 */
 	public BossBullet(int x, int y, int dx, int dy, int width, int height, Color color) {
-		super(x, y, width, color);
+		super(x, y, 0, color);
 		this.dx = dx;
 		this.dy = dy;
+		this.width = width;
+		this.height = height;
 		this.spriteType = DrawManager.SpriteType.FinalBossBullet; // boss's bullet image = enemyBullet
 	}
 
