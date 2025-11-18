@@ -32,6 +32,11 @@ public class Ship extends Entity {
 	private boolean isInvincible;
     // === [ADD] Which player: 1 = P1, 2 = P2 (default 1 for single-player compatibility) ===
     private int playerId = 1;
+    private boolean isP1Ship;
+    private boolean isMove;
+    private boolean movingSoundPlaying = false;
+
+
     public void setPlayerId(int pid) { this.playerId = pid; }
     public int getPlayerId() { return this.playerId; }
 
@@ -43,16 +48,24 @@ public class Ship extends Entity {
 	 * @param positionY
 	 *            Initial position of the ship in the Y axis.
 	 */
-	public Ship(final int positionX, final int positionY, final Color color) {
-		super(positionX, positionY, 13 * 2, 8 * 2, color);
+	public Ship(final int positionX, final int positionY,final Color color,final boolean isP1Ship) {
+        super(positionX, positionY, 25 * 2, 31 * 2, color);
+        if (isP1Ship){
+            this.spriteType = SpriteType.ShipP1;
+            this.isP1Ship = true;
+        }
+        else {
+            this.spriteType = SpriteType.ShipP2;
+            this.isP1Ship = false;
+        }
 
-		this.spriteType = SpriteType.Ship;
-		this.shootingCooldown = new Cooldown(ShopItem.getShootingInterval());
+		this.shootingCooldown = new Cooldown(100);//ShopItem.getShootingInterval()
 		this.destructionCooldown = new Cooldown(1000);
 		this.shieldCooldown = new Cooldown(0);
 		this.isInvincible = false;
 
 	}
+
 
 	/**
 	 * Moves the ship speed uni ts right, or until the right screen border is
@@ -61,6 +74,7 @@ public class Ship extends Entity {
 	public final void moveRight() {
 		int shipspeed = ShopItem.getSHIPSpeedCOUNT();
 		this.positionX += SPEED*(1+shipspeed/10);
+        this.isMove = true;
 	}
 
 	/**
@@ -70,6 +84,7 @@ public class Ship extends Entity {
 	public final void moveLeft() {
 		int shipspeed = ShopItem.getSHIPSpeedCOUNT();
 		this.positionX -= SPEED*(1+shipspeed/10);
+        this.isMove = true;
 	}
 
     /**
@@ -79,6 +94,7 @@ public class Ship extends Entity {
     public final void moveUp() {
 		int shipspeed = ShopItem.getSHIPSpeedCOUNT();
 		this.positionY -= SPEED*(1+shipspeed/10);
+        this.isMove = true;
     }
 
     /**
@@ -88,6 +104,7 @@ public class Ship extends Entity {
     public final void moveDown() {
 		int shipspeed = ShopItem.getSHIPSpeedCOUNT();
 		this.positionY += SPEED*(1+shipspeed/10);
+        this.isMove = true;
     }
 
 	/**
@@ -140,25 +157,83 @@ public class Ship extends Entity {
 	/**
 	 * Updates status of the ship.
 	 */
-	public final void update() {
+    public final void update() {
         if (this.isInvincible && this.shieldCooldown.checkFinished()) {
-            this.isInvincible = false;
-            this.setColor(Color.GREEN);
+            this.isInvincible = false;//테스트용
         }
 
-        if (!this.destructionCooldown.checkFinished())
-            this.spriteType = SpriteType.ShipDestroyed;
-        else
-            this.spriteType = SpriteType.Ship;
-	}
+
+        if (!this.destructionCooldown.checkFinished()) {
+            if (!this.isP1Ship) {
+                double ratio = this.destructionCooldown.getRemaining() / (double) this.destructionCooldown.getTotal();
+                // 전체 쿨다운 시간 1000ms 기준, 3단계로 나누기
+                if (ratio > 0.6) {
+                    this.spriteType = SpriteType.ShipP2Explosion1;
+                } else if (ratio > 0.3) {
+                    this.spriteType = SpriteType.ShipP2Explosion2;
+                } else {
+                    this.spriteType = SpriteType.ShipP2Explosion3;
+                }
+            }
+            else{
+                double ratio = this.destructionCooldown.getRemaining() / (double) this.destructionCooldown.getTotal();
+                // 전체 쿨다운 시간 1000ms 기준, 3단계로 나누기
+                if (ratio > 0.6) {
+                    this.spriteType = SpriteType.ShipP1Explosion1;
+                } else if (ratio > 0.3) {
+                    this.spriteType = SpriteType.ShipP1Explosion2;
+                } else {
+                    this.spriteType = SpriteType.ShipP1Explosion3;
+                }
+            }
+        }
+
+        else {
+            if (this.isP1Ship){
+                if (this.isMove){
+                    this.spriteType = SpriteType.ShipP1Move;
+                    if (!movingSoundPlaying) {
+                        SoundManager.playLoop("sfx/ShipMoving.wav");
+                        movingSoundPlaying = true;
+                    }
+                    this.isMove = false;
+                }
+                else{
+                    this.spriteType = SpriteType.ShipP1;
+                    if (movingSoundPlaying) {
+                        SoundManager.stop("sfx/ShipMoving.wav");
+                        movingSoundPlaying = false;
+                    }
+                }
+            }
+            else {
+                if (this.isMove){
+                    this.spriteType = SpriteType.ShipP2Move;
+                    if (!movingSoundPlaying) {
+                        SoundManager.playLoop("sfx/ShipMoving.wav");
+                        movingSoundPlaying = true;
+                    }
+                    this.isMove = false;
+                }
+                else {
+                    this.spriteType = SpriteType.ShipP2;
+                    if (movingSoundPlaying) {
+                        SoundManager.stop("sfx/ShipMoving.wav");
+                        movingSoundPlaying = false;
+                    }
+                }
+            }
+
+        }
+    }
 
 	/**
 	 * Switches the ship to its destroyed state.
 	 */
 	public final void destroy() {
         if (!this.isInvincible) {
-			SoundManager.stop("sfx/impact.wav");
-            SoundManager.play("sfx/impact.wav");
+			SoundManager.stop("sfx/destroy.wav");
+            SoundManager.play("sfx/destroy.wav");
             this.destructionCooldown.reset();
         }
     }
@@ -200,6 +275,10 @@ public class Ship extends Entity {
         this.isInvincible = true;
         this.shieldCooldown.setMilliseconds(duration);
         this.shieldCooldown.reset();
-        this.setColor(Color.BLUE);
+    }
+    public float getInvincibilityRatio() {
+        if (!isInvincible || shieldCooldown.getTotal() == 0) return 0f;
+        float ratio = (float) shieldCooldown.getRemaining() / shieldCooldown.getTotal();
+        return ratio;
     }
 }

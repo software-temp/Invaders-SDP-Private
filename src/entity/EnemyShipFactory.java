@@ -20,7 +20,7 @@ public class EnemyShipFactory {
     /** Initial position in the y-axis. */
     private static final int INIT_POS_Y = 100;
     /** Distance between ships. */
-    private static final int SEPARATION_DISTANCE = 40;
+    private static final int SEPARATION_DISTANCE = 80;
 
     /**
      * Creates the 2D list of enemy ships for the formation.

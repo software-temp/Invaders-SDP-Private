@@ -45,7 +45,7 @@ class ShipTest {
 
         // --- 2. Act ---
         // Create the Ship object.
-        Ship ship = new Ship(startX, startY, testColor);
+        Ship ship = new Ship(startX, startY, testColor,true);
 
         // --- 3. Assert ---
         // Verify that the values in the object match the values passed to the constructor.
@@ -62,7 +62,7 @@ class ShipTest {
     @Test
     void testShipMovement_MoveRight() {
         // --- 1. Arrange ---
-        Ship ship = new Ship(100, 100, Color.GREEN);
+        Ship ship = new Ship(100, 100, Color.CYAN,true);
         int initialX = ship.getPositionX();
         int speed = ship.getSpeed(); // This gets the base SPEED (2)
 
@@ -80,7 +80,7 @@ class ShipTest {
     @Test
     void testShipMovement_MoveLeft() {
         // --- 1. Arrange ---
-        Ship ship = new Ship(100, 100, Color.GREEN);
+        Ship ship = new Ship(100, 100, Color.CYAN,true);
         int initialX = ship.getPositionX();
         int speed = ship.getSpeed();
 
@@ -98,7 +98,7 @@ class ShipTest {
     @Test
     void testShipMovement_MoveUp() {
         // --- 1. Arrange ---
-        Ship ship = new Ship(100, 100, Color.GREEN);
+        Ship ship = new Ship(100, 100, Color.CYAN,true);
         int initialY = ship.getPositionY();
         int speed = ship.getSpeed();
 
@@ -116,7 +116,7 @@ class ShipTest {
     @Test
     void testShipMovement_MoveDown() {
         // --- 1. Arrange ---
-        Ship ship = new Ship(100, 100, Color.GREEN);
+        Ship ship = new Ship(100, 100, Color.CYAN,true);
         int initialY = ship.getPositionY();
         int speed = ship.getSpeed();
 
@@ -139,7 +139,7 @@ class ShipTest {
     @Test
     void testShoot_Success() {
         // --- 1. Arrange ---
-        Ship ship = new Ship(100, 100, Color.GREEN);
+        Ship ship = new Ship(100, 100, Color.CYAN,true);
         Set<Bullet> bullets = new HashSet<>();
 
         // --- 2. Act ---
@@ -153,7 +153,7 @@ class ShipTest {
     @Test
     void testShoot_Cooldown() {
         // --- 1. Arrange ---
-        Ship ship = new Ship(100, 100, Color.GREEN);
+        Ship ship = new Ship(100, 100, Color.CYAN,true);
         Set<Bullet> bullets = new HashSet<>();
         ship.shoot(bullets); // First shot (success)
         assertEquals(1, bullets.size());
@@ -169,7 +169,7 @@ class ShipTest {
     @Test
     void testShoot_AfterCooldown() throws InterruptedException {
         // --- 1. Arrange ---
-        Ship ship = new Ship(100, 100, Color.GREEN);
+        Ship ship = new Ship(100, 100, Color.CYAN,true);
         Set<Bullet> bullets = new HashSet<>();
         ship.shoot(bullets); // First shot (success)
 

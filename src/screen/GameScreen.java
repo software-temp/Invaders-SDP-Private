@@ -102,6 +102,7 @@ public class GameScreen extends Screen {
 
             // Player 1 Input
             if (model.getLivesP1() > 0 && model.getShip() != null && !model.getShip().isDestroyed()) {
+
                 if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_D))
                     model.playerMove(1, "RIGHT");
                 if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_A))
@@ -165,6 +166,8 @@ public class GameScreen extends Screen {
                 model.getLivesP1(),
                 model.getLivesP2(),
                 model.getLevel(),
+                model.getShip(),
+                model.getShipP2(),
                 model.getElapsedTime(),
                 model.getCurrentLevel().getLevelName(),
                 model.getAchievementText(),

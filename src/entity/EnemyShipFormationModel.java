@@ -210,13 +210,14 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
      * Ship to be destroyed.
      */
     public final void destroy(final EnemyShip destroyedShip) {
+
         for (int i = 0; i < this.enemyShips.size(); i++) {
             List<EnemyShip> column = this.enemyShips.get(i);
             int shipIndexInColumn = column.indexOf(destroyedShip);
 
             if (shipIndexInColumn != -1) {
                 if (!column.get(shipIndexInColumn).isDestroyed()) {
-                    column.get(shipIndexInColumn).destroy();
+                    column.get(shipIndexInColumn).destroy(false);
                     this.logger.info("Destroyed ship in (" + i + "," + shipIndexInColumn + ")");
                     this.shipCount--;
 
@@ -268,7 +269,7 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
         for (List<EnemyShip> column : this.enemyShips) {
             for (EnemyShip enemyShip : column) {
                 if (!enemyShip.isDestroyed()) {
-                    enemyShip.destroy();
+                    enemyShip.destroy(false);
                     destroyed++;
                     this.shootingManager.onShipDestroyed(enemyShip, column);
                 }
@@ -363,7 +364,7 @@ public class EnemyShipFormationModel implements Iterable<EnemyShip> {
     public void moveAllShips(int movementX, int movementY) {
         for (List<EnemyShip> column : this.enemyShips)
             for (EnemyShip enemyShip : column) {
-                enemyShip.move(movementX, movementY);
+                enemyShip.move(movementX, movementY,false);
             }
     }
 }

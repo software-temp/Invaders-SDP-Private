@@ -1,5 +1,7 @@
 package engine.DTO;
 
+import entity.Ship;
+
 public final class HUDInfoDTO {
 
     /** screen info */
@@ -12,6 +14,10 @@ public final class HUDInfoDTO {
     private final int livesP1;
     private final int livesP2;
     private final int level;
+//    private final double[] shipP1;
+//    private final double[] shipP2;
+    private final Ship shipP1;
+    private final Ship shipP2;
 
     /** item and gameState */
     private final int coin;
@@ -31,6 +37,9 @@ public final class HUDInfoDTO {
             int livesP1,
             int livesP2,
             int level,
+            Ship shipP1,
+            Ship shipP2,
+
             long elapsedTimeMillis,
             String levelName,
             String achievementText,
@@ -48,6 +57,8 @@ public final class HUDInfoDTO {
         this.levelName = levelName;
         this.achievementText = achievementText;
         this.healthPopupText = healthPopupText;
+        this.shipP1 = shipP1;
+        this.shipP2 = shipP2;
     }
 
     public int getWidth() {
@@ -97,6 +108,10 @@ public final class HUDInfoDTO {
     public int getLevel(){
         return level;
     }
+
+    public Ship getShipP1() {return this.shipP1;}
+    public Ship getShipP2() {return this.shipP2;}
+
 
     @Override
     public String toString() {

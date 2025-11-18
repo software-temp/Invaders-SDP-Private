@@ -1,5 +1,8 @@
 package entity;
 
+import audio.SoundManager;
+import engine.Cooldown;
+import engine.Core;
 import engine.DrawManager;
 
 import java.awt.*;
@@ -14,9 +17,9 @@ public class OmegaBoss extends MidBoss {
 	/** Initial position in the y-axis. */
 	private static final int INIT_POS_Y = 80;
 	/** Width of Omega */
-	private static final int OMEGA_WIDTH = 64;
-	/** Height of Omega */
-	private static final int OMEGA_HEIGHT = 28;
+    private static final int OMEGA_WIDTH = 70 * 2;
+    /** Height of Omega */
+    private static final int OMEGA_HEIGHT = 51 * 2;
 	/** Current Health of Omega */
 	private static final int OMEGA_HEALTH = 45;
 	/** Point of Omega when destroyed */
@@ -37,6 +40,9 @@ public class OmegaBoss extends MidBoss {
 	private final int widthBoundary;
 	/** Boss cannot move below this boundary. */
 	private final int bottomBoundary;
+    private boolean isMove = false;
+    private boolean ishit = false;
+    private Cooldown animationCooldown;
 	/**
 	 * Constructor, establishes the boss entity's generic properties.
 	 *
@@ -48,9 +54,12 @@ public class OmegaBoss extends MidBoss {
 		super(INIT_POS_X, INIT_POS_Y, OMEGA_WIDTH, OMEGA_HEIGHT, OMEGA_HEALTH, OMEGA_POINT_VALUE, color);
 		this.widthBoundary = widthBoundary;
 		this.bottomBoundary = bottomBoundary;
-		this.spriteType= DrawManager.SpriteType.OmegaBoss1;
+        this.spriteType= DrawManager.SpriteType.OmegaBoss4;
+        this.animationCooldown = new Cooldown(200);
 		this.logger.info("OMEGA : Initializing Boss OMEGA");
 		this.logger.info("OMEGA : move using the default pattern");
+        SoundManager.stop("sfx/OmegaBossAppearance.wav");
+        SoundManager.play("sfx/OmegaBossAppearance.wav");
 	}
 
 	/** move simple */
@@ -71,6 +80,8 @@ public class OmegaBoss extends MidBoss {
 	private void movePatterns(){
 		if(this.pattern!=2 && this.healPoint < this.maxHp/2){
 			this.pattern=2;
+            this.isMove = true;
+            this.animationCooldown = new Cooldown(50);
 			this.color=PATTERN_2_COLOR;
 			this.spriteType = DrawManager.SpriteType.OmegaBoss2;
 			logger.info("OMEGA : move using second pattern");
@@ -145,6 +156,9 @@ public class OmegaBoss extends MidBoss {
 	@Override
 	public void takeDamage(int damage) {
 		this.healPoint -= damage;
+        SoundManager.stop("sfx/OmegaBoss_hitting.wav");
+        SoundManager.play("sfx/OmegaBoss_hitting.wav");
+        ishit =true;
 	}
 
 	/**
@@ -154,6 +168,56 @@ public class OmegaBoss extends MidBoss {
 	 */
 	@Override
 	public void update() {
+        if (this.animationCooldown.checkFinished()) {
+            this.animationCooldown.reset();
+            if (this.isMove) {
+                if (isRight) {
+                    // 오른쪽 이동 중이면 3↔4 프레임 토글
+                    if (this.spriteType == DrawManager.SpriteType.OmegaBossMoving3)
+                        this.spriteType = DrawManager.SpriteType.OmegaBossMoving4;
+                    else
+                        this.spriteType = DrawManager.SpriteType.OmegaBossMoving3;
+
+                } else {
+                    // 왼쪽 이동 중이면 1↔2 프레임 토글
+                    if (this.spriteType == DrawManager.SpriteType.OmegaBossMoving1)
+                        this.spriteType = DrawManager.SpriteType.OmegaBossMoving2;
+                    else
+                        this.spriteType = DrawManager.SpriteType.OmegaBossMoving1;
+
+                }
+            }
+            else {
+                if (isRight) {
+                    // 오른쪽 이동 중이면 3↔4 프레임 토글
+                    if (ishit){
+                        this.spriteType = DrawManager.SpriteType.OmegaBossHitting1;
+                        ishit = false;
+                    }
+                    else {
+                        if (this.spriteType == DrawManager.SpriteType.OmegaBoss3)
+                            this.spriteType = DrawManager.SpriteType.OmegaBoss4;
+                        else
+                            this.spriteType = DrawManager.SpriteType.OmegaBoss3;
+                    }
+                } else {
+                    if (ishit){
+                        this.spriteType = DrawManager.SpriteType.OmegaBossHitting;
+                        ishit = false;
+                    }
+                    // 왼쪽 이동 중이면 1↔2 프레임 토글
+                    else {
+                        if (this.spriteType == DrawManager.SpriteType.OmegaBoss1)
+                            this.spriteType = DrawManager.SpriteType.OmegaBoss2;
+                        else
+                            this.spriteType = DrawManager.SpriteType.OmegaBoss1;
+                    }
+                }
+            }
+
+
+
+        }
 		this.movePatterns();
 	}
 }

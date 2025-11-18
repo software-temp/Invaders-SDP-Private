@@ -3,7 +3,7 @@ package entity;
 /**
  * Defines a contract for enemy formation movement strategies.
  */
-interface IMovementStrategy {
+public interface IMovementStrategy {
 
     /**
      * Updates the movement logic

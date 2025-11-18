@@ -28,7 +28,12 @@ public class GameView {
 
         /** frame initialize */
         drawManager.initDrawing(dto.getWidth(), dto.getHeight());
-
+        if (dto.getShipP1().isInvincible()) {
+            drawManager.getEntityRenderer().drawShield(dto.getShipP1().getPositionX(), dto.getShipP1().getWidth(), dto.getShipP1().getPositionY(),dto.getShipP1().getHeight(), dto.getShipP1().getInvincibilityRatio());
+        }
+        if (dto.getShipP2().isInvincible()){
+            drawManager.getEntityRenderer().drawShield(dto.getShipP2().getPositionX() ,dto.getShipP2().getWidth(), dto.getShipP2().getPositionY(), dto.getShipP2().getHeight(), dto.getShipP2().getInvincibilityRatio());
+        }
         /** Entity Rendering */
         if (model.getEntitiesToRender() != null) {
             for (int i = 0; i < model.getEntitiesToRender().size(); i++) {
@@ -76,6 +81,7 @@ public class GameView {
             drawManager.getUIRenderer().drawHorizontalLine(dto.getWidth(), dto.getHeight() / 2 - dto.getHeight() / 12);
             drawManager.getUIRenderer().drawHorizontalLine(dto.getWidth(), dto.getHeight() / 2 + dto.getHeight() / 12);
         }
+
 
         /** frame complete */
         drawManager.completeDrawing();

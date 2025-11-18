@@ -92,7 +92,9 @@ public class TestScreen extends Screen {
 				0,
 				0,
 				0,
-				0,
+                model.getPlayer(),
+                model.getPlayer(),
+                0,
 				"test",
 				"test",
 				"test"

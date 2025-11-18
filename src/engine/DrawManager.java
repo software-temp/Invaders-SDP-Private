@@ -2,6 +2,7 @@ package engine;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -41,16 +42,17 @@ public final class DrawManager {
     private double scale;
 
 	/** Sprite types mapped to their images. */
-	private static Map<SpriteType, boolean[][]> spriteMap;
+	private static Map<SpriteType, BufferedImage> spriteMap;
 
 	/** Sprite types. */
-	public static enum SpriteType {
-		Ship, ShipDestroyed, Bullet, EnemyBullet, EnemyShipA1, EnemyShipA2,
-		EnemyShipB1, EnemyShipB2, EnemyShipC1, EnemyShipC2, EnemyShipSpecial,
-		FinalBoss1, FinalBoss2,FinalBossBullet,FinalBossDeath,OmegaBoss1, OmegaBoss2,OmegaBossDeath, Explosion, SoundOn, SoundOff, Item_MultiShot,
-		Item_Atkspeed, Item_Penetrate, Item_Explode, Item_Slow, Item_Stop,
-		Item_Push, Item_Shield, Item_Heal
-	}
+    public static enum SpriteType {
+        ShipP1,ShipP2,ShipP1Move,ShipP2Move,ShipP2Explosion1,ShipP2Explosion2, ShipP2Explosion3,Life, ShipP1Explosion1,ShipP1Explosion2,ShipP1Explosion3,
+        Bullet, EnemyBullet, EnemyShipA1, EnemyShipA2, Laser,
+        EnemyShipB1, EnemyShipB2, EnemyShipC1, EnemyShipC2, EnemyShipSpecial, EnemyShipSpecialLeft, EnemySpecialExplosion,
+        FinalBoss1, FinalBoss2,FinalBossBullet,FinalBossDeath,OmegaBoss1, OmegaBoss2,OmegaBossHitting,OmegaBossHitting1,OmegaBoss3, OmegaBoss4,OmegaBossMoving1,OmegaBossMoving2,OmegaBossMoving3,OmegaBossMoving4,OmegaBossDeath, Explosion, SoundOn, SoundOff, Item_MultiShot,
+        Item_Atkspeed, Item_Penetrate, Item_Explode, Item_Slow, Item_Stop, Shield,
+        Item_Push, Item_Shield, Item_Heal,OmegaBoss100,OmegaBoss101
+    }
 
 	/**
 	 * Private constructor.
@@ -75,7 +77,7 @@ public final class DrawManager {
 	/**
 	 * Sets the frame to draw the image on.
 	 */
-public void setFrame(final Frame currentFrame) {
+    public void setFrame(final Frame currentFrame) {
 		frame = currentFrame;
         backBuffer = new BackBuffer(frame);
 		fontPack = null;

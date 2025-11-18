@@ -1,7 +1,7 @@
 package engine;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import engine.DrawManager.SpriteType;
+
+import javax.imageio.ImageIO;
 
 /**
  * Manages files used in the application.
@@ -66,38 +68,28 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
-	public void loadSprite(final Map<SpriteType, boolean[][]> spriteMap)
-			throws IOException {
-		InputStream inputStream = null;
+    public void loadSprite(final Map<SpriteType, BufferedImage> spriteMap) throws IOException {
 
-		try {
-			inputStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics");
-            char c;
+        File dir = new File("res/images");
+        File[] files = dir.listFiles((d, name) -> name.endsWith(".png"));
 
-			// Sprite loading.
-			for (Map.Entry<SpriteType, boolean[][]> sprite : spriteMap
-					.entrySet()) {
-				for (int i = 0; i < sprite.getValue().length; i++)
-					for (int j = 0; j < sprite.getValue()[i].length; j++) {
-						do
-							c = (char) inputStream.read();
-						while (c != '0' && c != '1');
+        if (files == null) return;
 
-						if (c == '1')
-							sprite.getValue()[i][j] = true;
-						else
-							sprite.getValue()[i][j] = false;
-					}
-				logger.fine("Sprite " + sprite.getKey() + " loaded.");
-			}
-			if (inputStream != null)
-				inputStream.close();
-		} finally {
-			if (inputStream != null)
-				inputStream.close();
-		}
-	}
+        for (File file : files) {
+            try {
+                BufferedImage img = ImageIO.read(file);
+                String fileName = file.getName().replace(".png", "");
+                for (SpriteType type : SpriteType.values()) {
+                    if (type.name().equalsIgnoreCase(fileName)) {
+                        spriteMap.put(type, img);
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 	/**
 	 * Loads a font of a given size.

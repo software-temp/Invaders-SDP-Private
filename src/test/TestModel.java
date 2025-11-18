@@ -22,7 +22,7 @@ public class TestModel {
 		this.width = width;
 		this.height = height;
 		this.entity = new OmegaBoss(Color.blue, width, height);
-		this.player = new Ship(this.width/2, height-20, Color.GREEN);
+		this.player = new Ship(this.width/2, height-20, Color.GREEN,true);
 	}
 
 	public void update(){
@@ -73,4 +73,8 @@ public class TestModel {
 	public void playerFire(){
 		// TODO: Implement player firing logic for test mode.
 	}
+
+    public Ship getPlayer() {
+        return player;
+    }
 }
