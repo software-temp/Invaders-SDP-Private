@@ -147,7 +147,10 @@ public class Ship extends Entity {
 	}
 
 	public void useSkill(final SkillType skillType) {
-		skills.get(skillType).use();
+		ISkill skill = skills.get(skillType);
+		if (skill != null) {
+			skill.use(this);
+		}
 	}
 
 	/**

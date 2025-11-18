@@ -158,7 +158,7 @@ public class GameScreen extends Screen {
 		}
 	}
 
-	private void handlePlayerSkillInput() {}
+	private void handlePlayerSkillInput() { /* TODO: Implement skill input handling */ }
 
     /**
      * Builds the DTO that passes data from Model to View.

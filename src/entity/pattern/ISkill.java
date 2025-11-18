@@ -3,5 +3,5 @@ package entity.pattern;
 import entity.Ship;
 
 public interface ISkill {
-	void use();
+	void use(Ship ship);
 }
