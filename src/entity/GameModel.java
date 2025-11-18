@@ -351,11 +351,6 @@ public class GameModel {
 		}
 	}
 
-	// =====================================================
-	//  Collision Request API (called from entities)
-	//  엔티티들이 충돌 시 GameModel에게 보내는 요청 메서드
-	// =====================================================
-
 	/**
 	 * Handles damage and rewards when a player bullet hits a normal enemy.
 	 */
