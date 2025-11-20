@@ -3,9 +3,7 @@ package entity;
 /**
  * Manages the in-game item (enhancement) system.
  * This is a temporary implementation focusing on functionality.
- * <p>
  * Currently implemented: MultiShot, Rapid Fire, Penetration
- * <p>
  * Example usage:
  * DropItem.setMultiShotLevel(2);  // Purchase level 2 in the shop
  */
