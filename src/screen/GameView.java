@@ -2,6 +2,7 @@ package screen;
 
 import engine.DrawManager;
 import engine.DTO.HUDInfoDTO;
+import entity.DropItem;
 import entity.GameModel;
 import entity.LaserBullet;
 import entity.GameConstant;
@@ -31,10 +32,14 @@ public class GameView {
 
         /** Entity Rendering */
         if (model.getEntitiesToRender() != null) {
-            for (int i = 0; i < model.getEntitiesToRender().size(); i++) {
-                var e = model.getEntitiesToRender().get(i);
+            for (var e : model.getEntitiesToRender()) {
+	            if (e instanceof DropItem) {
+		            drawManager.getItemRenderer().render((DropItem) e);
+		            continue;
+	            }
 				drawManager.getEntityRenderer().drawEntity(e);
             }
+
         }
 
         drawManager.getHUDRenderer().drawScore(dto.getWidth(), dto.getScoreP1(), 25);
