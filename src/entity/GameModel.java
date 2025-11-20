@@ -316,40 +316,39 @@ public class GameModel {
 	 */
 	private void processAllCollisions() {
 
-		List<Collidable> collidables = new ArrayList<>();
+		List<Entity> entities = new ArrayList<>();
 
-		if (ship != null) collidables.add(ship);
-		if (shipP2 != null) collidables.add(shipP2);
+		if (ship != null) entities.add(ship);
+		if (shipP2 != null) entities.add(shipP2);
 
 		for (EnemyShip e : enemyShipFormationModel) {
-			if (e != null && !e.isDestroyed()) collidables.add(e);
+			if (e != null && !e.isDestroyed()) entities.add(e);
 		}
 
 		for (EnemyShip e : enemyShipSpecialFormation) {
-			if (e != null && !e.isDestroyed()) collidables.add(e);
+			if (e != null && !e.isDestroyed()) entities.add(e);
 		}
 
-		if (finalBoss != null && !finalBoss.isDestroyed()) collidables.add(finalBoss);
-		if (omegaBoss != null && !omegaBoss.isDestroyed()) collidables.add(omegaBoss);
+		if (finalBoss != null && !finalBoss.isDestroyed()) entities.add(finalBoss);
+		if (omegaBoss != null && !omegaBoss.isDestroyed()) entities.add(omegaBoss);
 
-		collidables.addAll(bullets);
-		collidables.addAll(bossBullets);
-		collidables.addAll(dropItems);
+		entities.addAll(bullets);
+		entities.addAll(bossBullets);
+		entities.addAll(dropItems);
 
-		for (int i = 0; i < collidables.size(); i++) {
-			Collidable a = collidables.get(i);
-			Entity ea = a.asEntity();
+		for (int i = 0; i < entities.size(); i++) {
+			Entity a = entities.get(i);
 
-			for (int j = i + 1; j < collidables.size(); j++) {
-				Collidable b = collidables.get(j);
-				Entity eb = b.asEntity();
+			for (int j = i + 1; j < entities.size(); j++) {
+				Entity b = entities.get(j);
 
-				if (checkCollision(ea, eb)) {
+				if (checkCollision(a, b)) {
 					a.onCollision(b, this);
 					b.onCollision(a, this);
 				}
 			}
 		}
+		entities.clear();
 	}
 
 	/**
@@ -597,7 +596,7 @@ public class GameModel {
      * Second entity, the ship.
      * @return Result of the collision test.
      */
-    private boolean checkCollision(final Entity a, final Entity b) {
+    private boolean checkCollision(final HasBounds a, final HasBounds b) {
         // Calculate center point of the entities in both axis.
         int centerAX = a.getPositionX() + a.getWidth() / 2;
         int centerAY = a.getPositionY() + a.getHeight() / 2;

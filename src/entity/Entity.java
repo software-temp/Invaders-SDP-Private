@@ -108,11 +108,6 @@ public class Entity implements Collidable, HasBounds {
 		return this.height;
 	}
 
-	@Override
-	public Entity asEntity() {
-		return this;
-	}
-
 	/**
 	 * Default collision handler for all entities.
 	 * Specific entities override this to implement their own collision logic.
