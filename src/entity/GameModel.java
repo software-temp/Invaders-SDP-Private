@@ -394,7 +394,6 @@ public class GameModel {
 		if (ship.isInvincible()) return;
 
 		ship.destroy();
-		ship.activateInvincibility(2000);
 
 		if (ship.getPlayerId() == 1) {
 			livesP1 = Math.max(0, livesP1 - amount);  // ★ 여기!!

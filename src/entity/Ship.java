@@ -204,7 +204,7 @@ public class Ship extends Entity implements Collidable {
 	 * @return True if the ship is currently invincible.
 	 */
 	public final boolean isInvincible() {
-		return this.isInvincible;
+		return this.isInvincible || this.isDestroyed();
 	}
 
 	/**
