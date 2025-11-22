@@ -1,8 +1,7 @@
 package test;
 
-import engine.Cooldown;
+import engine.Core;
 import engine.DTO.HUDInfoDTO;
-import entity.GameConstant;
 import entity.GameModel;
 import screen.Screen;
 
@@ -15,19 +14,20 @@ public class TestScreen extends Screen {
 	 *
 	 * @param width  Screen width.
 	 * @param height Screen height.
+	 * @param fps    Frames per second, frame rate at which the game is run.
 	 */
-	public TestScreen(int width, int height) {
-		super(width, height, GameConstant.FPS);
+	public TestScreen(int width, int height, int fps) {
+		super(width, height, fps);
 	}
 
 	public final void initialize(){
 		super.initialize();
 
-		this.model = new TestModel(this.width, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT);
+		this.model = new TestModel(this.width, this.height);
 		this.view = new TestView(this.model, this.drawManager, this.width, this.height);
 
-		this.inputDelay = new Cooldown(GameModel.INPUT_DELAY);
-		this.inputDelay.reset();
+//		this.inputDelay = Core.getCooldown(GameModel.INPUT_DELAY);
+//		this.inputDelay.reset();
 	}
 
 	/**

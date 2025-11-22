@@ -92,7 +92,7 @@ public final class Core {
 
 		if (GameConstant.isTest){
 			while (true) {
-				currentScreen = new TestScreen(FRAME_WIDTH, FRAME_HEIGHT);
+				currentScreen = new TestScreen(FRAME_WIDTH, FRAME_HEIGHT, GameConstant.FPS);
 				frame.setScreen(currentScreen);
 			}
 		}

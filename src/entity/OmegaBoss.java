@@ -1,7 +1,15 @@
 package entity;
 
 import engine.DrawManager;
+import engine.Core;
+import engine.Cooldown;
+import entity.pattern.BossPattern;
+import entity.pattern.DashPattern;
+import entity.pattern.DiagonalPattern;
+import entity.pattern.HorizontalPattern;
+
 import java.awt.*;
+import java.util.logging.Logger;
 
 /**
  * Omega - Middle Boss
@@ -28,28 +36,122 @@ public class OmegaBoss extends MidBoss {
 	private static final int PATTERN_2_Y_SPEED = 3;
 	/** Color of pattern 2 */
 	private static final Color PATTERN_2_COLOR = Color.MAGENTA;
-	/** Current horizontal movement direction. true for right, false for left. */
-	private boolean isRight = true;
-	/** Current vertical movement direction. true for down, false for up. */
-	private boolean isDown = true;
-	/** Boss cannot move over this boundary. */
-	private final int widthBoundary;
-	/** Boss cannot move below this boundary. */
-	private final int bottomBoundary;
+	/** Dash cooldown duration in milliseconds (5 seconds) */
+	private static final int DASH_COOLDOWN_MS = 5000;
+
+	/** Boss pattern instance for delegating movement logic */
+	private BossPattern bossPattern;
+	/** Player reference for pattern targeting */
+	private Ship targetShip;
+	/** Current boss phase */
+	private int bossPhase = 1;
+	/** Logger instance */
+	private Logger logger;
+	/** Cooldown timer for dash attack */
+	private Cooldown dashCooldown;
+	/** Flag to track if currently in dash cooldown */
+	private boolean isInDashCooldown = false;
+
 	/**
 	 * Constructor, establishes the boss entity's generic properties.
 	 *
- 	 * @param color             Color of the boss entity.
- 	 * @param widthBoundary		The rightmost X-coordinate for the boss's movement. The boss cannot move over this value.
- 	 * @param bottomBoundary    The lowermost Y-coordinate for the boss's movement. The boss cannot move below this value.
+	 * @param color             Color of the boss entity.
+	 * @param player           The player ship to target
 	 */
-	public OmegaBoss(Color color, int widthBoundary, int bottomBoundary) {
+	public OmegaBoss(Color color, Ship player) {
 		super(INIT_POS_X, INIT_POS_Y, OMEGA_WIDTH, OMEGA_HEIGHT, OMEGA_HEALTH, OMEGA_POINT_VALUE, color);
-		this.widthBoundary = widthBoundary;
-		this.bottomBoundary = bottomBoundary;
-		this.spriteType= DrawManager.SpriteType.OmegaBoss1;
+		this.targetShip = player;
+		this.spriteType = DrawManager.SpriteType.OmegaBoss1;
+		this.logger = Core.getLogger();
+		this.dashCooldown = new Cooldown(DASH_COOLDOWN_MS);
+
 		this.logger.info("OMEGA : Initializing Boss OMEGA");
-		this.logger.info("OMEGA : move using the default pattern");
+		choosePattern();
+	}
+
+	/**
+	 * Updates the entity's state for the current game frame.
+	 * This method is called on every tick of the game loop and is responsible for
+	 * executing the boss's movement patterns.
+	 */
+	@Override
+	public void update() {
+		choosePattern();
+
+		if (bossPattern != null) {
+			bossPattern.move();
+			bossPattern.attack();
+
+			// Update position from pattern
+			this.positionX = bossPattern.getBossPosition().x;
+			this.positionY = bossPattern.getBossPosition().y;
+		}
+	}
+
+	/**
+	 * Chooses the appropriate pattern based on boss health
+	 * Pattern 1: Simple horizontal movement (HP > 50%)
+	 * Pattern 2: Diagonal movement (50% >= HP > 33%)
+	 * Pattern 3: Dash attack with cooldown (HP <= 33%)
+	 */
+	private void choosePattern() {
+		if (this.healPoint > this.maxHp / 2 && this.bossPhase == 1) {
+			++this.bossPhase;
+			bossPattern = new HorizontalPattern(this, PATTERN_1_X_SPEED);
+			logger.info("OMEGA : move using horizontal pattern");
+		}
+		else if (this.healPoint <= this.maxHp / 2 && this.healPoint > this.maxHp / 3 && this.bossPhase == 2) {
+			++this.bossPhase;
+			bossPattern = new DiagonalPattern(this, PATTERN_2_X_SPEED, PATTERN_2_Y_SPEED, PATTERN_2_COLOR);
+			logger.info("OMEGA : move using diagonal pattern");
+		}
+		else if (this.healPoint <= this.maxHp / 3 && this.bossPhase == 3) {
+			++this.bossPhase;
+			// Start with dash pattern
+			startDashPattern();
+		}
+
+		// Phase 3: Handle dash cooldown cycle
+		if (this.bossPhase >= 4) {
+			handleDashCycle();
+		}
+	}
+
+	/**
+	 * Handles the dash attack cycle in phase 3
+	 * Alternates between dash attack and diagonal movement with 5-second cooldown
+	 */
+	private void handleDashCycle() {
+		// Check if dash is completed
+		if (bossPattern instanceof DashPattern) {
+			DashPattern dashPattern = (DashPattern) bossPattern;
+			if (dashPattern.isDashCompleted()) {
+				startDashCooldown();
+			}
+		}
+		// Check if cooldown is finished and ready for next dash
+		else if (isInDashCooldown && dashCooldown.checkFinished()) {
+			startDashPattern();
+		}
+	}
+
+	/**
+	 * Start a new dash pattern
+	 */
+	private void startDashPattern() {
+		bossPattern = new DashPattern(this, targetShip);
+		isInDashCooldown = false;
+		logger.info("OMEGA : Starting dash attack");
+	}
+
+	/**
+	 * Start dash cooldown with diagonal movement
+	 */
+	private void startDashCooldown() {
+		bossPattern = new DiagonalPattern(this, PATTERN_2_X_SPEED, PATTERN_2_Y_SPEED, PATTERN_2_COLOR);
+		isInDashCooldown = true;
+		dashCooldown.reset();
+		logger.info("OMEGA : Dash cooldown started (5 seconds)");
 	}
 
 	/** move simple */
@@ -57,75 +159,6 @@ public class OmegaBoss extends MidBoss {
 	public void move(int distanceX, int distanceY) {
 		this.positionX += distanceX;
 		this.positionY += distanceY;
-	}
-
-	/**
-	 * Executes the appropriate move pattern based on the boss's health status.
-	 * Calls {@link #patternFirst()} if health is greater than half, otherwise
-	 * Calls {@link #patternSecond()}.
-	 *
-	 * @see #patternFirst()
-	 * @see #patternSecond()
-	 */
-	private void movePatterns(){
-		if(this.pattern!=2 && this.healPoint < this.maxHp/2){
-			this.pattern=2;
-			this.color=PATTERN_2_COLOR;
-			this.spriteType = DrawManager.SpriteType.OmegaBoss2;
-			logger.info("OMEGA : move using second pattern");
-		}
-
-		switch(pattern){
-			case 1:
-				this.patternFirst();
-				break;
-			case 2:
-				this.patternSecond();
-				break;
-		}
-	}
-
-	/**
-	 * The boss's phase first pattern, which makes it move from side to side across the screen.
-	 * @see #move(int, int)
-	 */
-	private void patternFirst(){
-		int dx = this.isRight ? PATTERN_1_X_SPEED : -PATTERN_1_X_SPEED;
-		this.move(dx, 0);
-
-		if (this.positionX <= 0) {
-			this.isRight = true;
-		} else if (this.positionX + this.width >= widthBoundary) {
-			this.isRight = false;
-		}
-	}
-
-	/**
-	 * The boss's phase Second pattern, which combines horizontal and vertical movement
-	 * Horizontally, it patrols from side to side at a faster speed than in {@link #patternFirst()}.
-	 * @see #move(int, int)
-	 */
-	private void patternSecond(){
-		int dx = this.isRight ? PATTERN_2_X_SPEED : -PATTERN_2_X_SPEED;
-		int dy = this.isDown ? PATTERN_2_Y_SPEED : -PATTERN_2_Y_SPEED;
-
-		this.move(dx, dy);
-
-		if (this.positionX <= 0) {
-			this.positionX = 0;
-			this.isRight = true;
-		} else if (this.positionX + this.width >= widthBoundary) {
-			this.positionX = widthBoundary - this.width;
-			this.isRight = false;
-		}
-
-		if (this.positionY <= INIT_POS_Y) {
-			this.positionY = INIT_POS_Y;
-			this.isDown = true;
-		} else if (this.positionY + this.height >= bottomBoundary) {
-			this.positionY = bottomBoundary - this.height;
-			this.isDown = false;
-		}
 	}
 
 	/** Marks the entity as destroyed and changes its sprite to an explosion. */
@@ -146,14 +179,11 @@ public class OmegaBoss extends MidBoss {
 		this.healPoint -= damage;
 	}
 
-	/**
-	 * Updates the entity's state for the current game frame.
-	 * This method is called on every tick of the game loop and is responsible for
-	 * executing the boss's movement patterns.
-	 */
-	@Override
-	public void update() {
-		this.movePatterns();
+	public boolean isShowingPath() {
+		if (bossPattern instanceof DashPattern) {
+			return ((DashPattern) bossPattern).isShowingPath();
+		}
+		return false;
 	}
 
 	@Override
@@ -166,4 +196,45 @@ public class OmegaBoss extends MidBoss {
 		model.requestBossHitByPlayerBullet(bullet, this);
 	}
 
+	/**
+	 * Calculate dash end point (by watching)
+	 * @return [x, y] array
+	 */
+	public int[] getDashEndPoint() {
+		if (bossPattern instanceof DashPattern) {
+			return ((DashPattern) bossPattern).getDashEndPoint(this.width, this.height);
+		}
+		return new int[]{this.positionX + this.width / 2, this.positionY + this.height / 2};
+	}
+
+	/**
+	 * Get current boss pattern
+	 */
+	public BossPattern getBossPattern() {
+		return this.bossPattern;
+	}
+
+	/**
+	 * Get current boss phase
+	 */
+	public int getBossPhase() {
+		return this.bossPhase;
+	}
+
+	/**
+	 * Check if boss is in dash cooldown
+	 */
+	public boolean isInDashCooldown() {
+		return isInDashCooldown;
+	}
+
+	/**
+	 * Update target ship for pattern
+	 */
+	public void setTarget(Ship target) {
+		this.targetShip = target;
+		if (bossPattern != null) {
+			bossPattern.setTarget(target);
+		}
+	}
 }
