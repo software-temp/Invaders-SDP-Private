@@ -302,14 +302,14 @@ public class ShopItem {
 		return status.toString();
 	}
 
-	/**
-	 * For testing - sets the Spread Shot to its maximum level.
-	 */
-	public static void setMaxLevelForTesting() {
-		multiShotLevel = MAX_MULTI_SHOT_LEVEL;
-		rapidFireLevel = MAX_RAPID_FIRE_LEVEL;
-		penetrationLevel = MAX_RAPID_FIRE_LEVEL;
-		bulletSpeedLevel = MAX_BULLET_SPEED_LEVEL;
-		SHIPSPEEDLEVEL = MAX_SHIP_SPEED_LEVEL;
-	}
+    /**
+     * For testing - sets the Spread Shot to its maximum level.
+     */
+    public static void setMaxLevelForTesting() {
+        multiShotLevel = MAX_MULTI_SHOT_LEVEL;
+        rapidFireLevel = MAX_RAPID_FIRE_LEVEL;
+        penetrationLevel = MAX_PENETRATION_LEVEL;
+        bulletSpeedLevel = MAX_BULLET_SPEED_LEVEL;
+        SHIPSPEEDLEVEL = MAX_SHIP_SPEED_LEVEL;
+    }
 }

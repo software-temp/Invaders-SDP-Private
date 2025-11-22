@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import entity.pattern.ApocalypseAttackPattern;
 import java.util.logging.Logger;
 
 import engine.*;
@@ -275,7 +276,34 @@ public class GameModel {
                 }
                 else if (this.omegaBoss != null){
                     this.omegaBoss.update();
-                    if (this.omegaBoss.isDestroyed()) {
+
+                    // GameModel gets the pattern component
+                    ApocalypseAttackPattern pattern = this.omegaBoss.getApocalypsePattern();
+
+                    // If the pattern component exists and is active
+                    if (pattern != null && pattern.isPatternActive()) {
+
+                        // Check if in Warning state and warning time is finished
+                        if (pattern.isWarningActive() && pattern.isWarningFinished()) {
+                            // Warning time is over, so start attack animation
+                            pattern.beginAttackAnimation();
+                        }
+                        // Check if in Attacking state (executes every frame)
+                        else if (pattern.isAttacking()) {
+                            // Get the current animation progress (0.0 ~ 1.0)
+                            float progress = pattern.getAttackAnimationProgress();
+
+                            // Pass the progress to execute damage logic every frame
+                            executeApocalypseDamage(pattern.getSafeZoneColumn(), progress);
+
+                            // Check if animation is finished, and if so, end the pattern
+                            if (pattern.isAttackAnimationFinished()) {
+                                pattern.finishPattern(); // Reset pattern component state
+                            }
+                        }
+                    }
+
+                    else if (this.omegaBoss.isDestroyed()) {
                         if ("omegaAndFinal".equals(this.currentLevel.getBossId())) {
                             this.omegaBoss = null;
                             this.finalBoss = new FinalBoss(this.width / 2 - 50, 50, ship, this.width, this.height);
@@ -554,6 +582,69 @@ public class GameModel {
     private void cleanupAllEntities() {
         cleanBullets();
         cleanItems();
+    }
+
+    /**
+     * Determines the damage for the boss's area-wide attack. (General method)
+     * @param safeZoneColumn (0-9) Safe zone column index
+     */
+    public void executeApocalypseDamage(int safeZoneColumn, float progress) {
+        if (safeZoneColumn < 0 || safeZoneColumn > 9) {
+            return;
+        }
+
+        // Calculate the current "bottom" Y-coordinate of the attack based on animation progress
+        int currentAttackHeight = (int) (this.height * progress);
+
+        int columnWidth = this.width / 10;
+
+        // --- Player 1 Check ---
+        if (this.livesP1 > 0 && this.ship != null && !this.ship.isDestroyed() && !this.ship.isInvincible()) {
+            // Based on the player's end X-coordinate
+            int playerLeftX = this.ship.getPositionX();
+            int playerRightX = this.ship.getPositionX() + this.ship.getWidth() - 1;
+
+            // Player's Y-coordinate (top)
+            int playerTopY = this.ship.getPositionY();
+
+            int leftColumn = playerLeftX / columnWidth;
+            int rightColumn = playerRightX / columnWidth;
+
+            // Is the player in a column that is not the safe zone?
+            boolean isInRedZone = (leftColumn != safeZoneColumn || rightColumn != safeZoneColumn);
+            // Is the "bottom" of the attack animation below the "top" of the player?
+            //    (i.e., has the attack reached the player?)
+            boolean isHitByAnimation = (currentAttackHeight >= playerTopY);
+
+            // If the player is not in the safe zone AND is hit by the animation
+            if (isInRedZone && isHitByAnimation) {
+                this.ship.destroy();
+                this.livesP1--;
+                showHealthPopup("-1 Life (Apocalypse!)");
+                this.logger.info("Hit by Apocalypse, " + this.livesP1 + " lives remaining.");
+            }
+        }
+
+        // --- Player 2 Check ---
+        if (this.shipP2 != null && this.livesP2 > 0 && !this.shipP2.isDestroyed() && !this.shipP2.isInvincible()) {
+            int playerLeftX = this.shipP2.getPositionX(); //
+            int playerRightX = this.shipP2.getPositionX() + this.shipP2.getWidth() - 1;
+
+            int playerTopY = this.shipP2.getPositionY();
+
+            int leftColumn = playerLeftX / columnWidth;
+            int rightColumn = playerRightX / columnWidth;
+
+            boolean isInRedZone = (leftColumn != safeZoneColumn || rightColumn != safeZoneColumn);
+            boolean isHitByAnimation = (currentAttackHeight >= playerTopY);
+
+            if (isInRedZone && isHitByAnimation) {
+                this.shipP2.destroy();
+                this.livesP2--;
+                showHealthPopup("-1 Life (Apocalypse!)");
+                this.logger.info("P2 Hit by Apocalypse, " + this.livesP2 + " lives remaining.");
+            }
+        }
     }
 
 
