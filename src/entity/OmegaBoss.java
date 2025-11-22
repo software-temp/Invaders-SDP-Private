@@ -1,7 +1,6 @@
 package entity;
 
 import engine.DrawManager;
-
 import java.awt.*;
 
 /**
@@ -157,9 +156,14 @@ public class OmegaBoss extends MidBoss {
 		this.movePatterns();
 	}
 
-	/** Renders the entity at its current position using the provided DrawManager. */
 	@Override
-	public void draw(DrawManager drawManager) {
-		drawManager.getEntityRenderer().drawEntity(this, this.positionX, this.positionY);
+	public void onCollision(Collidable other, GameModel model) {
+		other.onCollideWithBoss(this, model);
 	}
+
+	@Override
+	public void onHitByPlayerBullet(Bullet bullet, GameModel model) {
+		model.requestBossHitByPlayerBullet(bullet, this);
+	}
+
 }
