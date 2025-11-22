@@ -318,8 +318,13 @@ public class GameModel {
 
 		List<Entity> entities = new ArrayList<>();
 
-		if (ship != null) entities.add(ship);
-		if (shipP2 != null) entities.add(shipP2);
+		if (ship != null && livesP1 > 0 && !ship.isDestroyed()) {
+			entities.add(ship);
+		}
+
+		if (shipP2 != null && livesP2 > 0 && !shipP2.isDestroyed()) {
+			entities.add(shipP2);
+		}
 
 		for (EnemyShip e : enemyShipFormationModel) {
 			if (e != null && !e.isDestroyed()) entities.add(e);
