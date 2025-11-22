@@ -915,34 +915,4 @@ public class GameModel {
 
         return renderList;
     }
-//    List<Ship> ships = new ArrayList<>();
-//            if (this.ship != null) ships.add(this.ship);
-//            if (this.shipP2 != null) ships.add(this.shipP2);
-//
-//    int  curHp, maxHp, trigger1, trigger2, trigger3;
-//    curHp = this.finalBoss.getHealPoint();
-//    maxHp = this.finalBoss.getMaxHp();
-//    trigger1 = maxHp;
-//    trigger2 = maxHp-maxHp/3;
-//    trigger3 = maxHp-2*maxHp/3;
-//
-//            if(!blackHoleActive && ((trigger1 < lastHp && curHp < trigger1)
-//            || (trigger2 < lastHp && curHp < trigger2)
-//            || (trigger3 < lastHp && curHp < trigger3))) {
-//        blackHoleActive = true;
-//        blackHoleCooldown.reset();
-//        lastHp = curHp;
-//
-//        blackHoleCX = this.finalBoss.getPositionX() + this.finalBoss.getWidth() / 2;
-//        blackHoleCY = this.finalBoss.getPositionY() + this.finalBoss.getHeight() + 50;
-//        blackHoleRadius = 400;
-//    }
-//
-//    /** BlackHole duration */
-//            if(blackHoleActive){
-//        if(blackHoleCooldown.checkFinished()){
-//            blackHoleActive = false;
-//        }
-//        bossPattern.blackHolePattern(ships, blackHoleCX, blackHoleCY, blackHoleRadius);
-//    }
 }
