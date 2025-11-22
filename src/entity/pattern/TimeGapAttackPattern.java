@@ -4,7 +4,9 @@ import engine.Cooldown;
 import entity.Bullet;
 import entity.HasBounds;
 import entity.LaserBullet;
+import entity.Ship;
 
+import java.util.List;
 import java.awt.*;
 
 public class TimeGapAttackPattern extends BossPattern {
@@ -20,13 +22,15 @@ public class TimeGapAttackPattern extends BossPattern {
 	private Bullet bullet;
 	private boolean isUpdated=false;
 
+    private List<Ship> ships;
+
 	private final int screenWidth;
 	private final int screenHeight;
 
-	public TimeGapAttackPattern(HasBounds boss, HasBounds target, int screenWidth, int screenHeight) {
+	public TimeGapAttackPattern(HasBounds boss, List<Ship> ships, int screenWidth, int screenHeight) {
 		super(new Point(boss.getPositionX(), boss.getPositionY()));
 		this.boss = boss;
-		this.target = target;
+        this.ships = ships;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 	}
@@ -38,8 +42,10 @@ public class TimeGapAttackPattern extends BossPattern {
 			shootCooldown.reset();
 		}
 		if(!isUpdated){
-			this.targetPosition = new Point(target.getPositionX()+target.getWidth()/2,target.getPositionY()+target.getHeight()/2);
-			isUpdated=true;
+            this.target = chooseRandomAliveShip();
+            if (this.target == null) return;
+            this.targetPosition = new Point(target.getPositionX() + target.getWidth() / 2, target.getPositionY() + target.getHeight() / 2);
+            isUpdated=true;
 		}
 		if(this.shootCooldown.checkFinished()){
 			this.shootCooldown.reset();
@@ -70,7 +76,24 @@ public class TimeGapAttackPattern extends BossPattern {
 		if (Math.abs(targetY - bossPosition.y) <= 1) bossPosition.y = targetY;
 	}
 
-	@Override
+    /** random choose from ships */
+    private Ship chooseRandomAliveShip() {
+        List<Ship> aliveShips = new java.util.ArrayList<>();
+
+        for (Ship s : ships) {
+            if (s != null && !s.isDestroyed()) {
+                aliveShips.add(s);
+            }
+        }
+
+        if (aliveShips.isEmpty()) return null;
+
+        int idx = (int)(Math.random() * aliveShips.size());
+        return aliveShips.get(idx);
+    }
+
+
+    @Override
 	public void setTarget(HasBounds target){
 		this.target = target;
 	}
