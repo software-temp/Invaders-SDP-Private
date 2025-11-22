@@ -11,11 +11,11 @@ import java.util.Set;
 
 /**
  * Implements a ship, to be controlled by the player.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
-public class Ship extends Entity {
+public class Ship extends Entity implements Collidable {
 
 	// === Constants ===
 	/** Time between shots. */
@@ -35,7 +35,7 @@ public class Ship extends Entity {
 	private boolean isInvincible;
 
     // === Which player: 1 = P1, 2 = P2 (default 1 for single-player compatibility) ===
-    private int playerId = 1;
+	private int playerId = 1;
 
 	// === Variable for Skil ===
 	public enum SkillType {
@@ -47,7 +47,7 @@ public class Ship extends Entity {
 
 	/**
 	 * Constructor, establishes the ship's properties.
-	 * 
+	 *
 	 * @param positionX
 	 *            Initial position of the ship in the X axis.
 	 * @param positionY
@@ -146,6 +146,9 @@ public class Ship extends Entity {
 
 	}
 
+	/**
+	 * Called in GameScreen.java to use skills for each situation.
+	 */
 	public void useSkill(final SkillType skillType) {
 		ISkill skill = skills.get(skillType);
 		if (skill != null) {
@@ -168,7 +171,7 @@ public class Ship extends Entity {
 
 	/**
 	 * Checks if the ship is destroyed.
-	 * 
+	 *
 	 * @return True if the ship is currently destroyed.
 	 */
 	public final boolean isDestroyed() {
@@ -184,14 +187,14 @@ public class Ship extends Entity {
 		return SPEED;
 	}
 
-    /**
-     * Getter for the ship's invincibility state.
-     *
-     * @return True if the ship is currently invincible.
-     */
-    public final boolean isInvincible() {
-        return this.isInvincible;
-    }
+	/**
+	 * Getter for the ship's invincibility state.
+	 *
+	 * @return True if the ship is currently invincible.
+	 */
+	public final boolean isInvincible() {
+		return this.isInvincible || this.isDestroyed();
+	}
 
 	/**
 	 * Moves the ship speed uni ts right, or until the right screen border is
@@ -231,4 +234,41 @@ public class Ship extends Entity {
 
 	public void setPlayerId(int pid) { this.playerId = pid; }
 	public int getPlayerId() { return this.playerId; }
+
+	@Override
+	public void onCollision(Collidable other, GameModel model) {
+		if (model.isLevelFinished()) return;
+		other.onCollideWithShip(this, model);
+	}
+
+	@Override
+	public void onHitByEnemyBullet(Bullet bullet, GameModel model) {
+		if (!this.isInvincible()) {
+			model.requestShipDamage(this, 1);
+		}
+		model.requestRemoveBullet(bullet);
+	}
+
+	@Override
+	public void onHitByBossBullet(BossBullet b, GameModel model) {
+		if (!this.isInvincible()) {
+			model.requestShipDamage(this, 1);
+		}
+		model.requestRemoveBossBullet(b);
+	}
+
+	@Override
+	public void onCollideWithEnemyShip(EnemyShip enemy, GameModel model) {
+		model.requestPlayerCrash(this, enemy);
+	}
+
+	@Override
+	public void onCollideWithBoss(BossEntity boss, GameModel model) {
+		model.requestPlayerCrash(this, (Entity) boss);
+	}
+
+	@Override
+	public void onCollideWithDropItem(DropItem item, GameModel model) {
+		model.requestApplyItem(this, item);
+	}
 }

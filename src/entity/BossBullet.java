@@ -5,7 +5,7 @@ import engine.DrawManager;
 import java.awt.*;
 
 
-public class BossBullet extends Bullet {
+public class BossBullet extends Bullet implements Collidable {
     /** amount of horizontal change*/
     private int dx;
     /** amount of vertical change*/
@@ -35,7 +35,7 @@ public class BossBullet extends Bullet {
 		super.height = height;
         this.dx = dx;
         this.dy = dy;
-        this.spriteType = DrawManager.SpriteType.FinalBossBullet; // boss's bullet image = enemyBullet
+        this.spriteType = DrawManager.SpriteType.FinalBossBullet;
     }
     /**
      * move a bullet
@@ -45,4 +45,23 @@ public class BossBullet extends Bullet {
         this.positionX += this.dx;
         this.positionY += this.dy;
     }
+
+	/**
+	 * Handles collision behavior for boss bullets.
+	 * Boss bullets damage the player when they collide.
+	 */
+	@Override
+	public void onCollision(Collidable other, GameModel model) {
+		other.onHitByBossBullet(this, model);
+	}
+
+	@Override
+	public void onHitByPlayerBullet(Bullet bullet, GameModel model) {
+	}
+
+	@Override
+	public void onCollideWithShip(Ship ship, GameModel model) {
+		ship.onHitByBossBullet(this, model);
+	}
+
 }

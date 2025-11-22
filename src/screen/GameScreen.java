@@ -4,6 +4,7 @@ import engine.Cooldown;
 import engine.DTO.HUDInfoDTO;
 import engine.GameState;
 import engine.level.Level;
+import entity.GameConstant;
 import entity.GameModel;
 
 /**
@@ -62,7 +63,7 @@ public class GameScreen extends Screen {
         this.model = new GameModel(
                 this.gameState, this.currentLevel,
                 this.bonusLife, this.maxLives,
-                this.width, this.height
+                this.width, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT
         );
         this.view = new GameView(this.model,this.drawManager);
 

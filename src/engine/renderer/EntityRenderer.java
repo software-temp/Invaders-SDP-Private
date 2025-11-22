@@ -1,6 +1,6 @@
 package engine.renderer;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.Map;
 
 import engine.BackBuffer;
@@ -23,6 +23,22 @@ public final class EntityRenderer {
         this.backBuffer = backBuffer;
         this.scale = scale;
     }
+	public void drawEntity(SpriteType sprite, Color color, int x, int y) {
+		boolean[][] image = spriteMap.get(sprite);
+		Graphics g = backBuffer.getGraphics();
+		g.setColor(color);
+
+		for (int i = 0; i < image.length; i++) {
+			for (int j = 0; j < image[i].length; j++) {
+				if (image[i][j]) {
+					int pixelSize = (int) Math.max(1, 2 * scale);
+					int scaledX = x + (int)(i * pixelSize);
+					int scaledY = y + (int)(j * pixelSize);
+					g.fillRect(scaledX, scaledY, pixelSize, pixelSize);
+				}
+			}
+		}
+	}
 
     /** Draws a single entity on the back buffer. */
     public void drawEntity(final Entity entity, final int positionX, final int positionY) {

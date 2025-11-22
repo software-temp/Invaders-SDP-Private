@@ -1,6 +1,7 @@
 package entity;
 
 import engine.DrawManager;
+
 /**
  * Defines the contract for all boss entities that appear in the game.
  * Includes methods related to the boss's lifecycle, interaction, and movement.

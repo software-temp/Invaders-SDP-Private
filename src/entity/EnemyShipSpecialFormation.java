@@ -34,10 +34,6 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
     private static final int SIDE_MARGIN = 20;
 
     /**
-     * DrawManager instance.
-     */
-    private DrawManager drawManager;
-    /**
      * Application logger.
      */
     private Logger logger;
@@ -79,7 +75,6 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
      */
     public EnemyShipSpecialFormation(final GameSettings gameSettings, Cooldown cooldown, Cooldown explosionCooldown) {
         /** Option **/
-        this.drawManager = Core.getDrawManager();
         this.logger = Core.getLogger();
 
         /** Move **/
@@ -92,8 +87,8 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
                 * SHOOTING_VARIANCE);
 
         /** Initial : create Special Enemy **/
-        this.enemyShipSpecialRed = new EnemyShip(Color.RED, EnemyShip.Direction.RIGHT, 2);
-        this.enemyShipSpecialBlue = new EnemyShip(Color.BLUE, EnemyShip.Direction.RIGHT, 6);
+        this.enemyShipSpecialRed = new EnemyShip(EnemyShip.SpecialType.RED, EnemyShip.Direction.RIGHT, 2);
+        this.enemyShipSpecialBlue = new EnemyShip(EnemyShip.SpecialType.BLUE, EnemyShip.Direction.RIGHT, 6);
 
         /** special enemy information: width & height **/
         this.shipWidth = this.enemyShipSpecialRed.getWidth();
@@ -104,41 +99,6 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
         this.enemyShipSpecialExplosionCooldown = explosionCooldown;
         cooldown.reset();
     }
-
-    /**
-     * Level-based constructor (preferred). Avoids passing GameSettings around.
-     */
-    public EnemyShipSpecialFormation(final Level level,
-                                     final Cooldown cooldown,
-                                     final Cooldown explosionCooldown) {
-        this(
-            new GameSettings(
-                level.getFormationWidth(),
-                level.getFormationHeight(),
-                level.getBaseSpeed(),
-                level.getShootingFrecuency()
-            ),
-            cooldown,
-            explosionCooldown
-        );
-    }
-
-    /**
-     * Draws every component of the formation.
-     */
-    public final void draw() {
-        if (this.enemyShipSpecialRed != null)
-            drawManager.getEntityRenderer().drawEntity(this.enemyShipSpecialRed,
-                    this.enemyShipSpecialRed.getPositionX(),
-                    this.enemyShipSpecialRed.getPositionY());
-
-        if (this.enemyShipSpecialBlue != null)
-            drawManager.getEntityRenderer().drawEntity(this.enemyShipSpecialBlue,
-                    this.enemyShipSpecialBlue.getPositionX(),
-                    this.enemyShipSpecialBlue.getPositionY());
-
-    }
-
     /**
      * Updates the position of the ships.
      */
@@ -155,7 +115,7 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
 
         // recreate special enemy by CoolDown
         if (this.enemyShipSpecialCooldown.checkFinished()) {
-            this.enemyShipSpecialRed = new EnemyShip(Color.RED, EnemyShip.Direction.RIGHT, 2);
+            this.enemyShipSpecialRed = new EnemyShip(EnemyShip.SpecialType.RED, EnemyShip.Direction.RIGHT, 2);
             this.enemyShipSpecialCooldown.reset();
             this.logger.info("A special ship appears");
         }
@@ -168,7 +128,7 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
 
         if (enemyShipSpecial != null) {
             /** Check the special enemy type by Color (RED & BLUE) **/
-            Color color = enemyShipSpecial.getColor();
+			EnemyShip.SpecialType type = enemyShipSpecial.getSpecialType();
 
             /** Varidation Check : left & right possible move point **/
             boolean isAtRightSide = enemyShipSpecial.getPositionX() + this.shipWidth >= GameConstant.SCREEN_WIDTH - SIDE_MARGIN;
@@ -194,11 +154,11 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
 
             /** explosion logic **/
             } else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
-                if (color == Color.RED) {
-                    this.enemyShipSpecialRed = null;
-                } else if (color == Color.BLUE) {
-                    this.enemyShipSpecialBlue = null;
-                }
+				if (type == EnemyShip.SpecialType.RED) {
+					this.enemyShipSpecialRed = null;
+				} else if (type == EnemyShip.SpecialType.BLUE) {
+					this.enemyShipSpecialBlue = null;
+				}
         }
     }
 
@@ -228,7 +188,7 @@ public class EnemyShipSpecialFormation implements Iterable<EnemyShip> {
          */
         public final void destroy (EnemyShip enemyShipSpecial){
             enemyShipSpecial.destroy();
-            if(enemyShipSpecial.getColor() == Color.RED) {
+			if (enemyShipSpecial.getSpecialType() == EnemyShip.SpecialType.RED) {
                 this.enemyShipSpecialCooldown.reset();
             }
         }
