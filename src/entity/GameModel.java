@@ -52,6 +52,8 @@ public class GameModel {
     private Cooldown enemyShipSpecialCooldown;
     /** team drawing may implement */
     private FinalBoss finalBoss;
+    /** Spawn pattern has Mob */
+    private List<MidBossMob> midBossChilds;
     /** Time until bonus ship explosion disappears. */
     private Cooldown enemyShipSpecialExplosionCooldown;
     /** Time until Boss explosion disappears. */
@@ -60,6 +62,7 @@ public class GameModel {
     private Cooldown screenFinishedCooldown;
     /** OmegaBoss */
     private MidBoss omegaBoss;
+
     /** Set of all bullets fired by on-screen ships. */
     private Set<Bullet> bullets;
     /** Set of all dropItems dropped by on screen ships. */
@@ -175,6 +178,7 @@ public class GameModel {
         this.elapsedTime = 0;
         this.finalBoss = null;
         this.omegaBoss = null;
+        this.midBossChilds = null;
         this.currentPhase = StagePhase.wave;
     }
 
@@ -827,6 +831,7 @@ public class GameModel {
     public Set<Bullet> getBossBullets() { return bossBullets; }
     public EnemyShipFormationModel getEnemyShipFormationModel() { return enemyShipFormationModel; }
     public MidBoss getOmegaBoss() { return omegaBoss; }
+    public List<MidBossMob> getMidBossChilds() { return midBossChilds; }
     public Set<Bullet> getBullets() { return bullets; }
     public Set<DropItem> getDropItems() { return dropItems; }
     public int getScoreP1() { return scoreP1; }
@@ -867,7 +872,11 @@ public class GameModel {
                 renderList.add(enemy);
             }
         }
-
+        if (getMidBossChilds() != null) {
+            for (MidBossMob child : getMidBossChilds()) {
+                renderList.add(child);
+            }
+        }
         // 4. added boss
         if (getOmegaBoss() != null) {
             renderList.add(getOmegaBoss());
