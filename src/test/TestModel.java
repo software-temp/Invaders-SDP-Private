@@ -27,7 +27,7 @@ public class TestModel {
 		this.width = width;
 		this.height = height;
 		this.player = new Ship(this.width/2, height-20, Color.GREEN);
-		this.entity = new OmegaBoss(Color.blue, width, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT, GameConstant.STAT_SEPARATION_LINE_HEIGHT, player);
+		this.entity = new OmegaBoss(Color.blue, player);
 		// 총알 Set 초기화
 		this.bullets = new HashSet<>();
 	}

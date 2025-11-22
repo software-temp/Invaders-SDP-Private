@@ -1,6 +1,7 @@
 package entity.pattern.mid;
 
 import entity.Entity;
+import entity.GameConstant;
 import entity.HasBounds;
 import entity.pattern.BossPattern;
 
@@ -13,20 +14,17 @@ import java.awt.*;
 public class HorizontalPattern extends BossPattern {
 
     private Entity boss;
-    private final int widthBoundary;
     private final int speed;
     private boolean isRight;
 
     /**
      * Constructor for horizontal pattern
      * @param boss The boss entity
-     * @param widthBoundary Right boundary limit
      * @param speed Movement speed
      */
-    public HorizontalPattern(Entity boss, int widthBoundary, int speed) {
+    public HorizontalPattern(Entity boss, int speed) {
         super(new Point(boss.getPositionX(), boss.getPositionY()));
         this.boss = boss;
-        this.widthBoundary = widthBoundary;
         this.speed = speed;
         this.isRight = true;
     }
@@ -41,8 +39,8 @@ public class HorizontalPattern extends BossPattern {
         if (newX <= 0) {
             newX = 0;
             isRight = true;
-        } else if (newX + boss.getWidth() >= widthBoundary) {
-            newX = widthBoundary - boss.getWidth();
+        } else if (newX + boss.getWidth() >= GameConstant.SCREEN_WIDTH) {
+            newX = GameConstant.SCREEN_WIDTH - boss.getWidth();
             isRight = false;
         }
 

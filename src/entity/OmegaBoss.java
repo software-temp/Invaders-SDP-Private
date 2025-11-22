@@ -39,13 +39,6 @@ public class OmegaBoss extends MidBoss {
 	/** Dash cooldown duration in milliseconds (5 seconds) */
 	private static final int DASH_COOLDOWN_MS = 5000;
 
-	/** Boss cannot move over this boundary. */
-	private final int widthBoundary;
-	/** Boss cannot move below this boundary. */
-	private final int lowerBoundary;
-	/** Boss cannot move above this boundary. */
-	private final int upperBoundary;
-
 	/** Boss pattern instance for delegating movement logic */
 	private BossPattern bossPattern;
 	/** Player reference for pattern targeting */
@@ -63,16 +56,10 @@ public class OmegaBoss extends MidBoss {
 	 * Constructor, establishes the boss entity's generic properties.
 	 *
 	 * @param color             Color of the boss entity.
-	 * @param widthBoundary		The rightmost X-coordinate for the boss's movement. The boss cannot move over this value.
-	 * @param lowerBoundary    The lowermost Y-coordinate for the boss's movement. The boss cannot move below this value.
-	 * @param upperBoundary    The uppermost Y-coordinate for the boss's movement.
 	 * @param player           The player ship to target
 	 */
-	public OmegaBoss(Color color, int widthBoundary, int lowerBoundary, int upperBoundary, Ship player) {
+	public OmegaBoss(Color color, Ship player) {
 		super(INIT_POS_X, INIT_POS_Y, OMEGA_WIDTH, OMEGA_HEIGHT, OMEGA_HEALTH, OMEGA_POINT_VALUE, color);
-		this.widthBoundary = widthBoundary;
-		this.lowerBoundary = lowerBoundary;
-		this.upperBoundary = upperBoundary;
 		this.targetShip = player;
 		this.spriteType = DrawManager.SpriteType.OmegaBoss1;
 		this.logger = Core.getLogger();
@@ -110,13 +97,12 @@ public class OmegaBoss extends MidBoss {
 	private void choosePattern() {
 		if (this.healPoint > this.maxHp / 2 && this.bossPhase == 1) {
 			++this.bossPhase;
-			bossPattern = new HorizontalPattern(this, widthBoundary, PATTERN_1_X_SPEED);
+			bossPattern = new HorizontalPattern(this, PATTERN_1_X_SPEED);
 			logger.info("OMEGA : move using horizontal pattern");
 		}
 		else if (this.healPoint <= this.maxHp / 2 && this.healPoint > this.maxHp / 3 && this.bossPhase == 2) {
 			++this.bossPhase;
-			bossPattern = new DiagonalPattern(this, widthBoundary, lowerBoundary,
-					upperBoundary, PATTERN_2_X_SPEED, PATTERN_2_Y_SPEED, PATTERN_2_COLOR);
+			bossPattern = new DiagonalPattern(this, PATTERN_2_X_SPEED, PATTERN_2_Y_SPEED, PATTERN_2_COLOR);
 			logger.info("OMEGA : move using diagonal pattern");
 		}
 		else if (this.healPoint <= this.maxHp / 3 && this.bossPhase == 3) {
@@ -153,7 +139,7 @@ public class OmegaBoss extends MidBoss {
 	 * Start a new dash pattern
 	 */
 	private void startDashPattern() {
-		bossPattern = new DashPattern(this, targetShip, widthBoundary, lowerBoundary, upperBoundary);
+		bossPattern = new DashPattern(this, targetShip);
 		isInDashCooldown = false;
 		logger.info("OMEGA : Starting dash attack");
 	}
@@ -162,8 +148,7 @@ public class OmegaBoss extends MidBoss {
 	 * Start dash cooldown with diagonal movement
 	 */
 	private void startDashCooldown() {
-		bossPattern = new DiagonalPattern(this, widthBoundary, lowerBoundary,
-				upperBoundary, PATTERN_2_X_SPEED, PATTERN_2_Y_SPEED, PATTERN_2_COLOR);
+		bossPattern = new DiagonalPattern(this, PATTERN_2_X_SPEED, PATTERN_2_Y_SPEED, PATTERN_2_COLOR);
 		isInDashCooldown = true;
 		dashCooldown.reset();
 		logger.info("OMEGA : Dash cooldown started (5 seconds)");

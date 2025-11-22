@@ -2,6 +2,7 @@ package entity.pattern.mid;
 
 import engine.Core;
 import engine.DrawManager;
+import entity.GameConstant;
 import entity.HasBounds;
 import entity.Ship;
 import entity.pattern.BossPattern;
@@ -11,9 +12,6 @@ import java.util.logging.Logger;
 
 public class DashPattern extends BossPattern {
 
-    private final int screenWidth;
-    private final int lowerBoundary;
-    private final int upperBoundary;
     protected Logger logger;
 
     // Dash 관련 필드
@@ -28,13 +26,10 @@ public class DashPattern extends BossPattern {
     private static final int DASH_SPEED = 10;
     private boolean dashSkillInitialized = false;
 
-    public DashPattern(HasBounds boss, HasBounds target, int screenWidth, int lowerBoundary, int upperBoundary) {
+    public DashPattern(HasBounds boss, HasBounds target) {
         super(new Point(boss.getPositionX(), boss.getPositionY()));
         this.target = target;
         this.boss = boss;
-        this.screenWidth = screenWidth;
-        this.lowerBoundary = lowerBoundary;
-        this.upperBoundary = upperBoundary;
         this.logger = Core.getLogger();
 
         // 패턴 시작 시 초기화
@@ -97,16 +92,16 @@ public class DashPattern extends BossPattern {
         if (newX <= 0) {
             newX = 0;
             hitBoundary = true;
-        } else if (newX + boss.getWidth() >= screenWidth) {
-            newX = screenWidth - boss.getWidth();
+        } else if (newX + boss.getWidth() >= GameConstant.SCREEN_WIDTH) {
+            newX = GameConstant.SCREEN_WIDTH - boss.getWidth();
             hitBoundary = true;
         }
 
-        if (newY <= upperBoundary) {
-            newY = upperBoundary;
+        if (newY <= GameConstant.STAT_SEPARATION_LINE_HEIGHT) {
+            newY = GameConstant.STAT_SEPARATION_LINE_HEIGHT;
             hitBoundary = true;
-        } else if (newY + boss.getHeight() >= lowerBoundary) {
-            newY = lowerBoundary - boss.getHeight();
+        } else if (newY + boss.getHeight() >= GameConstant.ITEMS_SEPARATION_LINE_HEIGHT) {
+            newY = GameConstant.ITEMS_SEPARATION_LINE_HEIGHT - boss.getHeight();
             hitBoundary = true;
         }
 
@@ -161,15 +156,15 @@ public class DashPattern extends BossPattern {
         int endY = bossPosition.y;
 
         if (dashDirectionX > 0) {
-            endX = screenWidth - bossWidth;
+            endX = GameConstant.SCREEN_WIDTH - bossWidth;
         } else if (dashDirectionX < 0) {
             endX = 0;
         }
 
         if (dashDirectionY > 0) {
-            endY = lowerBoundary - bossHeight;
+            endY = GameConstant.ITEMS_SEPARATION_LINE_HEIGHT - bossHeight;
         } else if (dashDirectionY < 0) {
-            endY = upperBoundary - bossHeight;
+            endY = GameConstant.ITEMS_SEPARATION_LINE_HEIGHT - bossHeight;
         }
 
         return new int[]{endX + bossWidth / 2, endY + bossHeight / 2};

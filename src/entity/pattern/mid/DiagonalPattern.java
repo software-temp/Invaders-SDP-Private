@@ -2,6 +2,7 @@ package entity.pattern.mid;
 
 import engine.DrawManager;
 import entity.Entity;
+import entity.GameConstant;
 import entity.HasBounds;
 import entity.pattern.BossPattern;
 
@@ -14,9 +15,6 @@ import java.awt.*;
 public class DiagonalPattern extends BossPattern {
 
     private Entity boss;
-    private final int widthBoundary;
-    private final int lowerBoundary;
-    private final int upperBoundary;
     private final int horizontalSpeed;
     private final int verticalSpeed;
     private final Color patternColor;
@@ -26,21 +24,13 @@ public class DiagonalPattern extends BossPattern {
     /**
      * Constructor for diagonal pattern
      * @param boss The boss entity
-     * @param widthBoundary Right boundary limit
-     * @param lowerBoundary Lower boundary limit
-     * @param upperBoundary Upper boundary limit (initial Y position)
      * @param horizontalSpeed Horizontal movement speed
      * @param verticalSpeed Vertical movement speed
      * @param patternColor Color for this pattern
      */
-    public DiagonalPattern(Entity boss, int widthBoundary, int lowerBoundary,
-                           int upperBoundary, int horizontalSpeed, int verticalSpeed,
-                           Color patternColor) {
+    public DiagonalPattern(Entity boss, int horizontalSpeed, int verticalSpeed, Color patternColor) {
         super(new Point(boss.getPositionX(), boss.getPositionY()));
         this.boss = boss;
-        this.widthBoundary = widthBoundary;
-        this.lowerBoundary = lowerBoundary;
-        this.upperBoundary = upperBoundary;
         this.horizontalSpeed = horizontalSpeed;
         this.verticalSpeed = verticalSpeed;
         this.patternColor = patternColor;
@@ -49,7 +39,6 @@ public class DiagonalPattern extends BossPattern {
 
         // Update boss appearance for this pattern
         boss.setColor(patternColor);
-//        boss.(DrawManager.SpriteType.OmegaBoss2);
     }
 
     @Override
@@ -64,17 +53,17 @@ public class DiagonalPattern extends BossPattern {
         if (newX <= 0) {
             newX = 0;
             isRight = true;
-        } else if (newX + boss.getWidth() >= widthBoundary) {
-            newX = widthBoundary - boss.getWidth();
+        } else if (newX + boss.getWidth() >= GameConstant.SCREEN_WIDTH) {
+            newX = GameConstant.SCREEN_WIDTH - boss.getWidth();
             isRight = false;
         }
 
         // Check vertical boundaries
-        if (newY <= upperBoundary) {
-            newY = upperBoundary;
+        if (newY <= GameConstant.STAT_SEPARATION_LINE_HEIGHT) {
+            newY = GameConstant.STAT_SEPARATION_LINE_HEIGHT;
             isDown = true;
-        } else if (newY + boss.getHeight() >= lowerBoundary) {
-            newY = lowerBoundary - boss.getHeight();
+        } else if (newY + boss.getHeight() >= GameConstant.ITEMS_SEPARATION_LINE_HEIGHT) {
+            newY = GameConstant.ITEMS_SEPARATION_LINE_HEIGHT - boss.getHeight();
             isDown = false;
         }
 
