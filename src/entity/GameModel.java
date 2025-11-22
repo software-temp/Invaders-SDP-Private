@@ -699,7 +699,8 @@ public class GameModel {
                 break;
             case "omegaBoss":
             case "omegaAndFinal":
-                this.omegaBoss = new OmegaBoss(Color.ORANGE, width, GameConstant.ITEMS_SEPARATION_LINE_HEIGHT);
+                this.omegaBoss = new OmegaBoss(Color.ORANGE, ship);
+
                 this.logger.info("Omega Boss has spawned!");
                 break;
             default:
