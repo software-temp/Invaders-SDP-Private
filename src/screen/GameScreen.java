@@ -101,33 +101,10 @@ public class GameScreen extends Screen {
                 this.model.startTimer();
             }
 
-            // Player 1 Input
-            if (model.getLivesP1() > 0 && model.getShip() != null && !model.getShip().isDestroyed()) {
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_D))
-                    model.playerMove(1, "RIGHT");
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_A))
-                    model.playerMove(1, "LEFT");
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_W))
-                    model.playerMove(1, "UP");
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_S))
-                    model.playerMove(1, "DOWN");
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_SPACE))
-                    model.playerFire(1);
-            }
-
-            // Player 2 Input
-            if (model.getShipP2() != null && model.getLivesP2() > 0 && !model.getShipP2().isDestroyed()) {
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_RIGHT))
-                    model.playerMove(2, "RIGHT");
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_LEFT))
-                    model.playerMove(2, "LEFT");
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_UP))
-                    model.playerMove(2, "UP");
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_DOWN))
-                    model.playerMove(2, "DOWN");
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_ENTER))
-                    model.playerFire(2);
-            }
+			// Handle W,A,S,D and arrow keys to move Player 1 & 2
+			handlePlayerMovementInput();
+			// Handle keyboard input to activate player skills
+			handlePlayerSkillInput();
 
             // Update game world (Model)
             this.model.updateGameWorld();
@@ -152,6 +129,37 @@ public class GameScreen extends Screen {
             this.isRunning = false;
         }
     }
+	private void handlePlayerMovementInput(){
+		// Player 1 Input
+		if (model.getLivesP1() > 0 && model.getShip() != null && !model.getShip().isDestroyed()) {
+			if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_D))
+				model.playerMove(1, "RIGHT");
+			if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_A))
+				model.playerMove(1, "LEFT");
+			if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_W))
+				model.playerMove(1, "UP");
+			if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_S))
+				model.playerMove(1, "DOWN");
+			if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_SPACE))
+				model.playerFire(1);
+		}
+
+		// Player 2 Input
+		if (model.getShipP2() != null && model.getLivesP2() > 0 && !model.getShipP2().isDestroyed()) {
+			if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_RIGHT))
+				model.playerMove(2, "RIGHT");
+			if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_LEFT))
+				model.playerMove(2, "LEFT");
+			if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_UP))
+				model.playerMove(2, "UP");
+			if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_DOWN))
+				model.playerMove(2, "DOWN");
+			if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_ENTER))
+				model.playerFire(2);
+		}
+	}
+
+	private void handlePlayerSkillInput() { /* TODO: Implement skill input handling */ }
 
     /**
      * Builds the DTO that passes data from Model to View.
