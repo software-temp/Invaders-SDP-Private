@@ -89,4 +89,12 @@ public final class InputManager implements KeyListener {
 	public boolean isP2KeyDown(int keyCode) {
 		return isKeyDown(keyCode);
 	}
+
+	public boolean isP1ShiftDown() {
+		return keys[KeyEvent.VK_SHIFT];
+	}
+
+	public boolean isP2SlashDown() {
+		return keys[KeyEvent.VK_SLASH];
+	}
 }

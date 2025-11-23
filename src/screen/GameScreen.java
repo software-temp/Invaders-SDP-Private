@@ -7,6 +7,8 @@ import engine.level.Level;
 import entity.GameConstant;
 import entity.GameModel;
 
+import java.awt.event.KeyEvent;
+
 /**
  * Implements the game screen, where the action happens.
  * Acts as the CONTROLLER in the MVC pattern.
@@ -101,33 +103,48 @@ public class GameScreen extends Screen {
                 this.model.startTimer();
             }
 
-            // Player 1 Input
-            if (model.getLivesP1() > 0 && model.getShip() != null && !model.getShip().isDestroyed()) {
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_D))
-                    model.playerMove(1, "RIGHT");
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_A))
-                    model.playerMove(1, "LEFT");
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_W))
-                    model.playerMove(1, "UP");
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_S))
-                    model.playerMove(1, "DOWN");
-                if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_SPACE))
-                    model.playerFire(1);
-            }
+			// Player 1 Input
+			if (model.getLivesP1() > 0 && model.getShip() != null && !model.getShip().isDestroyed()) {
 
-            // Player 2 Input
-            if (model.getShipP2() != null && model.getLivesP2() > 0 && !model.getShipP2().isDestroyed()) {
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_RIGHT))
-                    model.playerMove(2, "RIGHT");
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_LEFT))
-                    model.playerMove(2, "LEFT");
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_UP))
-                    model.playerMove(2, "UP");
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_DOWN))
-                    model.playerMove(2, "DOWN");
-                if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_ENTER))
-                    model.playerFire(2);
-            }
+				boolean shift1 = inputManager.isP1ShiftDown();
+				if (inputManager.isP1KeyDown(KeyEvent.VK_D)) {
+					model.playerMoveOrTeleport(1, "RIGHT", shift1);
+				}
+				if (inputManager.isP1KeyDown(KeyEvent.VK_A)) {
+					model.playerMoveOrTeleport(1, "LEFT", shift1);
+				}
+				if (inputManager.isP1KeyDown(KeyEvent.VK_W)) {
+					model.playerMoveOrTeleport(1, "UP", shift1);
+				}
+				if (inputManager.isP1KeyDown(KeyEvent.VK_S)) {
+					model.playerMoveOrTeleport(1, "DOWN", shift1);
+				}
+				if (inputManager.isP1KeyDown(java.awt.event.KeyEvent.VK_SPACE))
+					model.playerFire(1);
+			}
+
+			// Player 2 Input
+			if (model.getShipP2() != null && model.getLivesP2() > 0 && !model.getShipP2().isDestroyed()) {
+				boolean Slash = inputManager.isP2SlashDown();
+
+				if (inputManager.isP2KeyDown(KeyEvent.VK_RIGHT)) {
+					model.playerMoveOrTeleport(2, "RIGHT", Slash);
+				}
+
+				if (inputManager.isP2KeyDown(KeyEvent.VK_LEFT)) {
+					model.playerMoveOrTeleport(2, "LEFT", Slash);
+				}
+
+				if (inputManager.isP2KeyDown(KeyEvent.VK_UP)) {
+					model.playerMoveOrTeleport(2, "UP", Slash);
+				}
+
+				if (inputManager.isP2KeyDown(KeyEvent.VK_DOWN)) {
+					model.playerMoveOrTeleport(2, "DOWN", Slash);
+				}
+				if (inputManager.isP2KeyDown(java.awt.event.KeyEvent.VK_ENTER))
+					model.playerFire(2);
+			}
 
             // Update game world (Model)
             this.model.updateGameWorld();
@@ -156,22 +173,35 @@ public class GameScreen extends Screen {
     /**
      * Builds the DTO that passes data from Model to View.
      */
-    private HUDInfoDTO createHUDInfoDTO() {
-        return new HUDInfoDTO(
-                getWidth(),
-                getHeight(),
-                model.getScoreP1(),
-                model.getScoreP2(),
-                model.getCoin(),
-                model.getLivesP1(),
-                model.getLivesP2(),
-                model.getLevel(),
-                model.getElapsedTime(),
-                model.getCurrentLevel().getLevelName(),
-                model.getAchievementText(),
-                model.getHealthPopupText()
-        );
-    }
+	private HUDInfoDTO createHUDInfoDTO() {
+
+		HUDInfoDTO dto = new HUDInfoDTO(
+				getWidth(),
+				getHeight(),
+				model.getScoreP1(),
+				model.getScoreP2(),
+				model.getCoin(),
+				model.getLivesP1(),
+				model.getLivesP2(),
+				model.getLevel(),
+				model.getElapsedTime(),
+				model.getCurrentLevel().getLevelName(),
+				model.getAchievementText(),
+				model.getHealthPopupText()
+		);
+
+		dto.teleportCooldownP1 =
+				(model.getShip() != null)
+						? model.getShip().getTeleportCooldownProgress()
+						: 1f;
+
+		dto.teleportCooldownP2 =
+				(model.getShipP2() != null)
+						? model.getShipP2().getTeleportCooldownProgress()
+						: 1f;
+
+		return dto;
+	}
 
     /**
      * Returns the game state for other systems.

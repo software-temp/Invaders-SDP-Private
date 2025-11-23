@@ -96,6 +96,72 @@ public class Ship extends Entity implements Collidable {
 		this.positionY += SPEED * (1 + shipspeed / 10);
 	}
 
+	public void move(String direction, int screenWidth, int screenHeight) {
+		switch (direction) {
+			case "RIGHT":
+				if (positionX + width + SPEED <= screenWidth - 1)
+					moveRight();
+				break;
+
+			case "LEFT":
+				if (positionX - SPEED >= 1)
+					moveLeft();
+				break;
+
+			case "UP":
+				if (positionY - SPEED >= GameConstant.STAT_SEPARATION_LINE_HEIGHT)
+					moveUp();
+				break;
+
+			case "DOWN":
+				if (positionY + height + SPEED <= screenHeight)
+					moveDown();
+				break;
+		}
+	}
+
+	public float getTeleportCooldownProgress() {
+		if (teleportCooldown == null) return 1f;
+
+		if (teleportCooldown.checkFinished()) return 1f;
+
+		long now = System.currentTimeMillis();
+		long passed = now - teleportCooldown.getStartTime();
+		float ratio = (float) passed / teleportCooldown.getDuration();
+
+		return Math.max(0f, Math.min(1f, ratio));
+	}
+
+	private Cooldown teleportCooldown = new Cooldown(5000);
+	private static final int TELEPORT_DISTANCE = 100;
+
+	public boolean canTeleport() {
+		return teleportCooldown.checkFinished();
+	}
+
+	public void teleport(String direction, int screenWidth, int screenHeight) {
+		if (!canTeleport()) return;
+
+		switch (direction) {
+			case "RIGHT":
+				this.positionX = Math.min(this.positionX + TELEPORT_DISTANCE, screenWidth - this.width - 1);
+				break;
+
+			case "LEFT":
+				this.positionX = Math.max(this.positionX - TELEPORT_DISTANCE, 1);
+				break;
+
+			case "UP":
+				this.positionY = Math.max(this.positionY - TELEPORT_DISTANCE, GameConstant.STAT_SEPARATION_LINE_HEIGHT);
+				break;
+
+			case "DOWN":
+				this.positionY = Math.min(this.positionY + TELEPORT_DISTANCE, screenHeight - this.height - 1);
+				break;
+		}
+		teleportCooldown.reset();
+
+	}
 	/**
 	 * Shoots a bullet upwards.
 	 *

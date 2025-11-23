@@ -50,7 +50,7 @@ public class GameView {
         drawManager.getHUDRenderer().drawTime(GameConstant.ITEMS_SEPARATION_LINE_HEIGHT, dto.getElapsedTimeMillis());
         drawManager.getHUDRenderer().drawItemsHUD(dto.getWidth(), dto.getHeight());
         drawManager.getHUDRenderer().drawLevel(GameConstant.ITEMS_SEPARATION_LINE_HEIGHT, dto.getLevelName());
-
+		drawManager.getHUDRenderer().drawTeleportCooldowns(dto.getWidth(), dto.getHeight(), dto.teleportCooldownP1, dto.teleportCooldownP2);
         /** draw Line */
         drawManager.getUIRenderer().drawHorizontalLine(dto.getWidth(), GameConstant.STAT_SEPARATION_LINE_HEIGHT - 1);
         drawManager.getUIRenderer().drawHorizontalLine(dto.getWidth(), GameConstant.ITEMS_SEPARATION_LINE_HEIGHT);

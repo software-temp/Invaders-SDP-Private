@@ -22,7 +22,11 @@ public final class HUDInfoDTO {
     private final String achievementText;
     private final String healthPopupText;
 
-    public HUDInfoDTO(
+	/** Teleport cooldown */
+	public float teleportCooldownP1;
+	public float teleportCooldownP2;
+
+	public HUDInfoDTO(
             int width,
             int height,
             int scoreP1,
@@ -48,6 +52,8 @@ public final class HUDInfoDTO {
         this.levelName = levelName;
         this.achievementText = achievementText;
         this.healthPopupText = healthPopupText;
+		this.teleportCooldownP1 = 1f;
+		this.teleportCooldownP2 = 1f;
     }
 
     public int getWidth() {

@@ -144,4 +144,33 @@ public final class HUDRenderer {
         int textWidth = fontPack.getBigMetrics().stringWidth(text);
         g.drawString(text, (screenWidth - textWidth) / 2, y + popupHeight / 2 + 5);
     }
+
+	/** Draw circular cooldown gauge */
+	private void drawTeleportCooldown(Graphics2D g, int x, int y, double ratio, Color readyColor) {
+
+		int r = 26;
+		g.setColor(Color.DARK_GRAY);
+		g.fillOval(x, y, r, r);
+
+		if (ratio >= 1.0) {
+			g.setColor(readyColor);
+			g.fillOval(x, y, r, r);
+			return;
+		}
+
+		g.setColor(readyColor);
+		int angle = (int)(360 * ratio);
+		g.fillArc(x, y, r, r, 90, -angle);
+
+		g.setColor(Color.BLACK);
+		g.drawOval(x, y, r, r);
+	}
+	/** Draw teleport cooldowns for P1 and P2 */
+	public void drawTeleportCooldowns(int screenWidth, int screenHeight, double cooldownP1, double cooldownP2) {
+
+		Graphics2D g = (Graphics2D) backBuffer.getGraphics();
+
+		drawTeleportCooldown(g, 170, screenHeight - 50, cooldownP1, Color.GREEN);
+		drawTeleportCooldown(g, screenWidth - 200, screenHeight - 50, cooldownP2, Color.PINK);
+	}
 }

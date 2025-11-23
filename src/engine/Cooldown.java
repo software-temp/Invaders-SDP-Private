@@ -79,4 +79,6 @@ public class Cooldown {
 		this.milliseconds = milliseconds;
 		this.duration = milliseconds;
 	}
+	public long getStartTime() { return this.time; }
+	public int getDuration() { return this.duration; }
 }

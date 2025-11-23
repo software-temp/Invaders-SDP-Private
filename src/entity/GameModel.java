@@ -197,31 +197,16 @@ public class GameModel {
      * @param playerNum (1 or 2)
      * @param direction ("RIGHT", "LEFT", "UP", "DOWN")
      */
-    public void playerMove(int playerNum, String direction) {
-        Ship ship = (playerNum == 1) ? this.ship : this.shipP2;
-        // If the ship doesn't exist or is destroyed, do nothing
-        if (ship == null || ship.isDestroyed()) return;
+	public void playerMoveOrTeleport(int playerNum, String direction, boolean teleport) {
+		Ship ship = (playerNum == 1) ? this.ship : this.shipP2;
+		if (ship == null || ship.isDestroyed()) return;
 
-        // Boundary logic brought over from the original processPlayerInput
-        switch (direction) {
-            case "RIGHT":
-                boolean isRightBorder = ship.getPositionX() + ship.getWidth() + ship.getSpeed() > this.width - 1;
-                if (!isRightBorder) ship.moveRight();
-                break;
-            case "LEFT":
-                boolean isLeftBorder = ship.getPositionX() - ship.getSpeed() < 1;
-                if (!isLeftBorder) ship.moveLeft();
-                break;
-            case "UP":
-                boolean isUpBorder = ship.getPositionY() - ship.getSpeed() < GameConstant.STAT_SEPARATION_LINE_HEIGHT;
-                if (!isUpBorder) ship.moveUp();
-                break;
-            case "DOWN":
-                boolean isDownBorder = ship.getPositionY() + ship.getHeight() + ship.getSpeed() > GameConstant.ITEMS_SEPARATION_LINE_HEIGHT;
-                if (!isDownBorder) ship.moveDown();
-                break;
-        }
-    }
+		if (teleport && ship.canTeleport()) {
+			ship.teleport(direction, width, height);
+		} else {
+			ship.move(direction, this.width, this.height);
+		}
+	}
 
     /**
      * Processes a player fire command received from the Controller.
